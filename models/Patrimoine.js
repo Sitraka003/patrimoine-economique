@@ -1,3 +1,6 @@
+/**
+ * Classe qui represente une patrimoine d'une personne ( ensemble de possessions )
+ */
 class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
