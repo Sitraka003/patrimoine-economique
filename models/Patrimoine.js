@@ -5,7 +5,7 @@ class Patrimoine {
     this.possessions = possessions; // [Possession, Possession, ...]
   }
   getValeur(date) {
-    return 
+    return this.possessions.reduce((total, possession) => total + possession.getValeur(date), 0)
   }
   addPossession(possession) {
     this.possessions.push(possession);
