@@ -1,7 +1,7 @@
 class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
-    this.date = date
+    this.date = new Date(date);
     this.possessions = possessions; // [Possession, Possession, ...]
   }
   getValeur(date) {
@@ -14,5 +14,7 @@ class Patrimoine {
     this.possessions = this.possessions.filter(p => p.libelle !== possession.libelle);
   }
 }
+
+
 
 module.exports = Patrimoine;
