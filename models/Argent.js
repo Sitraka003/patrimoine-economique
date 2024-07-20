@@ -9,7 +9,7 @@ class Argent extends Possession {
 
       switch (this.libelle) {
         case 'especes': {
-
+          return this.montant;
         }
         case 'compte_courant': {
 
