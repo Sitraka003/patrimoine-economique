@@ -23,6 +23,8 @@ export class Possession {
    * retourne la valeur de l'interet à une date donnée
    * @param _date {String} date de la valeur qu'on veut
    * @param rounded {boolean} indique si on doit arrondir ou pas
+   *
+   * @return {number}
    * */
   getAmortissementValue(_date, rounded=false) {
     // day * perday
@@ -37,8 +39,10 @@ export class Possession {
   /**
    * Retourne la valeur de la possession à une date donnée
    *
-   * @param _date {}
+   * @param _date {String}
    * @param rounded
+   *
+   * @return {number}
    * */
   getValeur(_date, rounded=false) {
     const result = this.valeur + this.getAmortissementValue(_date, rounded)

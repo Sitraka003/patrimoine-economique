@@ -20,6 +20,8 @@ export class Patrimoine {
    * @param _date {String} Date de la valeur qu'on veut
    * @param rounded {boolean} indique si on veut une valuer arrondie ou non
    * @param roundEach {boolean} indique si on veut arrondir la valeur de chaque possession
+   *
+   * @return {number}
    * */
   getValeur(_date, rounded=false, roundEach=false) {
     let result = 0;
