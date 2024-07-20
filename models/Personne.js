@@ -1,10 +1,9 @@
 /**
  * Class qui represente une personne morale
  */
-class Personne {
+export class Personne {
   constructor(nom) {
     this.nom = nom;
   }
 }
 
-module.exports = Person;
