@@ -1,11 +1,11 @@
 class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
-    this.date = date
+    this.date = date;
     this.possessions = possessions; // [Possession, Possession, ...]
   }
   getValeur(date) {
-    return 
+    return null;
   }
   addPossession(possession) {
     this.possessions.push(possession);
