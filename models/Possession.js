@@ -35,6 +35,18 @@ export class Possession {
   }
 
   /**
+   * Retourne la valeur de la possession à une date donnée
+   *
+   * @param _date {}
+   * @param rounded
+   * */
+  getValeur(_date, rounded=false) {
+    const result = this.valeur + this.getAmortissementValue(_date, rounded)
+
+    return rounded ? Math.round(result) : result;
+  }
+
+  /**
    * @
    * */
   applyAmortissement(_date, rounded=false) {
