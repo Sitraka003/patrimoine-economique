@@ -69,7 +69,14 @@ export class Possession {
 
 
 export class Argent extends Possession {
-  constructor(possesseur, valeur, date) {
+  /**
+   * @param possesseur {Personne} possesseur de l'argent
+   * @param valeur {int} valeur de l'argent
+   * @param date {String} date d'accisition de l'argent
+   * @param inflation {int} pourcentage d'inflation annuel
+   * */
+  constructor(possesseur, valeur, date, inflation=0 ) {
     super(possesseur, date, 'argent', valeur);
+    this.interetData[0] = -inflation;
   }
 }
