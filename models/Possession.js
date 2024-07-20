@@ -26,7 +26,7 @@ export class Possession {
    *
    * @return {number}
    * */
-  getAmortissementValue(_date, rounded=false) {
+  getInterestValue(_date, rounded=false) {
     // day * perday
     const date = new Date(_date);
     const dayBetween = (date - this.date) / (1000 * 60 * 60 * 24);
@@ -45,7 +45,7 @@ export class Possession {
    * @return {number}
    * */
   getValeur(_date, rounded=false) {
-    const result = this.valeur + this.getAmortissementValue(_date, rounded)
+    const result = this.valeur + this.getInterestValue(_date, rounded)
 
     return rounded ? Math.round(result) : result;
   }
@@ -53,9 +53,9 @@ export class Possession {
   /**
    * @
    * */
-  applyAmortissement(_date, rounded=false) {
-    if (this.valeur + this.getAmortissementValue(_date) >= 0) {
-      this.valeur += this.getAmortissementValue(_date, rounded)
+  applyInterest(_date, rounded=false) {
+    if (this.valeur + this.getInterestValue(_date) >= 0) {
+      this.valeur += this.getInterestValue(_date, rounded)
     }
     else {
       this.valeur = 0;
@@ -63,6 +63,6 @@ export class Possession {
   }
 
   updateValeur(_date, rounded=false) {
-    this.applyAmortissement(_date, rounded)
+    this.applyInterest(_date, rounded)
   }
 }
