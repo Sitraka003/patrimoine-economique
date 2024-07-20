@@ -9,7 +9,7 @@ export class Possession {
    * @param value {number} valeur monetaire ou d'échage de la possession
    * @param interet {number} taux d'interet en pourcentage (par defaut annuel)
    * */
-  constructor(possesseur, date, libelle, value, interet) {
+  constructor(possesseur, date, libelle="Possession", value, interet=0) {
     this.possesseur = possesseur;
     this.libelle = libelle;
     this.date = new Date(date);
@@ -64,5 +64,12 @@ export class Possession {
 
   updateValeur(_date, rounded=false) {
     this.applyInterest(_date, rounded)
+  }
+}
+
+
+export class Argent extends Possession {
+  constructor(possesseur, valeur, date) {
+    super(possesseur, date, 'argent', valeur);
   }
 }
