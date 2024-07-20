@@ -1,10 +1,12 @@
 class Argent extends Possession {
-  constructor(possesseur, libelle, montant, dateCreation = null, salaireMensuel = 0, trainDeVieMensuel = 0) {
+  constructor(possesseur, libelle, montant, dateCreation = null, salaireMensuel = 0, trainDeVieMensuel = 0, dateDepot = null, tauxAnnuel = 0) {
     super(possesseur, "argent", libelle);
     this.montant = montant;
     this.dateCreation = dateCreation ? new Date(dateCreation) : null;
     this.salaireMensuel = salaireMensuel;
     this.trainDeVieMensuel = trainDeVieMensuel;
+    this.dateDepot = dateDepot ? new Date(dateDepot) : null;
+    this.tauxAnnuel = tauxAnnuel;
   }
 
   getValeur(date) {
@@ -25,7 +27,15 @@ class Argent extends Possession {
         return valeurActuelle;
       }
       case 'compte_epargne': {
+        const moisEcoules = (dateActuelle.getFullYear() - this.dateDepot.getFullYear()) * 12 + (dateActuelle.getMonth() - this.dateDepot.getMonth());
+        let valeurActuelle = this.montant;
+        const tauxInteretMensuel = this.tauxAnnuel / 12 / 100;
 
+        for (let i = 0; i < moisEcoules; i++) {
+          valeurActuelle *= (1 + tauxInteretMensuel);
+        }
+
+        return valeurActuelle;
       }
       default:
         return 0;
