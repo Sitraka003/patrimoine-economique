@@ -1,5 +1,6 @@
+const Possession = require("./Possession");
 class Argent extends Possession {
-  constructor(possesseur, libelle, montant, dateCreation = null, salaireMensuel = 0, trainDeVieMensuel = 0, dateDepot = null, tauxAnnuel = 0) {
+  constructor(possesseur, libelle, montant = 0, dateCreation = null, salaireMensuel = 0, trainDeVieMensuel = 0, dateDepot = null, tauxAnnuel = 0) {
     super(possesseur, "argent", libelle);
     this.montant = montant;
     this.dateCreation = dateCreation ? new Date(dateCreation) : null;

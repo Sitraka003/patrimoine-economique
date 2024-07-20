@@ -1,3 +1,4 @@
+const Possession = require("./Possession");
 class TrainDeVie extends Possession {
     constructor(possesseur, libelle, coutMensuel) {
       super(possesseur, "train_de_vie", libelle);
