@@ -5,7 +5,21 @@ class Argent extends Possession {
     }
   
     getValeur(date) {
-      return this.montant;
+      const dateActuelle = new Date(date);
+
+      switch (this.libelle) {
+        case 'especes': {
+
+        }
+        case 'compte_courant': {
+
+        }
+        case 'compte_epargne': {
+
+        }
+        default:
+          return 0;
+      }
     }
 }
 
