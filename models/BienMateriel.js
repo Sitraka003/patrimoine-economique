@@ -8,12 +8,11 @@ class BienMateriel extends Possession {
   
     getValeur(date) {
       const dateActuelle = new Date(date);
-      const anneesEcoules = dateActuelle.getFullYear() - dateAchat.getFullYear();
-      let valeurActuelle = valeurInitiale;
-        for (let i = 0; i < anneesEcoules; i++) {
-            valeurActuelle *= (1 - tauxDepreciationAnnuel);
-        }
+      const anneesEcoulees = (dateActuelle - dateAchat) / (1000 * 60 * 60 * 24 * 365);
+      let valeurActuelle = valeurInitiale * Math.pow((1 - (tauxDepreciationAnnuel / 100)), anneesEcoulees);
+        return valeurActuelle;
     }   
+
 
 }
 module.exports = BienMateriel;
