@@ -33,7 +33,7 @@ class BienMateriels extends Possession {
     const anneeCalculs = dateCalcul.getFullYear();
     const moisCalcul = moisActuel.getMonth();
     const tempsAcquisition = ((anneeActuels - anneeCalculs)*12) +(moisActuel-moisCalcul);    
-    let perte = ((valeurAcquisition * (perteDeValeur/100))) * (tempsAcquisition/12);
+    let perte = ((this.valeurAcquisition * (this.perteDeValeur/100))) * (tempsAcquisition/12);
         return perte;
     }
             
