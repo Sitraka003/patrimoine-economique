@@ -4,5 +4,9 @@ class Possession {
     this.type = type;
     this.libelle = libelle;
   }
+
+  getValeur() {
+    return 0;
+  }
 }
 module.exports = Possession;
