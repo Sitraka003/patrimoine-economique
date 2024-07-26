@@ -40,7 +40,7 @@ function totalDesDepenses() {
     return lesSommesDepenses;
 }
 
-function autreRevenus() { //autre revenu à par le salaire
+function autreRevenus() {//à par le salaire
     let revenus = [];
     let toujourInserer = true;
 
