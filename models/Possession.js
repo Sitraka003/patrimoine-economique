@@ -29,7 +29,3 @@ export class Possession {
     return this.valeur;
   }
 }
-
-// Exemple d'utilisation
-let test = new Possession("me", "salaire", "compte courant", 1000, new Date(2024, 2, 30), null, 100);
-console.log("Valeur sensé donnée un an",test.getValueAt(new Date(2025, 2, 30)));
