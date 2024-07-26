@@ -1,18 +1,38 @@
-class Patrimoine {
-  constructor(possesseur, date, possessions) {
-    this.possesseur  = possesseur;
-    this.date = date
-    this.possessions = possessions; // [Possession, Possession, ...]
+import Personne from "./Personne.js";
+import Possession from "./Possession.js";
+
+class Patrimoine{
+  constructor(date, Personne, possession) {
+    //to represent a point in time
+    this.date = date;
+    this.Personne = Personne;
+    this.possession = [possession];
   }
-  getValeur(date) {
-    return 
+
+  Addpossession(Possession) {
+    this.possession.push(Possession);
   }
-  addPossession(possession) {
-    this.possessions.push(possession);
+
+  //voir la liste de bien que la personne possède
+  listPossession() {
+    for(let i of this.possession) {
+      console.log(i);
+    }
   }
-  removePossession(possession) {
-    this.possessions = this.possessions.filter(p => p.libelle !== possession.libelle);
+
+  TotalPossessionPrice() {
+    let total = 0;
+    for(let i = 0; i < this.possession.length; i++) {
+      total += (
+        this.possession[i].getPossessionPrice() - 
+        (
+          this.possession[i].PriceAmortization() * 
+          this.date - this.possession[i].getDate()
+        )
+      );
+    }
+    return total;
   }
 }
 
-module.exports = Patrimoine;
+export default Patrimoine;
