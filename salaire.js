@@ -28,4 +28,5 @@ export function salaireNet() {
 
     return salaireNetAPayer = salaireBrut - irsa - ostie - cnaps;
 }
-console.log(`le total de votre salaire net à payer est : ${salaireNet()} Ariary`);
+
+//console.log(`le total de votre salaire net à payer est : ${salaireNet()} Ariary`); // [for test]
