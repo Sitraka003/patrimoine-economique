@@ -18,9 +18,9 @@ class Possession {
     let dateDeFin = moment(dateEvaluation, 'YYYY-MM-DD');
 
     let difference = moment.duration(dateDeFin.diff(dateDeCommencement));
-    let annee = diff.years();
-    let mois = diff.months();
-    let jour = diff.days();
+    let annee = difference.years();
+    let mois = difference.months();
+    let jour = difference.days();
 
     let raison = annee + mois / 12 + jour / 365;
 
