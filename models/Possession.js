@@ -1,32 +1,35 @@
 import moment from "moment";
 
-class Possession {
+export class Possession {
   constructor(possesseur, libelle, nom, valeur, dateAchat, dateExpiration, tauxAmortissement) {
     this.possesseur = possesseur;
     this.libelle = libelle;
     this.name = nom;
     this.valeur = valeur;
-    this.type = type;
     this.dateAchat = dateAchat;
     this.dateExpiration = dateExpiration;
     this.tauxAmortissement = tauxAmortissement;
   }
 
   getValueAt(dateEvaluation) {
+    let dateDeCommencement = moment(this.dateAchat);
+    let dateDeFin = moment(dateEvaluation);
 
-    let dateDeCommencement = moment(this.dateDeCommencement, 'YYYY-MM-DD');
-    let dateDeFin = moment(dateEvaluation, 'YYYY-MM-DD');
+    let moisEnTotalite = dateDeFin.diff(dateDeCommencement, 'months');
+    dateDeCommencement.add(moisEnTotalite, 'months');
+    let jour = dateDeFin.diff(dateDeCommencement, 'days');
+    let annee = Math.floor(moisEnTotalite / 12);
+    let mois = moisEnTotalite % 12;
 
-    let difference = moment.duration(dateDeFin.diff(dateDeCommencement));
-    let annee = difference.years();
-    let mois = difference.months();
-    let jour = difference.days();
-
+    
     let raison = annee + mois / 12 + jour / 365;
+    
+    this.valeur -= this.tauxAmortissement * this.valeur * (raison / 100);
 
-    this.valeur -= this.tauxAmortissement * this.value * (ratio / 100);
-
-    return this.value;
+    return this.valeur;
   }
 }
-module.exports = Possession;
+
+// Exemple d'utilisation
+let test = new Possession("me", "salaire", "compte courant", 1000, new Date(2024, 2, 30), null, 100);
+console.log("Valeur sensé donnée un an",test.getValueAt(new Date(2025, 2, 30)));
