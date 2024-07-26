@@ -14,7 +14,7 @@ class Possession {
 
   getValueAt(dateEvaluation) {
 
-    let dateDeCommencement = moment(this.buyingDate, 'YYYY-MM-DD');
+    let dateDeCommencement = moment(this.dateDeCommencement, 'YYYY-MM-DD');
     let dateDeFin = moment(dateEvaluation, 'YYYY-MM-DD');
 
     let difference = moment.duration(dateDeFin.diff(dateDeCommencement));
