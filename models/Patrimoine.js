@@ -1,4 +1,4 @@
-class Patrimoine {
+export class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
     this.date = date

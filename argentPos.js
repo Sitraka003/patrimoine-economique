@@ -9,7 +9,7 @@ import { Possession } from "./models/Possession.js";
  * @method getvaleurPossesion retourne la valeur Argent
  * }
  */
-class ArgentPossessions  extends Possession{
+export class ArgentPossessions  extends Possession{
     constructor(possesseur,montant, libelle ){
         super( possesseur,'ArgentPossessions',libelle)
         this.montant=montant;
@@ -21,3 +21,51 @@ class ArgentPossessions  extends Possession{
         return this.montant;
     }
 }
+
+class CompteCourant extends ArgentPossessions {
+    constructor(possesseur, montant,salaire){
+        //salaire fixe tous les 30 jours fin du mois
+        super(possesseur,'ArgentPossessions',montant)
+        this.salaire=salaire;
+    }
+
+    creditCompte(somme){
+        this.montant += somme;
+    }
+    
+    debitCompte(somme){
+        this.montant -= somme;
+    }
+
+    ajouterSalaire(){
+        setInterval(()=> {
+            this.creditCompte(this.salaire)}
+        ,30*24*60*60*1000)
+        
+    }
+    
+}
+
+class CompteEpargne extends ArgentPossessions {
+    constructor(possesseur, montant,interet){
+        super(possesseur,'ArgentPossessions',montant,interet)
+        this.montant=montant;
+        this.interet=interet;
+    }
+
+    getSolde(){
+        this.montant += montant*(this.interet/100);
+        return this.montant;
+    }
+}
+
+class Especes extends ArgentPossessions{
+    constructor(possesseur,montant){
+        super(possesseur,'ArgentPossessions',montant)
+    }
+
+    creditEspece(somme){
+        this.montant += somme
+    }
+}
+
