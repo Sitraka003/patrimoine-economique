@@ -1,7 +1,7 @@
 import Possession from "./Possession.js";
 
-class Argent extends Possession {
+class Argent extends Possession{
 
 }
 
-export default Argent;
+export default  Argent;

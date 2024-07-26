@@ -3,6 +3,8 @@ import Personne from './models/Personne.js';
 import Possession from './models/Possession.js';
 import TrainDeVie from './models/TrainDeVie.js';
 import Salaire from './models/Salaire.js';
+import ExtraDepense from './models/ExtraDepense.js';
+
 
 const personne = new Personne('John Doe', '1980-05-1');
 
@@ -17,6 +19,8 @@ const patrimoine = new Patrimoine(personne, new Date(), [possession]);
 patrimoine.addPossession(new Possession(personne, "voiture", '2015-01-1', 50000));
 
 patrimoine.addPossession(new Possession(personne, "appartement", '2018-05', 100000));
+
+patrimoine.addPossession(new ExtraDepense(personne, "cheque de caisse", '2021-01-01', 100000));
 
 patrimoine.addPossession(trainDeVie);
 

@@ -1,6 +1,7 @@
 import Salaire from "./Salaire.js";
 import TrainDeVie from "./TrainDeVie.js";
-
+import ExtraDepense from "./ExtraDepense.js";
+import Argent from "./Argent.js";
 class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
@@ -21,7 +22,9 @@ class Patrimoine {
                               return spendYear == 0 ? possession.getValeur()*spendMonth : possession.getValeur()*spendMonth*spendYear;
                             }else if(possession instanceof TrainDeVie){
                               return  spendYear == 0 ? -possession.getValeur()*spendMonth : -possession.getValeur()*spendMonth*spendYear;
-                            }else return possession.getValeur() - (spendMonth * possession.getValeur() / 1200) - (spendYear * possession.getValeur() /365);
+                            }else if(possession instanceof Argent) return possession.getValeur();
+                            else if(possession instanceof ExtraDepense) return -possession.getValeur();
+                            else return possession.getValeur() - (spendMonth * possession.getValeur() / 1200) - (spendYear * possession.getValeur() /365);
                           } )
                           .reduce((total, valeur) => total + valeur, 0);
   }
