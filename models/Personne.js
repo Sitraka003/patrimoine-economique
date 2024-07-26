@@ -1,7 +1,8 @@
 class Personne {
-  constructor(nom) {
-    this.nom = nom;
-  }
+constructor(nom,salaireMensuel,depenseMensuelles) {
+this.nom = nom;
+this.salaireMensuel= Number(salaireMensuel);
+this.depenseMensuelles=Number(depenseMensuelles);
 }
-
-module.exports = Person;
+}
+module.exports = Personne
