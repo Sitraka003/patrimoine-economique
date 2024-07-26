@@ -1,30 +1,25 @@
-import Salaire from "./salaire";
+
 let prompt = require("prompt-sync");
 
 class TrainDeVie{
-    spentMoney = [];
+    
 
-    constructor(cout,description,spentMoney){
+
+    constructor(cout,description){
         this.cout= cout;
         this.description = description;
-        this.spentMoney = spentMoney;
     }
 
-    i = 0;
+    getCout(){
+        return this.cout;
+    }
 
-    spend(amount){
-        this.montant -=amount;
-        i += 1;
-        let raison = prompt("Veuillez donner une description : ")
-        let date = new Date;
-        this.spentMoney.push("depense " + i + "\n motif : " + raison + "\n Date : " + date)
-        return "Vous avez depensé " + amount + "Ar, il vous reste " + this.montant + "Ar \n Motif : " + 
-    raison
-}
-
-    seeSpent(){
-        return this.spentMoney;
+    getDescription(){
+        return this.description;
     }
 
     
+
 }
+
+module.exports = TrainDeVie;

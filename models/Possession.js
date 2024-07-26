@@ -15,10 +15,11 @@ class Possession {
     console.log('Prorpriétaire : ' + this.possesseur + "\n type de produit : " + this.type + " \n valeur :" + this.valeur)
   }
 
-  getNewValue(possession){
+  getNewValue(){
     let today = new Date()
+    let tauxAmortissement = this.tauxAmortissement
     const newDate = today.getFullYear -this.dateAchat ;
-      let lostValue= (10/100)*this.valeur ;
+      let lostValue= (tauxAmortissement/100)*this.valeur ;
       let newValue = this.valeur - newDate*lostValue
 
       return newValue;
