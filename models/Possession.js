@@ -1,4 +1,4 @@
-class Possession {
+export class Possession {
   constructor(type, libelle, valeur, dateAcquisition, tauxDepreciation = 0) {
     this.type = type;
     this.libelle = libelle;

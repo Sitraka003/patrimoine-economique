@@ -1,4 +1,4 @@
-class Salaire {
+export class Salaire {
     constructor(montant, dateDebut) {
         this.montant = montant;
         this.dateDebut = new Date(dateDebut);
@@ -12,5 +12,3 @@ class Salaire {
         this.montant = nouveauMontant;
     }
 }
-
-module.exports = Salaire;

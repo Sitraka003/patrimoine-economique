@@ -1,4 +1,4 @@
-class TrainDeVie {
+export class TrainDeVie {
     constructor(mensuelDepense) {
         this.mensuelDepense = mensuelDepense;
     }
@@ -11,5 +11,3 @@ class TrainDeVie {
         this.mensuelDepense = nouvelleDepense;
     }
 }
-
-module.exports = TrainDeVie;
