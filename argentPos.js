@@ -65,7 +65,7 @@ class Especes extends ArgentPossessions{
     }
 
     creditEspece(somme){
-        this.montant += somme
+        this.montant += somme;
     }
 }
 
