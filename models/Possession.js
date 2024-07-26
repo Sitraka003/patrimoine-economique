@@ -1,3 +1,5 @@
+import moment from "moment";
+
 class Possession {
   constructor(possesseur, libelle, nom, valeur, dateAchat, dateExpiration, tauxAmortissement) {
     this.possesseur = possesseur;
