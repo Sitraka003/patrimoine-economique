@@ -1,7 +1,8 @@
 class Personne {
-  constructor(nom) {
-    this.nom = nom;
-  }
+    constructor(nom, patrimoine) {
+        this.nom = nom;
+        this.patrimoine = patrimoine;
+    }
 }
 
-module.exports = Person;
+module.exports = Personne;

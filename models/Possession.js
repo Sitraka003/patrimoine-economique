@@ -1,8 +1,10 @@
 class Possession {
-  constructor(possesseur, type, libelle) {
-    this.possesseur = possesseur;
+  constructor(type, libelle, valeur) {
     this.type = type;
     this.libelle = libelle;
+    this.valeur = valeur;
   }
+
+  getValeur() { };
 }
 module.exports = Possession;
