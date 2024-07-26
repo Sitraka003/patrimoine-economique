@@ -108,4 +108,4 @@ function trainDeVie() {
     }
 }
 
-console.log(trainDeVie());
+//console.log(trainDeVie()); pour juste tester
