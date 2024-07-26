@@ -5,4 +5,4 @@ class Possession {
     this.libelle = libelle;
   }
 }
-module.exports = Possession;
+export default Possession;

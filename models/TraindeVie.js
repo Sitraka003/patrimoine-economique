@@ -1,24 +1,13 @@
-class Possesseur {
-    constructor() {
-        this.possessions = [];
+import Possession from "./Possession.js";
+class TrainDeVie extends Possession {
+    constructor(possesseur, libelle, coutMensuel) {
+        super(possesseur, "train_de_vie", libelle);
+        this.coutMensuel = coutMensuel;
     }
 
-    ajouterPossession(possession) {
-        this.possessions.push(possession);
-    }
-
-    getPossession(type) {
-        return this.possessions.find(p => p.type === type);
-    }
-
-    payerFrais(trainDeVie) {
-        const argent = this.getPossession("argent");
-        if (argent && argent.montant >= trainDeVie.coutMensuel) {
-            argent.montant -= trainDeVie.coutMensuel;
-            return true;
-        }
-        return false;
+    getValeur(date) {
+        return 0;
     }
 }
 
-export default Possesseur;
+export default TrainDeVie;

@@ -4,4 +4,4 @@ class Personne {
   }
 }
 
-module.exports = Personne;
+export default Personne;
