@@ -1,4 +1,4 @@
-const Possession = require("./Possession");
+const Possession = require("../Possession");
 
 class BienMateriel extends Possession {
     constructor(possesseur, libelle, valeurInitiale, dateAchat, tauxDepreciationAnnuel) {
