@@ -39,8 +39,8 @@ export class Possession {
   /**
    * Retourne la valeur de la possession à une date donnée
    *
-   * @param _date {String}
-   * @param rounded
+   * @param _date {String} date de la valeur qu'on veut
+   * @param rounded {boolean} indique si on doit arrondir ou pas
    *
    * @return {number}
    * */
@@ -51,7 +51,9 @@ export class Possession {
   }
 
   /**
-   * @
+   * applique l'interet
+   * @param _date {String} date d'application
+   * @param rounded {boolean} indique si on doit arrondir ou pas
    * */
   applyInterest(_date, rounded=false) {
     if (this.valeur + this.getInterestValue(_date) >= 0) {
@@ -62,6 +64,11 @@ export class Possession {
     }
   }
 
+  /**
+   * change la valeur à la date actuel selon l'interet
+   * @param _date {String} date d'application
+   * @param rounded {boolean} indique si on doit arrondir ou pas
+   * */
   updateValeur(_date, rounded=false) {
     this.applyInterest(_date, rounded)
   }
