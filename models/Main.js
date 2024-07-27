@@ -1,8 +1,8 @@
 const Personne = require('./Personne');
-const Argent = require('./Argent');
-const BienMateriel = require('./BienMateriel');
-const TrainDeVie = require('./TrainDeVie');
 const Patrimoine = require('./Patrimoine');
+const Argent = require('./typeOfPossessions/Argent');
+const BienMateriel = require('./typeOfPossessions/BienMateriel');
+const TrainDeVie = require('./typeOfPossessions/TrainDeVie');
 
 // Création de la personne Ilo
 const ilo = new Personne('Ilo');
