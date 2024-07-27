@@ -8,15 +8,23 @@ export class Possession {
    * @param libelle {String} libelle ou nom de la possession
    * @param value {number} valeur monetaire ou d'échage de la possession
    * @param interet {number} taux d'interet en pourcentage (par defaut annuel)
+   * @param interetOccurence jour d'occurence d'application de l'interet
    * */
-  constructor(possesseur, date, libelle="Possession", value, interet=0) {
+  constructor(possesseur,
+              date,
+              libelle="Possession",
+              value,
+              interet=0,
+              interetOccurence=365)
+  {
     this.possesseur = possesseur;
     this.libelle = libelle;
     this.date = new Date(date);
     this.valeur = value;
 
-    this.interet = interet
-    this.interetData = [this.interet, 365] // [x, y] --> + x% / yjour
+    this.interet = interet;
+    this.interetDayOccurence = interetOccurence;
+    this.interetData = [this.interet, this.interetDayOccurence] // [x, y] --> + x% / yjour
   }
 
   /**
@@ -30,10 +38,11 @@ export class Possession {
     // day * perday
     const date = new Date(_date);
     const dayBetween = (date - this.date) / (1000 * 60 * 60 * 24);
-    const perDay = this.interetData[0] / this.interetData[1]
+    const perDayPercent = (this.interet / 100) / this.interetDayOccurence
+    const perDayValeur = perDayPercent * this.valeur;
 
-    const result = perDay * dayBetween;
-    return rounded ? Math.floor(result): result;
+    const result = perDayValeur * dayBetween;
+    return rounded ? Math.round(result): result;
   }
 
   /**
@@ -85,8 +94,14 @@ export class Argent extends Possession {
    * @param date {String} date d'accisition de l'argent
    * @param inflation {int} pourcentage d'inflation annuel
    * */
-  constructor(possesseur, valeur, date, inflation=0 ) {
-    super(possesseur, date, 'argent', valeur);
-    this.interetData[0] = -inflation;
+  constructor(possesseur, valeur, date, inflation=0, inflationOccurence=365 ) {
+    super(possesseur, date, 'argent', valeur, -inflation, inflationOccurence);
+  }
+}
+
+
+export class Salaire extends Argent {
+  constructor(possesseur, valeurMonsuel, date) {
+    super(possesseur, valeurMonsuel, date, -100, 30);
   }
 }
