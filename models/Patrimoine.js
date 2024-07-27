@@ -1,18 +1,29 @@
-class Patrimoine {
-  constructor(possesseur, date, possessions) {
-    this.possesseur  = possesseur;
-    this.date = date
-    this.possessions = possessions; // [Possession, Possession, ...]
+class Patrimony {
+  constructor(owner) {
+    const creationDate = new Date();
+    this.owner  = owner;
+   
+    this.patrimonyCreationDate = creationDate;
+    this.possessions = []; // [Possession, Possession, ...]
   }
-  getValeur(date) {
-    return 
+  getValue(year,month,date) {
+    let possessionsToTheDate = this.possessions.filter((e)=>{
+      return e.aquisitionDate < new Date(year,month,date) 
+    })
+    // console.log(possessionsToTheDate[0].possessionName); 
+    return possessionsToTheDate.reduce((acc,currVal)=>acc+currVal.getActualValue(),0) 
   }
   addPossession(possession) {
     this.possessions.push(possession);
   }
   removePossession(possession) {
-    this.possessions = this.possessions.filter(p => p.libelle !== possession.libelle);
+    this.possessions = this.possessions.filter(p => p.possessionName !== possession.possessionName);
+  }
+  getPossessions(){
+     this.possessions.forEach(element => {
+      console.log(element.possessionName)
+    });
   }
 }
 
-module.exports = Patrimoine;
+export default Patrimony;
