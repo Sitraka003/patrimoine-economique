@@ -75,6 +75,9 @@ export class Possession {
 }
 
 
+/**
+ * Classe qui designe l'argent
+ * */
 export class Argent extends Possession {
   /**
    * @param possesseur {Personne} possesseur de l'argent
