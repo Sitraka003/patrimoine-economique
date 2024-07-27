@@ -92,7 +92,8 @@ export class Argent extends Possession {
    * @param possesseur {Personne} possesseur de l'argent
    * @param valeur {int} valeur de l'argent
    * @param date {String} date d'accisition de l'argent
-   * @param inflation {int} pourcentage d'inflation annuel
+   * @param inflation {int} pourcentage d'inflation (par inflationOccurence)
+   * @param inflationOccurence occurence en jours d'application de l'inflation
    * */
   constructor(possesseur, valeur, date, inflation=0, inflationOccurence=365 ) {
     super(possesseur, date, 'argent', valeur, -inflation, inflationOccurence);
