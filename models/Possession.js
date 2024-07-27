@@ -35,14 +35,19 @@ export class Possession {
    * @return {number}
    * */
   getInterestValue(_date, rounded=false) {
-    // day * perday
-    const date = new Date(_date);
-    const dayBetween = (date - this.date) / (1000 * 60 * 60 * 24);
-    const perDayPercent = (this.interet / 100) / this.interetDayOccurence
-    const perDayValeur = perDayPercent * this.valeur;
-
-    const result = perDayValeur * dayBetween;
+    const result = this.getPerDayValeur() * this.getDayBetween(_date, this.date);
     return rounded ? Math.round(result): result;
+  }
+
+  getPerDayValeur() {
+    const perDayPercent = (this.interet / 100) / this.interetDayOccurence
+    return  perDayPercent * this.valeur;
+  }
+
+  getDayBetween(_date1, _date2) {
+    const date = new Date(_date1);
+    const date2 = new Date(_date2);
+    return (date - date2) / (1000 * 60 * 60 * 24);
   }
 
   /**
@@ -55,7 +60,6 @@ export class Possession {
    * */
   getValeur(_date, rounded=false) {
     const result = this.valeur + this.getInterestValue(_date, rounded)
-
     return rounded ? Math.round(result) : result;
   }
 
@@ -104,5 +108,10 @@ export class Argent extends Possession {
 export class Salaire extends Argent {
   constructor(possesseur, valeurMonsuel, date) {
     super(possesseur, valeurMonsuel, date, -100, 30);
+  }
+
+  getValeur(_date, rounded = false) {
+    const result = this.getPerDayValeur() * this.getDayBetween(_date, this.date);
+    return rounded ? Math.round(result) : result;
   }
 }
