@@ -1,5 +1,5 @@
-const Possession = require("../Possession");
-class TrainDeVie extends Possession {
+import { Possession } from "../Possession.js";
+export class TrainDeVie extends Possession {
     constructor(possesseur, libelle, coutMensuel) {
       super(possesseur, "train_de_vie", libelle);
       this.coutMensuel = coutMensuel;
@@ -9,5 +9,3 @@ class TrainDeVie extends Possession {
       return 0;
     }
 }
-
-module.exports = TrainDeVie;

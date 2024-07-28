@@ -1,8 +1,10 @@
-const Personne = require('./Personne');
-const Patrimoine = require('./Patrimoine');
-const Argent = require('./typeOfPossessions/Argent');
-const BienMateriel = require('./typeOfPossessions/BienMateriel');
-const TrainDeVie = require('./typeOfPossessions/TrainDeVie');
+import { Possession } from "./Possession.js";
+import { Personne } from "./Personne.js";
+import { Patrimoine } from "./Patrimoine.js";
+import { Argent } from "./typeOfPossessions/Argent.js";
+import { BienMateriel } from "./typeOfPossessions/BienMateriel.js";
+import { TrainDeVie } from "./typeOfPossessions/TrainDeVIe.js";
+
 
 // Création de la personne Ilo
 const ilo = new Personne('Ilo');

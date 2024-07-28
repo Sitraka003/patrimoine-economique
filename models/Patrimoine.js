@@ -1,4 +1,4 @@
-class Patrimoine {
+export class Patrimoine {
   constructor(possesseur, date, possessions) {
     this.possesseur  = possesseur;
     this.date = date
@@ -14,5 +14,3 @@ class Patrimoine {
     this.possessions = this.possessions.filter(p => p.libelle !== possession.libelle);
   }
 }
-
-module.exports = Patrimoine;

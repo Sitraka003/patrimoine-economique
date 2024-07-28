@@ -1,5 +1,5 @@
-const Possession = require("../Possession");
-class Argent extends Possession {
+import { Possession } from "../Possession.js";
+export class Argent extends Possession {
   constructor(
     possesseur, 
     libelle, 
@@ -64,5 +64,3 @@ class Argent extends Possession {
 // const compteCourant = new Argent('ilo', 'compte_courant', 0, '2024-02-01', 600000, 500000, null, 0);
 // console.log(compteCourant.getValeur('2024-04-30'));
 // console.log(compteCourant.getValeur('2024-05-01'));
-
-module.exports = Argent;

@@ -1,4 +1,4 @@
-class Possession {
+export class Possession {
   constructor(possesseur, type, libelle) {
     this.possesseur = possesseur;
     this.type = type;
@@ -9,4 +9,3 @@ class Possession {
     return 0;
   }
 }
-module.exports = Possession;

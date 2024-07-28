@@ -1,6 +1,5 @@
-const Possession = require("../Possession");
-
-class BienMateriel extends Possession {
+import { Possession } from "../Possession.js";
+export class BienMateriel extends Possession {
     constructor(possesseur, libelle, valeurInitiale, dateAchat, tauxDepreciationAnnuel) {
       super(possesseur, "bien_materiel", libelle);
       this.valeurInitiale = valeurInitiale;
@@ -17,4 +16,3 @@ class BienMateriel extends Possession {
 
 
 }
-module.exports = BienMateriel;
