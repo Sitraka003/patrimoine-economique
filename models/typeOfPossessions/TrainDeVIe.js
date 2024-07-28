@@ -6,6 +6,6 @@ export class TrainDeVie extends Possession {
     }
   
     getValeur(date) {
-      return 0;
+      return this.coutMensuel;
     }
 }
