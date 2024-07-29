@@ -61,6 +61,5 @@ export class Argent extends Possession {
     }
   }
 }
-// const compteCourant = new Argent('ilo', 'compte_courant', 0, '2024-02-01', 600000, 500000, null, 0);
 // console.log(compteCourant.getValeur('2024-04-30'));
 // console.log(compteCourant.getValeur('2024-05-01'));
