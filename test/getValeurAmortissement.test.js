@@ -17,9 +17,14 @@ describe("Tester si les amortissements(tauxDepreciationAnnuel, tauxAnnuel) sont 
     describe("tester getValeur dans Argent", () => {
         it("doit augmenter le montant si on fournit une date ultérieur", () => {
             const rakoto = new Personne("Rakoto");
-            const compteEpargne = new Argent(rakoto, 'compte_epargne', 20000, null, 0, 0, '2023-06-01', 5);
+            const compteEpargne = new Argent(rakoto, 'compte_epargne', 20_000, null, 0, 0, '2023-06-01', 5);
             const calculMathematique = 21160;
             assert.closeTo( compteEpargne.getValeur('2024-07-28'), calculMathematique, 100)
+        })
+        it("doit augmenter le montant avec l'amortissement donnée après un an jour pour jour", () => {
+            const rakoto = new Personne("Rakoto");
+            const compteEpargne = new Argent(rakoto, 'compte_epargne', 20_000, null, 0, 0, '2023-06-01', 5);
+            assert.closeTo(Math.round(compteEpargne.getValeur('2024-06-01')), 20_000+(20_000*5/100), 100)
         })
     })
 })
