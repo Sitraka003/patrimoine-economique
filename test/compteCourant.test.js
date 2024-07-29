@@ -9,7 +9,7 @@ describe("tester la performance de getValeur dans Argent pour un compte courant"
         const compteCourant = new Argent(rakoto, 'compte_courant', 0, '2024-02-01', 600000, 500000, null, 0);
         assert.equal(compteCourant.getValeur('2024-04-02'), (compteCourant.salaireMensuel - compteCourant.trainDeVieMensuel) * (4 - 2));
     });
-    it("ne doit pas être encore débiter par le train de vie si la date donnée est un fin du mois", () => {
+    it("ne doit pas encore être débiter par le train de vie si la date donnée est un fin du mois", () => {
         const rakoto = new Personne("Rakoto");
         const compteCourant = new Argent(rakoto, 'compte_courant', 0, '2024-02-01', 600000, 500000, null, 0);
         assert.equal(compteCourant.getValeur('2024-02-29'), (compteCourant.getValeur('2024-02-01')+compteCourant.salaireMensuel)); 
