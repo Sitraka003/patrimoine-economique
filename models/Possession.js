@@ -69,8 +69,8 @@ export class Possession {
    * @param rounded {boolean} indique si on doit arrondir ou pas
    * */
   applyInterest(_date, rounded=false) {
-    if (this.valeur + this.getInterestValue(_date) >= 0) {
-      this.valeur += this.getInterestValue(_date, rounded)
+    if (this.getValeur(_date, rounded) >= 0) {
+      this.valeur = this.getValeur(_date, rounded)
     }
     else {
       this.valeur = 0;
