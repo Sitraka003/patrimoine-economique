@@ -24,4 +24,5 @@ export default class Patrimoine {
       (p) => p.libelle !== possession.libelle,
     );
   }
+ }
 }

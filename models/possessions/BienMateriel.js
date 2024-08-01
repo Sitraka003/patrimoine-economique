@@ -7,5 +7,6 @@ export default class BienMateriel extends Possession {
 
   getValeur(date) {
     return super.getValeur(date);
+    super.getValeur(date);
   }
 }

@@ -26,7 +26,6 @@ export default class Possession {
     const tauxMois = (differenceDate.month * this.tauxAmortissement) / 12;
     const tauxJour = (differenceDate.day * this.tauxAmortissement) / 365;
     const tauxFinal = tauxAnnee + tauxMois + tauxJour;
-
     const valeurFinal = Math.round(this.valeur - (this.valeur * tauxFinal) / 100);
     return valeurFinal;
   }
