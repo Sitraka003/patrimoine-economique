@@ -1,4 +1,3 @@
-// Argent.js
 import TYPES from "../../constante.js";
 import Possession from "./Possession.js";
 
