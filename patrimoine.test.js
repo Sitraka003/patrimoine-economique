@@ -3,10 +3,10 @@ import { describe, it } from "mocha";
 import TYPES from './constante.js';
 import Patrimoine from './models/Patrimoine.js';
 import Personne from './models/Personne.js';
-import Possession from './models/Possession.js';
 import Argent from './models/possessions/Argent.js';
 import BienMateriel from './models/possessions/BienMateriel.js';
 import Flux from './models/possessions/Flux.js';
+import Possession from './models/possessions/Possession.js';
 
 describe('Patrimoine', () => {
     it('should calculate the total value of possessions', () => {
@@ -51,7 +51,7 @@ describe('Argent', () => {
         expect(argent.getValeur(date)).to.equal(10000);
     });
 
-    it('should throw an error for invalid type', () => {
-        expect(() => new Argent('John Doe', 'Invalid', 10000, new Date('2020-01-01'), new Date('2025-01-01'), 0, 'InvalidType')).to.throw("Type d'argent invalide");
+    it('should throw an error for invalid type', function () {
+        expect(() => new Argent('possesseur', 'libelle', 100, new Date(), new Date(), 0.1, 'invalidType')).to.throw("Type d'argent invalide");
     });
 });
