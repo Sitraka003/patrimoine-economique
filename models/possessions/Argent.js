@@ -1,4 +1,4 @@
-import TYPES from "./Constant.js";
+import TYPES from "../../constante.js";
 import Possession from "./Possession.js";
 
 export default class Argent extends Possession {
