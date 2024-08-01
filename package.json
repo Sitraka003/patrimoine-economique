@@ -4,14 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha '**/*.test.js' --watch"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "keywords": [],
-  "description": "",
-  "dependencies": {
-    "chai": "^5.1.1",
-    "mocha": "^10.7.0"
-  }
+  "license": "ISC"
 }
