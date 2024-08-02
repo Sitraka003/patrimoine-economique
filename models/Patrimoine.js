@@ -17,11 +17,13 @@ export default class Patrimoine {
       );
     } else {
       this.possessions.push(possession);
+      return "Possession ajouter";
     }
   }
   removePossession(possession) {
     this.possessions = this.possessions.filter(
       (p) => p.libelle !== possession.libelle,
     );
+    return "Possession retirer";
   }
 }
