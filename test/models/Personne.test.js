@@ -10,6 +10,7 @@ describe('Personne tests', () => {
         expect(typeof john !== 'undefined').to.be.true;
     })
 
+
     it("integrité des attributs", () => {
         expect(john.nom).to.equal(johnName)
     })
