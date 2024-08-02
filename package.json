@@ -1,4 +1,10 @@
 {
+<<<<<<< HEAD
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.0"
+  }
+=======
   "name": "patrimoine",
   "version": "1.0.0",
   "description": "",
@@ -9,4 +15,5 @@
   },
   "author": "",
   "license": "ISC"
+>>>>>>> 3314e7e6b3ace2f181661346cce218b2001b6479
 }
