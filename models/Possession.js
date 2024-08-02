@@ -84,6 +84,7 @@ export class Possession {
    * */
   updateValeur(_date, rounded=false) {
     this.applyInterest(_date, rounded)
+    this.date = new Date(_date);
   }
 }
 

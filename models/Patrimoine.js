@@ -11,7 +11,8 @@ export class Patrimoine {
     this.possesseur  = possesseur;
     this.date = new Date(date);
 
-    this.possessions = possessions; // [Possession, Possession, ...]
+    this.possessions = []
+    this.possessions = [...this.possessions, possessions]; // [Possession, Possession, ...]
   }
 
   /**
