@@ -13,6 +13,9 @@ export default class Flux extends Possession {
     // this.destination = destination; // Compte
     this.dateDebut = dateDebut;
     this.dateFin = dateFin;
+    this.possesseur = possesseur;
+    this.libelle = libelle;
+    this.tauxAmortissement = tauxAmortissement;
   }
 
   getValeur(date) {

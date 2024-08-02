@@ -19,6 +19,6 @@ export default class Argent extends Possession {
     if (date >= this.dateDebut && date <= this.dateFin) {
       return this.valeur;
     }
-    return 0;
+    return 0; 
   }
 }
