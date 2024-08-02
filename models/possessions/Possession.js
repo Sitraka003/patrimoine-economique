@@ -1,4 +1,5 @@
 export default class Possession {
+
   constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
     this.possesseur = possesseur;
     this.libelle = libelle;
@@ -13,7 +14,8 @@ export default class Possession {
   }
 
   getValeurApresAmortissement(dateActuelle) {
-    if (dateActuelle < this.dateDebut || dateActuelle > this.dateFin) {
+    if (dateActuelle < this.dateDebut || this.dateFin ? dateActuelle > this.dateFin : false) {
+      console.log(this.dateDebut);
       return 0;
     }
     const differenceDate = {
@@ -29,5 +31,21 @@ export default class Possession {
   
     const valeurFinal = Math.round(this.valeur - (this.valeur * tauxFinal) / 100);
     return valeurFinal;
+  }
+
+  getPossesseur(){
+    return this.possesseur;
+  }
+
+  getDateAchat(){
+    return this.dateDebut;
+  }
+
+  setAmortissement(taux){
+    this.tauxAmortissement = taux;
+  }
+
+  getTauxAmortissement(){
+    return this.tauxAmortissement;
   }
 }
