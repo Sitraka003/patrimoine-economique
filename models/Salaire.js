@@ -1,4 +1,4 @@
-class Salaire {
+export class Salaire {
     constructor(montant, periode) {
         this.montant = montant; // montant du salaire
         this.periode = periode; // période de paiement (mensuel, annuel, etc.)

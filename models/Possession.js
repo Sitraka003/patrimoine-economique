@@ -1,4 +1,4 @@
-class Possession {
+export class Possession {
   constructor(possesseur, type, libelle) {
     this.possesseur = possesseur;
     this.type = type;
@@ -6,7 +6,7 @@ class Possession {
   }
 
   calculerAmortissement(periode) {
-    const tauxAmortissement = 0.1; // taux d'amortissement (10% par an)
+    const tauxAmortissement = 0.1;
     const amortissement = this.prix * tauxAmortissement * periode;
     return amortissement;
   }
