@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from "mocha";
-import TYPES from './constante.js';
-import Patrimoine from './models/Patrimoine.js';
-import Personne from './models/Personne.js';
-import Argent from './models/possessions/Argent.js';
-import BienMateriel from './models/possessions/BienMateriel.js';
-import Flux from './models/possessions/Flux.js';
-import Possession from './models/possessions/Possession.js';
+import TYPES from '../constante.js';
+import Patrimoine from '../models/Patrimoine.js';
+import Personne from '../models/Personne.js';
+import Argent from '../models/possessions/Argent.js';
+import BienMateriel from '../models/possessions/BienMateriel.js';
+import Flux from '../models/possessions/Flux.js';
+import Possession from '../models/possessions/Possession.js';
 
 describe('Patrimoine', () => {
     it('should calculate the total value of possessions', () => {
