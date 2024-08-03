@@ -21,6 +21,8 @@ export default class Flux extends Possession {
       mois: date.getMonth() - this.dateDebut.getMonth(),
     };
 
+    console.log(differenceDate);
+
     // calcul montant total
     let valeurTotal = 0;
     if (differenceDate.annee > 0 || differenceDate.mois > 0) {
