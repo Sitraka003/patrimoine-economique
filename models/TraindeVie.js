@@ -1,4 +1,4 @@
-import Possession from "./Possession.js";
+import Possession from "./possesions/Possession.js";
 class TrainDeVie extends Possession {
     constructor(possesseur, libelle, coutMensuel) {
         super(possesseur, "train_de_vie", libelle);
