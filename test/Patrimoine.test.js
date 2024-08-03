@@ -17,7 +17,7 @@ describe('Patrimoine', () => {
   it('should calculate total value correctly', () => {
     const patrimoine = new Patrimoine(possesseur, possessions);
     const date = new Date('2026-01-01');
-    const expectedValue = 260000; // 16000 (voiture) + 244000 (maison)
+    const expectedValue = 260000; 
     expect(patrimoine.getValeur(date)).to.equal(expectedValue);
   });
 
