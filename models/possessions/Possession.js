@@ -1,3 +1,10 @@
+// La classe Possession est une classe de base pour toutes les possessions.
+// constructor(...) : initialise les propriétés de la possession.
+// getValeur(date) : retourne la valeur après amortissement à une date donnée.
+// getValeurApresAmortissement(dateActuelle) : calcule la valeur après amortissement en fonction de la date actuelle.
+
+
+
 export default class Possession {
   constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
     this.possesseur = possesseur;

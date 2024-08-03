@@ -1,0 +1,215 @@
+
+patrimoine.js
+Ce fichier définit une classe Patrimoine, qui représente le patrimoine d'une personne.
+
+export default class Patrimoine {
+  constructor(possesseur, possessions) {
+    this.possesseur = possesseur;
+    this.possessions = [...possessions]; // [Possession, Possession, ...]
+  }
+
+  getValeur(date) {
+    let result = 0;
+    for (const item of this.possessions) {
+      result += item.getValeur(date);
+    }
+    return result;
+  }
+
+  addPossession(possession) {
+    if (possession.possesseur != this.possesseur) {
+      console.log(
+        `${possession.libelle} n'appartient pas à ${this.possesseur}`,
+      );
+    } else {
+      this.possessions.push(possession);
+    }
+  }
+
+  removePossession(possession) {
+    this.possessions = this.possessions.filter(
+      (p) => p.libelle !== possession.libelle,
+    );
+  }
+}
+
+
+Constructeur (constructor):
+
+Initialise un Patrimoine avec un possesseur (le propriétaire du patrimoine) et une liste de possessions (des objets qui appartiennent au propriétaire).
+getValeur(date):
+
+Calcule la valeur totale du patrimoine à une date donnée en additionnant les valeurs de toutes les possessions à cette date.
+addPossession(possession):
+
+Ajoute une nouvelle possession au patrimoine si elle appartient au possesseur. Sinon, affiche un message d'erreur.
+removePossession(possession):
+
+Supprime une possession du patrimoine en utilisant le libelle (nom) de la possession pour l'identifier.
+
+
+
+personne.js
+Ce fichier définit une classe Personne, qui représente une personne.
+export default class Personne {
+  constructor(nom) {
+    this.nom = nom;
+  }
+}
+
+Constructeur (constructor):
+Initialise une Personne avec un nom.
+
+
+
+possessions/argent.js
+Ce fichier définit une classe Argent, qui hérite de la classe Possession.
+import Possession from "./Possession.js";
+import { TYPES } from "../../constante.js";
+
+export default class Argent extends Possession {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement, type) {
+    super(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement);
+    try {
+      if (!TYPES.values().includes(type)) {
+        throw new Error("Type d'argent invalide");
+      }
+      this.type = type;
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
+
+  getValeur(date) {
+    if (date >= this.dateDebut && date <= this.dateFin) {
+      return this.valeur;
+    }
+    return 0;
+  }
+}
+
+
+Constructeur (constructor):
+Initialise une possession de type Argent avec un type (par exemple, Courant, Épargne, Espèce) et vérifie que le type est valide. S'il est invalide, affiche une erreur.
+getValeur(date):
+
+Retourne la valeur de l'argent à une date donnée si cette date est comprise entre dateDebut et dateFin. Sinon, retourne 0.
+possessions/bienMateriel.js
+Ce fichier définit une classe BienMateriel, qui hérite de la classe Possession.
+
+javascript
+Copier le code
+import Possession from "./Possession.js";
+
+export default class BienMateriel extends Possession {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
+    super(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement);
+  }
+
+  getValeur(date) {
+    return super.getValeur(date);
+  }
+}
+Constructeur (constructor):
+
+Initialise une possession de type BienMateriel.
+getValeur(date):
+
+Retourne la valeur du bien matériel en appelant la méthode getValeur de la classe parente Possession.
+possessions/flux.js
+Ce fichier définit une classe Flux, qui hérite de la classe Possession.
+
+javascript
+Copier le code
+import Possession from "./Possession.js";
+
+export default class Flux extends Possession {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement, jour) {
+    this.valeur = valeur;
+    this.jour = jour;
+    this.dateDebut = dateDebut;
+    this.dateFin = dateFin;
+  }
+
+  getValeur(date) {
+    const differenceDate = {
+      annee: date.getFullYear() - this.dateDebut.getFullYear(),
+      mois: date.getMonth() - this.dateDebut.getMonth(),
+    };
+
+    let valeurTotal = 0;
+    if (differenceDate.annee > 0 || differenceDate.mois > 0) {
+      valeurTotal = this.valeur * differenceDate.mois + this.valeur * differenceDate.annee * 12;
+    }
+
+    return valeurTotal;
+  }
+}
+Constructeur (constructor):
+
+Initialise une possession de type Flux avec une valeur, un jour de versement, une date de début et une date de fin.
+getValeur(date):
+
+Calcule et retourne la valeur totale du flux en fonction de la différence de date entre dateDebut et la date donnée.
+possessions/possession.js
+Ce fichier définit une classe Possession, dont les autres types de possessions héritent.
+
+javascript
+Copier le code
+export default class Possession {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
+    this.possesseur = possesseur;
+    this.libelle = libelle;
+    this.valeur = valeur;
+    this.dateDebut = dateDebut;
+    this.dateFin = dateFin;
+    this.tauxAmortissement = tauxAmortissement;
+  }
+
+  getValeur(date) {
+    return this.getValeurApresAmortissement(date);
+  }
+
+  getValeurApresAmortissement(dateActuelle) {
+    if (dateActuelle < this.dateDebut || dateActuelle > this.dateFin) {
+      return 0;
+    }
+    const differenceDate = {
+      year: dateActuelle.getFullYear() - this.dateDebut.getFullYear(),
+      month: dateActuelle.getMonth() - this.dateDebut.getMonth(),
+      day: dateActuelle.getDate() - this.dateDebut.getDate(),
+    };
+
+    const tauxAnnee = differenceDate.year * this.tauxAmortissement;
+    const tauxMois = (differenceDate.month * this.tauxAmortissement) / 12;
+    const tauxJour = (differenceDate.day * this.tauxAmortissement) / 365;
+    const tauxFinal = tauxAnnee + tauxMois + tauxJour;
+
+    const valeurFinal = Math.round(this.valeur - (this.valeur * tauxFinal) / 100);
+    return valeurFinal;
+  }
+}
+Constructeur (constructor):
+
+Initialise une Possession avec un possesseur, un libelle, une valeur, une dateDebut, une dateFin, et un tauxAmortissement.
+getValeur(date):
+
+Retourne la valeur de la possession après amortissement à une date donnée.
+getValeurApresAmortissement(dateActuelle):
+
+Calcule la valeur de la possession après amortissement en fonction de la date actuelle. Utilise la différence de date pour calculer le taux d'amortissement et ajuste la valeur de la possession en conséquence.
+constante.js
+Ce fichier définit des types d'argent.
+
+javascript
+Copier le code
+const TYPE_ARGENT = {
+  Courant: "Courant",
+  Epargne: "Epargne",
+  Espece: "Espece"
+};
+export default TYPE_ARGENT;
+TYPE_ARGENT:
+Définit trois types d'argent : Courant, Épargne, et Espèce.
+Ce projet représente un système de gestion de patrimoine où des personnes peuvent posséder différents types de possessions (argent, biens matériels, flux). Chaque possession a une valeur qui peut changer avec le temps en fonction de l'amortissement ou d'autres facteurs. Le patrimoine d'une personne est la somme des valeurs de toutes ses possessions.

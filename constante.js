@@ -3,4 +3,5 @@ const TYPE_ARGENT = {
   Epargne: "Epargne",
   Espece: "Espece"
 };
-export default TYPE_ARGENT;
+
+export { TYPE_ARGENT };
