@@ -35,13 +35,14 @@
 // export default App
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
+import data from '../../../data/data.json'
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello, world!</h1>
-      <Button variant="primary">Primary Button</Button>
+      <h1>Hello, {data.nom} </h1>
+      {/* <Button variant="primary">Primary Button</Button> */}
     </div>
   );
 }
