@@ -46,16 +46,6 @@
         },
         {
             "possesseur": "Ilo",
-            "libelle": "salaire",
-            "valeur": 0,
-            "dateDebut": "2023-12-31T21:00:00.000Z",
-            "dateFin": null,
-            "tauxAmortissement": null,
-            "jour": 2,
-            "valeurConstante": 200000
-        },
-        {
-            "possesseur": "Ilo",
             "libelle": "train de vie",
             "valeur": 0,
             "dateDebut": "2024-05-12T21:00:00.000Z",
@@ -63,6 +53,16 @@
             "tauxAmortissement": null,
             "jour": 14,
             "valeurConstante": -500000
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "salaire",
+            "valeur": 0,
+            "dateDebut": "2023-12-31T21:00:00.000Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "jour": 2,
+            "valeurConstante": 200000
         }
     ]
 }
