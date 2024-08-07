@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import data from './data.json';
+
+function MyTable() {
+  return (
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Libelle</th>
+          <th>Valeur intiale (Ariary)</th>
+          <th>Date de début</th>
+          <th>Date de fin</th>
+          <th>Amortissement</th>
+          <th>Valeur actuelle (Ariary)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => (
+          <tr key={index}>
+            <td>{item.Libelle}</td>
+            <td>{item.ValeurInitiale}</td>
+            <td>{item.DateDeDebut}</td>
+            <td>{item.DateDeFin}</td>
+            <td>{item.Amortissement}</td>
+            <td>{item.ValeurActuelle}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedDate, setSelectedDate] = useState(null);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Patrimoine économique</h1>
+      <MyTable />
+      <div className='dateSelection'>
+        <div className='ms-1'>
+          <label htmlFor="selectDate">Sélectionner une date :</label>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="yyyy/MM/dd"
+            placeholderText="Select a date"
+          />
+          <Button variant="primary" onClick={() => console.log(selectedDate)}>Valider</Button>{' '}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className='calcResult'>
+        <p>Patrimoine du possesseur :</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

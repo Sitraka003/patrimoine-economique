@@ -1,0 +1,20 @@
+[
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Ordinateur Dell",
+        "ValeurInitiale": 2000000,
+        "DateDeDebut": "2024-01-02",
+        "DateDeFin": "2026-01-02",
+        "Amortissement": 0.3,
+        "ValeurActuel" : 1000000
+    },
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Smartphone Samsung",
+        "ValeurInitiale": 1000000,
+        "DateDeDebut": "2024-01-02",
+        "DateDeFin": "2026-01-02",
+        "Amortissement": 0.2,
+        "ValeurActuel" : 800000
+    }
+]
