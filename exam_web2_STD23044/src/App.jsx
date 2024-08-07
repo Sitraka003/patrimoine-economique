@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import data from './data.json';
+import Patrimoine from '../../models/Patrimoine.js';
+import Possession from '../../models/possessions/Possession.js';
 
 function MyTable() {
   return (
@@ -12,11 +14,10 @@ function MyTable() {
       <thead>
         <tr>
           <th>Libelle</th>
-          <th>Valeur intiale (Ariary)</th>
+          <th>Valeur initiale (Ariary)</th>
           <th>Date de début</th>
           <th>Date de fin</th>
           <th>Amortissement</th>
-          <th>Valeur actuelle (Ariary)</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +28,6 @@ function MyTable() {
             <td>{item.DateDeDebut}</td>
             <td>{item.DateDeFin}</td>
             <td>{item.Amortissement}</td>
-            <td>{item.ValeurActuelle}</td>
           </tr>
         ))}
       </tbody>
@@ -37,10 +37,34 @@ function MyTable() {
 
 function App() {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [patrimoineValue, setPatrimoineValue] = useState(0);
+
+  const calculatePatrimoineValue = () => {
+    if (selectedDate) {
+      const possessions = data.map(item => new Possession(
+        item.Possesseur,
+        item.Libelle,
+        item.ValeurInitiale,
+        new Date(item.DateDeDebut),
+        new Date(item.DateDeFin),
+        item.Amortissement
+      ));
+
+      const patrimoine = new Patrimoine("Fanantenana Ny Aina", possessions);
+      const patVlaue = patrimoine.getValeur(selectedDate);
+      setPatrimoineValue(patVlaue);
+    }
+  };
 
   return (
     <>
-      <h1>Patrimoine économique</h1>
+      <div className='container'>
+        <div className='row justify-content-center'>
+          <div className='col-md-6'>
+            <h1 className='text-center bordered-title'>Patrimoine économique</h1>
+          </div>
+        </div>
+      </div>
       <MyTable />
       <div className='dateSelection'>
         <div className='ms-1'>
@@ -51,11 +75,11 @@ function App() {
             dateFormat="yyyy/MM/dd"
             placeholderText="Select a date"
           />
-          <Button variant="primary" onClick={() => console.log(selectedDate)}>Valider</Button>{' '}
+          <Button variant="primary" onClick={calculatePatrimoineValue}>Valider</Button>{' '}
         </div>
       </div>
       <div className='calcResult'>
-        <p>Patrimoine du possesseur :</p>
+        <p className='text-bold'>Patrimoine du possesseur : {patrimoineValue.toFixed(2)} Ariary</p>
       </div>
     </>
   );

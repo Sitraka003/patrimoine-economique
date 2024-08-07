@@ -5,8 +5,7 @@
         "ValeurInitiale": 2000000,
         "DateDeDebut": "2024-01-02",
         "DateDeFin": "2026-01-02",
-        "Amortissement": 0.3,
-        "ValeurActuel" : 1000000
+        "Amortissement": 0.3
     },
     {
         "Posseseur": "Fanantenana Ny Aina",
@@ -14,7 +13,6 @@
         "ValeurInitiale": 1000000,
         "DateDeDebut": "2024-01-02",
         "DateDeFin": "2026-01-02",
-        "Amortissement": 0.2,
-        "ValeurActuel" : 800000
+        "Amortissement": 0.2
     }
 ]
