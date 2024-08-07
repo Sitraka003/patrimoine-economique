@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import data from './data.json';
 import Patrimoine from '../../models/Patrimoine.js';
 import Possession from '../../models/possessions/Possession.js';
+import './App.css'
 
 function MyTable() {
   return (
@@ -79,7 +80,7 @@ function App() {
         </div>
       </div>
       <div className='calcResult'>
-        <p className='text-bold'>Patrimoine du possesseur : {patrimoineValue.toFixed(2)} Ariary</p>
+        <p>Patrimoine du possesseur : {patrimoineValue.toFixed(2)} Ariary</p>
       </div>
     </>
   );
