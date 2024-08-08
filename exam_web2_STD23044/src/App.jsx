@@ -10,27 +10,47 @@ import Possession from '../../models/possessions/Possession.js';
 import './App.css'
 
 function MyTable() {
+  const today = new Date(Date.now());
+
   return (
     <Table striped bordered hover>
       <thead>
         <tr>
+          <th>#</th>
           <th>Libelle</th>
           <th>Valeur initiale (Ariary)</th>
           <th>Date de début</th>
           <th>Date de fin</th>
           <th>Amortissement</th>
+          <th>Valeur Actuelle (Ariary)</th>
         </tr>
       </thead>
+
       <tbody>
-        {data.map((item, index) => (
-          <tr key={index}>
-            <td>{item.Libelle}</td>
-            <td>{item.ValeurInitiale}</td>
-            <td>{item.DateDeDebut}</td>
-            <td>{item.DateDeFin}</td>
-            <td>{item.Amortissement}</td>
-          </tr>
-        ))}
+        {data.map((item, index) => {
+          const possession = new Possession(
+            item.Possesseur,
+            item.Libelle,
+            item.ValeurInitiale,
+            new Date(item.DateDeDebut),
+            new Date(item.DateDeFin),
+            item.Amortissement
+          );
+
+          const valeurActuelle = possession.getValeur(today);
+
+          return (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{item.Libelle}</td>
+              <td>{item.ValeurInitiale}</td>
+              <td>{item.DateDeDebut}</td>
+              <td>{item.DateDeFin}</td>
+              <td>{item.Amortissement}</td>
+              <td>{valeurActuelle.toFixed(2)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </Table>
   );
@@ -55,6 +75,10 @@ function App() {
       const patVlaue = patrimoine.getValeur(selectedDate);
       setPatrimoineValue(patVlaue);
     }
+
+    else {
+      alert("VEUILLEZ TOUT D'ABORD SELECTIONNE UNE DATE\nMERCI")
+    }
   };
 
   return (
@@ -68,19 +92,19 @@ function App() {
       </div>
       <MyTable />
       <div className='dateSelection'>
-        <div className='ms-1'>
-          <label htmlFor="selectDate">Sélectionner une date :</label>
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            dateFormat="yyyy/MM/dd"
-            placeholderText="Select a date"
-          />
-          <Button variant="primary" onClick={calculatePatrimoineValue}>Valider</Button>{' '}
-        </div>
+        <label htmlFor="selectDate">Sélectionner une date :</label>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="yyyy/MM/dd"
+          placeholderText="La nouvelle date"
+        />
+      </div>
+      <div className='calcBtn'>
+        <Button variant="primary" onClick={calculatePatrimoineValue}>Calculer le patrimoine</Button>{' '}
       </div>
       <div className='calcResult'>
-        <p>Patrimoine du possesseur : {patrimoineValue.toFixed(2)} Ariary</p>
+        <p>Patrimoine du possesseur : </p><span className='text-danger'>{patrimoineValue.toFixed(2)} Ariary</span>
       </div>
     </>
   );
