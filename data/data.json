@@ -1,0 +1,68 @@
+{
+    "possesseur": "Ilo",
+    "possessions": [
+        {
+            "possesseur": "Ilo",
+            "libelle": "Argent",
+            "valeur": 400000,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "type": "Espece"
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "Argent",
+            "valeur": 200000,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "type": "Epargne"
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "Argent",
+            "valeur": -600000,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "type": "Courant"
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "Ordinateur",
+            "valeur": 2000000,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": 10
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "Effets vestimentaires",
+            "valeur": 1000000,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": 20
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "train de vie",
+            "valeur": 0,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "jour": 14,
+            "valeurConstante": -500000
+        },
+        {
+            "possesseur": "Ilo",
+            "libelle": "salaire",
+            "valeur": 0,
+            "dateDebut": "2024-08-08T05:54:19.771Z",
+            "dateFin": null,
+            "tauxAmortissement": null,
+            "jour": 8,
+            "valeurConstante": 200000
+        }
+    ]
+}
