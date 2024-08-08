@@ -6,3 +6,53 @@
     padding: 10px;
     border-radius: 5px;
 }
+
+.calcResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+
+    p {
+        margin-top: 2vh;
+        font-size: 1.2rem;
+        font-weight: 550;
+        font-style: oblique;
+        border-bottom: 2px solid black;
+    }
+
+    span {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.2rem;
+        font-weight: 550;
+    }
+}
+
+.dateSelection {
+    margin-top: 3vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    gap: 1vw;
+
+    DatePicker {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        font-style: oblique;
+        border-bottom: 2px black solid;
+        margin-left: 1vw;
+    }
+}
+
+.calcBtn {
+    margin-top: 2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
