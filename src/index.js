@@ -1,10 +1,10 @@
-import { createRoot } from 'react-dom/client';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import ShowTable from "./table";
 
-function NavigationBar() {
-  // TODO: Implémentez une véritable barre de navigation
-  return <h1>React vous dit bonjour !</h1>;
-}
-
-const domNode = document.getElementById('navigation');
-const root = createRoot(domNode);
-root.render(<NavigationBar />);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <ShowTable />
+  </React.StrictMode>
+);
