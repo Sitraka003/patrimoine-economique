@@ -1,8 +1,35 @@
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
+import axios from "axios";
 
 function ShowTable() {
+  const [patrimoine, setPatrimoine] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await axios
+        .get(
+          "https://raw.githubusercontent.com/Liantsoa1/patrimoine-economique/main/data/data.json"
+        )
+        .then(function (response) {
+          const patrimoinesData = response.data.find(
+            (item) => item.model === "Patrimoine"
+          );
+          setPatrimoine(patrimoinesData.data.possessions);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <Table striped bordered hover >
+    <Table striped bordered hover>
       <thead>
         <tr>
           <th>#</th>
@@ -15,33 +42,17 @@ function ShowTable() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Ordinateur</td>
-          <td>5000</td>
-          <td>@mdo</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-        <td>1</td>
-          <td>Ordinateur</td>
-          <td>5000</td>
-          <td>@mdo</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-        <td>1</td>
-          <td>Ordinateur</td>
-          <td>5000</td>
-          <td>@mdo</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
+        {patrimoine.map((possession, index) => (
+          <tr key={index}>
+            <td>{index}</td>
+            <td>{possession?.libelle}</td>
+            <td>{possession?.valeur}</td>
+            <td>{possession?.dateDebut}</td>
+            <td>{possession?.dateFin}</td>
+            <td>{possession?.tauxAmortissement}</td>
+            <td>{index}</td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );
