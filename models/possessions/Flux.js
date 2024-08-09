@@ -2,7 +2,7 @@
 // dateDebut = 01/01/2024
 // montant = 400_000
 // jour = 1
-import Possession from "./Possession.js";
+/*import Possession from "./Possession.js";
 export default class Flux extends Possession {
   // Si salaire => +
   // Si train de vie => -
@@ -42,5 +42,37 @@ export default class Flux extends Possession {
     const montantTotal = totalMois * this.valeurConstante;
 
     return montantTotal;
+  }
+}*/
+import Possession from "./Possession.js";
+
+export default class Flux extends Possession {
+  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement, jour) {
+    super(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement);
+    this.jour = jour;
+  }
+
+  getValeur(date) {
+    // Calculer la différence entre la date actuelle et la date de début en mois
+    const differenceDate = {
+      annee: date.getFullYear() - this.dateDebut.getFullYear(),
+      mois: date.getMonth() - this.dateDebut.getMonth(),
+    };
+
+    // Ajouter les années converties en mois
+    const totalMois = differenceDate.annee * 12 + differenceDate.mois;
+
+    // Calculer le nombre de paiements effectués
+    let nombrePaiements = 0;
+    if (date.getDate() >= this.jour) {
+      nombrePaiements = totalMois + 1; // Inclure le mois en cours si le jour est passé
+    } else {
+      nombrePaiements = totalMois; // Sinon, n'inclure que les mois passés
+    }
+
+    // Calculer le montant total
+    const valeurTotal = this.valeur * nombrePaiements;
+
+    return valeurTotal;
   }
 }
