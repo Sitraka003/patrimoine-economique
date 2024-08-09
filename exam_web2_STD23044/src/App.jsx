@@ -71,9 +71,10 @@ function App() {
         item.tauxAmortissement
       ));
 
-      const patrimoine = new Patrimoine("Fanantenana Ny Aina", possessions);
+      const patrimoine = new Patrimoine("John Doe", possessions);
       const patValue = patrimoine.getValeur(selectedDate);
       setPatrimoineValue(patValue);
+      
     } else {
       alert("VEUILLEZ TOUT D'ABORD SELECTIONNER UNE DATE\nMERCI");
     }
