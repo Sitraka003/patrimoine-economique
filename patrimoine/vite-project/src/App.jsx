@@ -52,7 +52,7 @@ function PossessionTable({ possessions }) {
             <tr key={`${item.libelle}-${index}`} className='text-center'>
               <td>{index + 1}</td>
               <td>{item.libelle}</td>
-              <td className='text-end'>{item.valeur}</td>
+              <td className='text-end'>{item.valeur.toFixed(2)}</td>
               <td>{new Date(item.dateDebut).toLocaleDateString()}</td>
               <td>{item.dateFin ? new Date(item.dateFin).toLocaleDateString() : "-"}</td>
               <td>{item.tauxAmortissement ? item.tauxAmortissement : "-"}</td>
@@ -74,16 +74,29 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/patrimoines'); // Récupère le patrimoine avec ID 1
+        const response = await fetch('http://localhost:5000/0');
+        if (!response.ok) {
+          throw new Error(`Erreur réseau : ${response.statusText}`);
+        }
         const result = await response.json();
-        setPossessions(result.possessions); // Accède à la clé "possessions" dans les données
+        console.log('Données récupérées :', result);
+    
+        // Assurez-vous que result est un objet et a la clé "possessions"
+        if (result && Array.isArray(result.possessions)) {
+          setPossessions(result.possessions);
+        } else {
+          console.error('La réponse ne contient pas de possessions valides.');
+          alert('La réponse ne contient pas de possessions valides.');
+          setPossessions([]);
+        }
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
-        alert("Une erreur est survenue lors de la récupération des données.");
+        alert(`Une erreur est survenue lors de la récupération des données : ${error.message}`);
       } finally {
         setLoading(false);
       }
     };
+    
   
     fetchData();
   }, []);
@@ -120,7 +133,7 @@ function App() {
         alert("Une erreur est survenue lors du calcul du patrimoine.");
       }
     } else {
-      alert("VEUILLEZ TOUT D'ABORD SÉLECTIONNER UNE DATE\nMERCI");
+      alert("Selectionner une date !");
     }
   };
 
@@ -130,10 +143,15 @@ function App() {
 
   return (
     <>
-      <div className='container'>
+      <div className='container p-4'>
         <div className='row justify-content-center'>
           <div className='col-md-6'>
-            <h1 className='text-center bordered-title'>Patrimoine économique</h1>
+            <h1 className='text-center 
+                          bg-secondary 
+                          text-white 
+                          p-2
+                          m-2
+                          '>Patrimoine économique</h1>
           </div>
         </div>
       </div>
@@ -144,11 +162,10 @@ function App() {
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
           dateFormat="dd/MM/yyyy"
-          placeholderText="La nouvelle date"
         />
       </div>
       <div className='calcBtn'>
-        <Button variant="primary" onClick={calculatePatrimoineValue}>Calculer le patrimoine</Button>{' '}
+        <Button variant="secondary" onClick={calculatePatrimoineValue}>Calculer le patrimoine</Button>{' '}
       </div>
       <div className='calcResult'>
         <p>Patrimoine du possesseur : </p><span className='text-danger'>{patrimoineValue.toFixed(2)} Ariary</span>
