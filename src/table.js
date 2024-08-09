@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
+import formatDate from "./formatDate";
+import actualValue from "./actualValue";
 
 function ShowTable() {
   const [patrimoine, setPatrimoine] = useState([]);
@@ -44,13 +46,13 @@ function ShowTable() {
       <tbody>
         {patrimoine.map((possession, index) => (
           <tr key={index}>
-            <td>{index}</td>
+            <td>{index + 1}</td>
             <td>{possession?.libelle}</td>
             <td>{possession?.valeur}</td>
-            <td>{possession?.dateDebut}</td>
+            <td>{formatDate(possession?.dateDebut)}</td>
             <td>{possession?.dateFin}</td>
             <td>{possession?.tauxAmortissement}</td>
-            <td>{index}</td>
+            <td>{actualValue(possession?.valeur, possession?.dateDebut, possession?.tauxAmortissement)}</td>
           </tr>
         ))}
       </tbody>
