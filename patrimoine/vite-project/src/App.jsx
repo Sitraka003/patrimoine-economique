@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import data from '../../../data/data.json';
+import './App.css';
 import Patrimoine from '../../../models/Patrimoine.js';
 import Possession from '../../../models/possessions/Possession.js';
 import Flux from "../../../models/possessions/Flux.js";
-import './App.css';
 
 function PossessionTable({ possessions }) {
-  const today = new Date(Date.now());
+  const today = new Date();
 
   return (
     <Table striped bordered hover>
@@ -69,11 +68,31 @@ function PossessionTable({ possessions }) {
 function App() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [patrimoineValue, setPatrimoineValue] = useState(0);
+  const [possessions, setPossessions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/patrimoines'); // Récupère le patrimoine avec ID 1
+        const result = await response.json();
+        setPossessions(result.possessions); // Accède à la clé "possessions" dans les données
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+        alert("Une erreur est survenue lors de la récupération des données.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  
   const calculatePatrimoineValue = () => {
     if (selectedDate) {
       try {
-        const possessions = data[1].data.possessions.map(item =>
+        const patrimoine = new Patrimoine("John Doe", possessions.map(item =>
           item.jour
             ? new Flux(
                 item.possesseur,
@@ -92,19 +111,22 @@ function App() {
                 item.dateFin ? new Date(item.dateFin) : null,
                 item.tauxAmortissement
               )
-        );
+        ));
 
-        const patrimoine = new Patrimoine("John Doe", possessions);
         const patValue = patrimoine.getValeur(selectedDate);
         setPatrimoineValue(patValue);
       } catch (error) {
-        console.error("Erreur lors du calcul du patrimoine : ", error);
+        console.error("Erreur lors du calcul du patrimoine :", error);
         alert("Une erreur est survenue lors du calcul du patrimoine.");
       }
     } else {
       alert("VEUILLEZ TOUT D'ABORD SÉLECTIONNER UNE DATE\nMERCI");
     }
   };
+
+  if (loading) {
+    return <p>Chargement des données...</p>;
+  }
 
   return (
     <>
@@ -115,7 +137,7 @@ function App() {
           </div>
         </div>
       </div>
-      <PossessionTable possessions={data[1].data.possessions} />
+      <PossessionTable possessions={possessions} />
       <div className='dateSelection'>
         <label htmlFor="selectDate">Sélectionner une date :</label>
         <DatePicker
