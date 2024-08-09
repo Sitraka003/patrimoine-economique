@@ -4,13 +4,14 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import data from './data.json';
+import data from '../../data/data.json';
 import Patrimoine from '../../models/Patrimoine.js';
 import Possession from '../../models/possessions/Possession.js';
-import './App.css'
+import './App.css';
 
 function MyTable() {
   const today = new Date(Date.now());
+  const possessions = data[1].data.possessions;
 
   return (
     <Table striped bordered hover>
@@ -25,16 +26,15 @@ function MyTable() {
           <th>Valeur Actuelle (Ariary)</th>
         </tr>
       </thead>
-
       <tbody>
-        {data.map((item, index) => {
+        {possessions.map((item, index) => {
           const possession = new Possession(
-            item.Possesseur,
-            item.Libelle,
-            item.ValeurInitiale,
-            new Date(item.DateDeDebut),
-            new Date(item.DateDeFin),
-            item.Amortissement
+            item.possesseur,
+            item.libelle,
+            item.valeur,
+            new Date(item.dateDebut),
+            item.dateFin ? new Date(item.dateFin) : null,
+            item.tauxAmortissement
           );
 
           const valeurActuelle = possession.getValeur(today);
@@ -42,11 +42,11 @@ function MyTable() {
           return (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{item.Libelle}</td>
-              <td>{item.ValeurInitiale}</td>
-              <td>{item.DateDeDebut}</td>
-              <td>{item.DateDeFin}</td>
-              <td>{item.Amortissement}</td>
+              <td>{item.libelle}</td>
+              <td>{item.valeur}</td>
+              <td>{new Date(item.dateDebut).toLocaleDateString()}</td>
+              <td>{item.dateFin ? new Date(item.dateFin).toLocaleDateString() : "N/A"}</td>
+              <td>{item.tauxAmortissement || "N/A"}</td>
               <td>{valeurActuelle.toFixed(2)}</td>
             </tr>
           );
@@ -62,22 +62,20 @@ function App() {
 
   const calculatePatrimoineValue = () => {
     if (selectedDate) {
-      const possessions = data.map(item => new Possession(
-        item.Possesseur,
-        item.Libelle,
-        item.ValeurInitiale,
-        new Date(item.DateDeDebut),
-        new Date(item.DateDeFin),
-        item.Amortissement
+      const possessions = data[1].data.possessions.map(item => new Possession(
+        item.possesseur,
+        item.libelle,
+        item.valeur,
+        new Date(item.dateDebut),
+        item.dateFin ? new Date(item.dateFin) : null,
+        item.tauxAmortissement
       ));
 
       const patrimoine = new Patrimoine("Fanantenana Ny Aina", possessions);
-      const patVlaue = patrimoine.getValeur(selectedDate);
-      setPatrimoineValue(patVlaue);
-    }
-
-    else {
-      alert("VEUILLEZ TOUT D'ABORD SELECTIONNE UNE DATE\nMERCI")
+      const patValue = patrimoine.getValeur(selectedDate);
+      setPatrimoineValue(patValue);
+    } else {
+      alert("VEUILLEZ TOUT D'ABORD SELECTIONNER UNE DATE\nMERCI");
     }
   };
 
