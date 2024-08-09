@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import data from '../../data/data.json';
 import Patrimoine from '../../models/Patrimoine.js';
 import Possession from '../../models/possessions/Possession.js';
+import Flux from "../../models/possessions/Flux.js";
 import './App.css';
 
 function MyTable() {
@@ -16,7 +17,7 @@ function MyTable() {
   return (
     <Table striped bordered hover>
       <thead>
-        <tr>
+        <tr className='text-center'>
           <th>#</th>
           <th>Libelle</th>
           <th>Valeur initiale (Ariary)</th>
@@ -28,26 +29,36 @@ function MyTable() {
       </thead>
       <tbody>
         {possessions.map((item, index) => {
-          const possession = new Possession(
-            item.possesseur,
-            item.libelle,
-            item.valeur,
-            new Date(item.dateDebut),
-            item.dateFin ? new Date(item.dateFin) : null,
-            item.tauxAmortissement
-          );
+          const possession = item.jour
+            ? new Flux( // va instancié un flux si il y a un jour dans les paquets de données venant de data.json
+              item.possesseur,
+              item.libelle,
+              item.valeurConstante,
+              new Date(item.dateDebut),
+              item.dateFin ? new Date(item.dateFin) : null,
+              item.tauxAmortissement,
+              item.jour
+            )
+            : new Possession( // sinon, va instancié une possession
+              item.possesseur,
+              item.libelle,
+              item.valeur,
+              new Date(item.dateDebut),
+              item.dateFin ? new Date(item.dateFin) : null,
+              item.tauxAmortissement
+            );
 
           const valeurActuelle = possession.getValeur(today);
 
           return (
-            <tr key={index}>
+            <tr key={index} className='text-center'>
               <td>{index + 1}</td>
               <td>{item.libelle}</td>
-              <td>{item.valeur}</td>
+              <td className='text-end'>{item.valeur}</td>
               <td>{new Date(item.dateDebut).toLocaleDateString()}</td>
-              <td>{item.dateFin ? new Date(item.dateFin).toLocaleDateString() : "N/A"}</td>
-              <td>{item.tauxAmortissement || "N/A"}</td>
-              <td>{valeurActuelle.toFixed(2)}</td>
+              <td>{item.dateFin ? new Date(item.dateFin).toLocaleDateString() : "-"}</td>
+              <td>{item.tauxAmortissement ? item.tauxAmortissement : "-"}</td>
+              <td className='text-end'>{valeurActuelle.toFixed(2)}</td>
             </tr>
           );
         })}
@@ -62,19 +73,30 @@ function App() {
 
   const calculatePatrimoineValue = () => {
     if (selectedDate) {
-      const possessions = data[1].data.possessions.map(item => new Possession(
-        item.possesseur,
-        item.libelle,
-        item.valeur,
-        new Date(item.dateDebut),
-        item.dateFin ? new Date(item.dateFin) : null,
-        item.tauxAmortissement
-      ));
+      const possessions = data[1].data.possessions.map(item =>
+        item.jour ? new Flux(
+          item.possesseur,
+          item.libelle,
+          item.valeurConstante,
+          new Date(item.dateDebut),
+          item.dateFin ? new Date(item.dateFin) : null,
+          item.tauxAmortissement,
+          item.jour)
+
+          : new Possession(
+            item.possesseur,
+            item.libelle,
+            item.valeur,
+            new Date(item.dateDebut),
+            item.dateFin ? new Date(item.dateFin) : null,
+            item.tauxAmortissement
+          )
+      );
 
       const patrimoine = new Patrimoine("John Doe", possessions);
       const patValue = patrimoine.getValeur(selectedDate);
       setPatrimoineValue(patValue);
-      
+
     } else {
       alert("VEUILLEZ TOUT D'ABORD SELECTIONNER UNE DATE\nMERCI");
     }
@@ -95,7 +117,7 @@ function App() {
         <DatePicker
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
-          dateFormat="yyyy/MM/dd"
+          dateFormat="dd/MM/yyyy"
           placeholderText="La nouvelle date"
         />
       </div>
