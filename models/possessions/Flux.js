@@ -19,10 +19,10 @@ export default class Flux extends Possession {
 
 
   getValeur(date) {
-    //Pour que ca retourne 0 à une date inferieur à la date de debut
+    //Pour que ca retourne 0 à une date anterieur à la date de debut
     // => Dans mon cas ca retourne toujours -200.000 Ar à n'importe quel date < dateDeDebut 
     if (date < this.dateDebut) {
-      return 0; // Le flux n'existe pas encore, donc valeur nulle
+      return 0; // Le flux n'existe pas encore => valeur nulle
     }
 
     const nombreDeMois = (debut, dateEvaluation, jourJ) => {
