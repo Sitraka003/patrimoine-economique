@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import getData from './main';
+import getData from '../../data/main';
 import Possession from '../../models/possessions/Possession';
 import Patrimoine from '../../models/Patrimoine';
 
