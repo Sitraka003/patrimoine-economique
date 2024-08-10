@@ -10,10 +10,9 @@ import "./App.css";
 const App = () => {
   const [selectedPerson, setSelectedPerson] = useState("");
   const [patrimoine, setPatrimoine] = useState(null);
-  const [patrimoineTotal, setPatrimoineTotal] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [error, setError] = useState("");
-  const [valeursActuelles, setValeursActuelles] = useState([]);
+  const [patrimoineTotal, setPatrimoineTotal] = useState(null);
 
   useEffect(() => {
     const person = data.find((p) => p.nom === selectedPerson);
@@ -43,7 +42,7 @@ const App = () => {
             return new Flux(
               person.nom,
               possession.libelle,
-              possession.valeur,
+              possession.valeurConstante,
               new Date(possession.dateDebut),
               possession.dateFin ? new Date(possession.dateFin) : null,
               possession.tauxAmortissement,
@@ -54,8 +53,7 @@ const App = () => {
         }
       });
       setPatrimoine(new Patrimoine(person.nom, possessionsInstances));
-      setPatrimoineTotal(null);
-      setValeursActuelles([]); // Réinitialiser la liste des valeurs actuelles
+      setPatrimoineTotal(null); // Réinitialiser la somme du patrimoine total
     }
   }, [selectedPerson]);
 
@@ -68,25 +66,32 @@ const App = () => {
     setError("");
   };
 
+  const calculerValeurActuelle = (possession, date) => {
+    let valeurActuelle = possession.getValeurApresAmortissement(new Date(date));
+    if (possession.valeur === 0 && possession.valeurConstante) {
+      const dateDebut = new Date(possession.dateDebut);
+      const moisDiff =
+        (new Date(date).getFullYear() - dateDebut.getFullYear()) * 12 +
+        (new Date(date).getMonth() - dateDebut.getMonth());
+      if (moisDiff >= 1) {
+        valeurActuelle += moisDiff * possession.valeurConstante;
+      }
+    }
+    return valeurActuelle;
+  };
+
   const handleValider = () => {
     if (!selectedDate) {
       setError("Veuillez sélectionner une date avant de valider.");
       return;
     }
 
-    const selected = new Date(selectedDate);
-    if (patrimoine) {
-      const valeurs = patrimoine.possessions.map((possession) => ({
-        libelle: possession.libelle,
-        valeurActuelle: possession.getValeurApresAmortissement(selected),
-      }));
+    const valeurs = patrimoine.possessions.map((possession) =>
+      calculerValeurActuelle(possession, selectedDate)
+    );
 
-      // Somme totale des valeurs actuelles
-      const total = valeurs.reduce((acc, curr) => acc + curr.valeurActuelle, 0);
-
-      setPatrimoineTotal(total);
-      setValeursActuelles(valeurs);
-    }
+    const total = valeurs.reduce((acc, curr) => acc + curr, 0);
+    setPatrimoineTotal(total);
   };
 
   return (
@@ -130,19 +135,26 @@ const App = () => {
               {patrimoine.possessions.map((possession, index) => (
                 <tr key={index}>
                   <td>{possession.libelle}</td>
-                  <td>{`${possession.valeur} fmg`}</td>
+                  <td>{`${
+                    possession.valeur || possession.valeurConstante
+                  } Ar`}</td>
                   <td>{possession.dateDebut.toISOString().split("T")[0]}</td>
                   <td>
                     {possession.dateFin
                       ? possession.dateFin.toLocaleDateString()
-                      : "Non definie"}
+                      : "Non définie"}
                   </td>
-                  <td>{possession.tauxAmortissement} %</td>
+                  <td>
+                    {possession.tauxAmortissement !== null
+                      ? `${possession.tauxAmortissement} %`
+                      : "N/A"}
+                  </td>
                   <td>
                     {selectedDate
-                      ? `${possession
-                          .getValeurApresAmortissement(new Date(selectedDate))
-                          .toFixed(2)} fmg`
+                      ? `${calculerValeurActuelle(
+                          possession,
+                          selectedDate
+                        ).toFixed(2)} Ar`
                       : "Sélectionnez une date"}
                   </td>
                 </tr>
@@ -173,7 +185,7 @@ const App = () => {
           {patrimoineTotal !== null && (
             <div>
               <h2 className="mt-4 text-success">
-                Valeur totale du patrimoine : {patrimoineTotal.toFixed(2)} fmg
+                Valeur totale du patrimoine : {patrimoineTotal.toFixed(2)} Ar
               </h2>
             </div>
           )}
