@@ -4,7 +4,6 @@ import Flux from "../models/possessions/Flux.js"
 import Personne from "../models/Personne.js"
 import  Possession  from "../models/possessions/Possession.js"
 import Argent from '../models/possessions/Argent.js'
-import Patrimoine from "../models/Patrimoine.js"
 
 const TYPE_ARGENT = {
     Courant: "Courant",
