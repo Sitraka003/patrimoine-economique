@@ -31,7 +31,7 @@ export default class Patrimoine {
    * @param possession {Possession} Possession à ajouter
    * */
   addPossession(possession) {
-    if (possession.possesseur != this.possesseur) {
+    if (possession.possesseur !== this.possesseur) {
       console.log(
         `${possession.libelle} n'appartient pas à ${this.possesseur}`,
       );

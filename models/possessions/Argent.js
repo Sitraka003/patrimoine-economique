@@ -3,7 +3,7 @@ import Possession from "./Possession.js";
 /**
  * Type d'Argent possible
  * */
-var TYPE_ARGENT = {
+const TYPE_ARGENT = {
   Courant: "Courant",
   Epargne: "Epargne",
   Espece: "Espece"

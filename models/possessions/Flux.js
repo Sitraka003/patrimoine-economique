@@ -51,8 +51,6 @@ export default class Flux extends Possession {
 
     // Calculer le montant total sans modifier this.valeur
     const totalMois = nombreDeMois(this.dateDebut, date, this.jour);
-    const montantTotal = totalMois * this.valeurConstante;
-
-    return montantTotal;
+    return totalMois * this.valeurConstante;
   }
 }
