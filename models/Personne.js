@@ -3,3 +3,8 @@ export default class Personne {
     this.nom = nom;
   }
 }
+
+
+module.exports = Personne;
+
+
