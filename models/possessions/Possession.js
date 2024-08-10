@@ -1,4 +1,16 @@
+
+/**
+ * Class representant une Possession
+ * */
 export default class Possession {
+  /**
+   * @param possesseur {Personne} Personne possesseur de la possession
+   * @param libelle {String} Petite description de la possession
+   * @param valeur {number} Valeur de la possession
+   * @param dateDebut {Date} Date d'obtention de la possession
+   * @param dateFin {Date} Date de cloture de la possession
+   * @param tauxAmortissement {int} Taux d'ammortissement de la possession
+   * */
   constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement) {
     this.possesseur = possesseur;
     this.libelle = libelle;
@@ -8,10 +20,22 @@ export default class Possession {
     this.tauxAmortissement = tauxAmortissement;
   }
 
+  /**
+   * Retourne la valeur de la possession à la date donnée
+   *
+   * @param date {Date} Date pour le calcul de la valeur de la possession
+   * @return {number} Valeur de la possession à la date donnée
+   * */
   getValeur(date) {
     return this.getValeurApresAmortissement(date);
   }
 
+  /**
+   * Retourne la valeur de la possession à une date donné en tenant compte de son taux d'ammortissement
+   *
+   * @param dateActuelle {Date} Date d'application de l'ammortissement
+   * @return {number}
+   * */
   getValeurApresAmortissement(dateActuelle) {
     if (dateActuelle < this.dateDebut) {
       return 0;
@@ -22,9 +46,8 @@ export default class Possession {
       day: dateActuelle.getDate() - this.dateDebut.getDate(),
     };
   
-    var raison = differenceDate.year + differenceDate.month / 12 + differenceDate.day / 365;
+    const raison = differenceDate.year + differenceDate.month / 12 + differenceDate.day / 365;
 
-    const result = this.valeur - this.valeur *(raison * this.tauxAmortissement / 100);
-    return result;
+    return this.valeur - this.valeur * (raison * this.tauxAmortissement / 100);
   }
 }

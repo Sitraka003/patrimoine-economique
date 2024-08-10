@@ -93,7 +93,7 @@ describe("Test about spending evaluation", () => {
 
 describe("Test about possession increasing ration :", () => {
 
-    var Ilo = new Personne("Ilo");
+    const Ilo = new Personne("Ilo");
 
     it("should return 90_000 :", () => {
         const computer = new Possession(
