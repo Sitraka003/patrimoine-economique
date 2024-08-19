@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import data from "../../../data/data.json";
-import Argent from "../../../models/possessions/Argent.js";
-import BienMateriel from "../../../models/possessions/BienMateriel.js";
-import Flux from "../../../models/possessions/Flux.js";
-import Patrimoine from "../../../models/Patrimoine.js";
+import data from "../../data/data.json";
+import Argent from "../../models/possessions/Argent.js";
+import BienMateriel from "../../models/possessions/BienMateriel.js";
+import Flux from "../../models/possessions/Flux.js";
+import Patrimoine from "../../models/Patrimoine.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
