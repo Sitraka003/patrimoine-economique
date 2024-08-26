@@ -1,8 +1,7 @@
-class Personne {
-  constructor(nom,prenom,dateDeNaissance) {
+
+export default class Personne {
+  constructor(nom) {
     this.nom = nom;
-    this.prénom = prenom;
-    this.dateDeNaissance = dateDeNaissance;
   }
 
   showUser(user) {
