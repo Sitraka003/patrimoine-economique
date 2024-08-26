@@ -24,7 +24,11 @@ app.listen(3000, () =>{
     console.log("je teste")
 })
 
-app.post("/newValue", (async(request, reponse)=>{
-    const body = request.body
+app.post("/possesion", (async(request, reponse)=>{
+    const {libelle , valeur , dateDebut , taux } = request.body
     request.send(body)
+
+    if (!libelle || !valeur || !dateDebut || !taux) {
+        return reponse.status(400).json({ error: 'données incomplètes' });
+      }
 }))
