@@ -2,98 +2,108 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-import Possession from '../models/possessions/Possession.js';
-import Patrimoine from '../models/Patrimoine.js';
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const dataFilePath = path.join(__dirname, '..', 'data', 'data.json');
+
+//lecture de data.json
 let data;
 try {
-  data = JSON.parse(fs.readFileSync(dataFilePath, 'utf8'));
-  console.log('Data loaded successfully:', JSON.stringify(data, null, 2));
+  const fileData = fs.readFileSync(dataFilePath, 'utf8');
+  data = JSON.parse(fileData);
 } catch (error) {
-  console.error('Error loading data:', error);
+  console.error('Erreur de chargement des données:', error);
   process.exit(1);
 }
 
+//prise les données dans possessions
 const possessionsData = data.find(d => d.model === 'Patrimoine').data.possessions;
-const possessions = possessionsData.map(p => new Possession(
-  p.possesseur.nom,
-  p.libelle,
-  p.valeur,
-  new Date(p.dateDebut),
-  p.dateFin ? new Date(p.dateFin) : null,
-  p.tauxAmortissement
-));
-const patrimoine = new Patrimoine(data.find(d => d.model === 'Patrimoine').data.possesseur.nom, possessions);
 
-app.get('/', (req, res) => {
-  res.send("Welcome to John Doe's possession API");
-});
-
+// Collecter toutes les possessions
 app.get('/possession', (req, res) => {
-  console.log('GET /possession');
-  res.json(patrimoine.possessions);
+  const possessions = possessionsData.map(p => ({
+    libelle: p.libelle,
+    valeur: p.valeur,
+    dateDebut: p.dateDebut.split('T')[0],
+    dateFin: p.dateFin ? p.dateFin.split('T')[0] : null,
+    taux: p.tauxAmortissement
+  }));
+  res.json(possessions);
 });
 
+// ajoute d'une nouvelle possession
 app.post('/possession', (req, res) => {
   const { libelle, valeur, dateDebut, taux } = req.body;
-  const newPossession = new Possession(patrimoine.possesseur, libelle, valeur, new Date(dateDebut), null, taux);
-  patrimoine.addPossession(newPossession);
-  res.status(201).json(newPossession);
+  const newPossession = {
+    libelle,
+    valeur,
+    dateDebut,
+    dateFin: null,
+    tauxAmortissement: taux
+  };
+  possessionsData.push(newPossession);
+  try {
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+    res.status(201).json(newPossession);
+  } catch (error) {
+    console.error('Erreur de sauvegarde des données:', error);
+    res.status(500).send('Erreur serveur');
+  }
 });
 
+//mettre à jour une possession
 app.put('/possession/:libelle', (req, res) => {
   const { libelle } = req.params;
-  const { dateFin } = req.body;
-  const possession = patrimoine.possessions.find(p => p.libelle === libelle);
+  const { valeur, dateDebut, dateFin, taux } = req.body;
+  const possession = possessionsData.find(p => p.libelle === libelle);
+
   if (possession) {
-    possession.dateFin = new Date(dateFin);
-    res.json(possession);
+    possession.valeur = valeur;
+    possession.dateDebut = dateDebut;
+    possession.dateFin = dateFin || null;
+    possession.tauxAmortissement = taux;
+    try {
+      fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+      res.json(possession);
+    } catch (error) {
+      console.error('Erreur de sauvegarde des données:', error);
+      res.status(500).send('Erreur serveur');
+    }
   } else {
-    res.status(404).send('Possession not found');
+    res.status(404).send('Possession non trouvée');
   }
 });
 
+//clôture d'une possession
 app.post('/possession/:libelle/close', (req, res) => {
+  console.log('Clôture de possession demandée pour:', req.params.libelle);
   const { libelle } = req.params;
-  const possession = patrimoine.possessions.find(p => p.libelle === libelle);
+  const possession = possessionsData.find(p => p.libelle === libelle);
+  
   if (possession) {
-    possession.dateFin = new Date();
-    res.json(possession);
+    possession.dateFin = new Date().toISOString().split('T')[0];
+    try {
+      fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+      res.json(possession);
+    } catch (error) {
+      console.error('Erreur de sauvegarde des données:', error);
+      res.status(500).send('Erreur serveur');
+    }
   } else {
-    res.status(404).send('Possession not found');
+    console.log('Possession non trouvée:', libelle);
+    res.status(404).send('Possession non trouvée');
   }
 });
 
-app.get('/patrimoine/:date', (req, res) => {
-  const date = new Date(req.params.date);
-  const valeur = patrimoine.getValeur(date);
-  res.json({ valeur });
-});
-
-app.post('/patrimoine/range', (req, res) => {
-  const { type, dateDebut, dateFin, jour } = req.body;
-  const dateStart = new Date(dateDebut);
-  const dateEnd = new Date(dateFin);
-  let totalValeur = 0;
-  let currentDate = dateStart;
-
-  while (currentDate <= dateEnd) {
-    totalValeur += patrimoine.getValeur(currentDate);
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  res.json({ totalValeur });
-});
-
+// Démarrer le serveur
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Serveur en fonctionnement sur le port ${PORT}`);
 });
