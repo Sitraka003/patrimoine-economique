@@ -20,7 +20,7 @@
           "valeur": 4000000,
           "dateDebut": "2023-12-25",
           "dateFin": null,
-          "tauxAmortissement": "10"
+          "tauxAmortissement": "5"
         },
         {
           "possesseur": {
@@ -86,13 +86,6 @@
           "dateDebut": "2024-08-26",
           "dateFin": "2024-08-27",
           "tauxAmortissement": "4"
-        },
-        {
-          "libelle": "Mofo",
-          "valeur": "600",
-          "dateDebut": "2024-08-27",
-          "dateFin": "2024-08-27",
-          "tauxAmortissement": "1"
         }
       ]
     }

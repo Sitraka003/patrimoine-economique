@@ -23,10 +23,10 @@ try {
   process.exit(1);
 }
 
-//prise les données dans possessions
+//prise des données dans possessions
 const possessionsData = data.find(d => d.model === 'Patrimoine').data.possessions;
 
-// Collecter toutes les possessions
+// Collecte de toutes les possessions
 app.get('/possession', (req, res) => {
   const possessions = possessionsData.map(p => ({
     libelle: p.libelle,
@@ -83,22 +83,24 @@ app.put('/possession/:libelle', (req, res) => {
 
 //clôture d'une possession
 app.delete('/possession/:libelle/close', (req, res) => {
-  console.log('Clôture de possession demandée pour:', req.params.libelle);
+  console.log('Request to delete possession:', req.params.libelle);
   const { libelle } = req.params;
-  const possession = possessionsData.find(p => p.libelle === libelle);
+
+  const index = possessionsData.findIndex(p => p.libelle === libelle);
   
-  if (possession) {
-    possession.dateFin = new Date().toISOString().split('T')[0];
+  if (index !== -1) {
+    possessionsData.splice(index, 1);
+    
     try {
       fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      res.json(possession);
+      res.json({ message: 'Possession successfully deleted' });
     } catch (error) {
-      console.error('Erreur de sauvegarde des données:', error);
-      res.status(500).send('Erreur serveur');
+      console.error('Error saving data:', error);
+      res.status(500).send('Server error');
     }
   } else {
-    console.log('Possession non trouvée:', libelle);
-    res.status(404).send('Possession non trouvée');
+    console.log('Possession not found:', libelle);
+    res.status(404).send('Possession not found');
   }
 });
 
