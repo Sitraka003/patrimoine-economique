@@ -10,7 +10,7 @@ import './App.css';
 function HeroSection() {
   const location = useLocation();
   return location.pathname === '/' ? (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-white">
       <div className="text-center">
         <h1 className="display-3 font-weight-bold">Welcome to the Patrimoine App Calculator</h1>
       </div>
