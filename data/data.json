@@ -1,12 +1,21 @@
 [
-  { "model": "Personne", "data": { "nom": "John Doe" } },
+  {
+    "model": "Personne",
+    "data": {
+      "nom": "John Doe"
+    }
+  },
   {
     "model": "Patrimoine",
     "data": {
-      "possesseur": { "nom": "John Doe" },
+      "possesseur": {
+        "nom": "John Doe"
+      },
       "possessions": [
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
@@ -14,7 +23,9 @@
           "tauxAmortissement": 5
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -24,7 +35,9 @@
           "valeurConstante": 500000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -34,7 +47,9 @@
           "valeurConstante": -300000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
@@ -42,7 +57,9 @@
           "tauxAmortissement": 5
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -52,7 +69,9 @@
           "valeurConstante": 500000
         },
         {
-          "possesseur": { "nom": "John Doe" },
+          "possesseur": {
+            "nom": "John Doe"
+          },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -60,6 +79,13 @@
           "tauxAmortissement": null,
           "jour": 2,
           "valeurConstante": -300000
+        },
+        {
+          "libelle": "zavatra_vaovao",
+          "valeur": "12000",
+          "dateDebut": "2024-08-26",
+          "dateFin": "2024-08-26",
+          "tauxAmortissement": "4"
         }
       ]
     }
