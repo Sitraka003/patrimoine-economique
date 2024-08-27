@@ -31,7 +31,6 @@ export default function ListPossessionPage() {
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
-            // Retirer la possession clôturée de la liste
             setPossessions((prevPossessions) =>
               prevPossessions.filter((p) => p.libelle !== libelle)
             );

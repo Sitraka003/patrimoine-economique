@@ -9,7 +9,6 @@ export default function UpdatePossessionPage() {
   const [dateFin, setDateFin] = useState('');
   const [taux, setTaux] = useState('');
 
-  // Charger les données de possession existantes au démarrage
   useEffect(() => {
     const fetchPossessions = async () => {
       try {

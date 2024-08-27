@@ -19,9 +19,9 @@ export default function CreatePossessionPage() {
                 throw new Error('Network response was not ok');
             }
             const newPossession = await response.json();
-            alert('New possession created:', newPossession);
+            alert('Nouvelle possession créée:', newPossession);
         } catch (error) {
-            alert('Error creating possession:', error);
+            alert('Erreur dans la création de la possession:', error);
         }
     };
 
