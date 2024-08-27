@@ -18,9 +18,9 @@
           },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
-          "dateDebut": "2023-12-25T00:00:00.000Z",
+          "dateDebut": "2023-12-25",
           "dateFin": null,
-          "tauxAmortissement": 5
+          "tauxAmortissement": "10"
         },
         {
           "possesseur": {
@@ -86,6 +86,13 @@
           "dateDebut": "2024-08-26",
           "dateFin": "2024-08-27",
           "tauxAmortissement": "4"
+        },
+        {
+          "libelle": "Mofo",
+          "valeur": "600",
+          "dateDebut": "2024-08-27",
+          "dateFin": "2024-08-27",
+          "tauxAmortissement": "1"
         }
       ]
     }

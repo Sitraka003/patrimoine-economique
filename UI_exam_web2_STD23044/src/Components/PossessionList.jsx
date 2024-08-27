@@ -26,7 +26,7 @@ export default function ListPossessionPage() {
     async function handleClose(libelle) {
         try {
             const response = await fetch(`http://localhost:9000/possession/${libelle}/close`, {
-              method: 'POST',
+              method: 'DELETE',
             });
             if (!response.ok) {
               throw new Error('Network response was not ok');

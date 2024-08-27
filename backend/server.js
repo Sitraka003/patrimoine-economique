@@ -82,7 +82,7 @@ app.put('/possession/:libelle', (req, res) => {
 });
 
 //clôture d'une possession
-app.post('/possession/:libelle/close', (req, res) => {
+app.delete('/possession/:libelle/close', (req, res) => {
   console.log('Clôture de possession demandée pour:', req.params.libelle);
   const { libelle } = req.params;
   const possession = possessionsData.find(p => p.libelle === libelle);
