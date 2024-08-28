@@ -26,19 +26,42 @@ export default function ListPossessionPage() {
     async function handleClose(libelle) {
         try {
             const response = await fetch(`http://localhost:9000/possession/${libelle}/close`, {
-              method: 'DELETE',
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
             });
             if (!response.ok) {
-              throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok');
             }
+            const result = await response.json();
             setPossessions((prevPossessions) =>
-              prevPossessions.filter((p) => p.libelle !== libelle)
+                prevPossessions.map((p) =>
+                    p.libelle === libelle ? { ...p, dateFin: new Date(result.possession.dateFin).toLocaleDateString() } : p
+                )
             );
             alert('Possession clôturée');
-          } catch (error) {
+        } catch (error) {
             console.error('Erreur lors de la clôture de la possession:', error);
             alert('Erreur lors de la clôture de la possession');
-          }
+        }
+    }
+
+    async function handleDelete(libelle) {
+        try {
+            const response = await fetch(`http://localhost:9000/possession/${libelle}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            setPossessions((prevPossessions) =>
+                prevPossessions.filter(p => p.libelle !== libelle)
+            );
+            alert('Possession supprimée');
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la possession:', error);
+            alert('Erreur lors de la suppression de la possession');
+        }
     }
 
     return (
@@ -56,6 +79,7 @@ export default function ListPossessionPage() {
                         <th>Date de début</th>
                         <th>Date de fin</th>
                         <th>Taux</th>
+                        <th>Valeur Actuelle</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -67,16 +91,23 @@ export default function ListPossessionPage() {
                             <td>{possession.valeur}</td>
                             <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
                             <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : '-'}</td>
-                            <td>{possession.taux}</td>
+                            <td>{possession.taux !== null ? possession.taux : '0'}</td>
+                            <td>{possession.valeurActuelle}</td>
                             <td>
                                 <Link to={`/possession/${possession.libelle}/update`}>
-                                    <Button variant="warning">Editer</Button>
+                                    <Button variant="primary">Editer</Button>
                                 </Link>
                                 <Button
-                                    variant="danger"
+                                    variant="warning"
                                     onClick={() => handleClose(possession.libelle)}
                                 >
                                     Cloturer
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => handleDelete(possession.libelle)}
+                                >
+                                    Supprimer
                                 </Button>
                             </td>
                         </tr>
