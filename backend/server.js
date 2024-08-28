@@ -210,9 +210,13 @@ app.get("/patrimoine/:date", async (req, res) => {
 // 6. POST /patrimoine/range: Get Valeur Patrimoine Range
 app.post("/patrimoine/range", async (req, res) => {
   try {
-    const { type, dateDebut, dateFin, jour } = req.body;
+    const { type, dateDebut, dateFin } = req.body;
     const debut = new Date(dateDebut);
     const fin = new Date(dateFin);
+
+    if (isNaN(debut.getTime()) || isNaN(fin.getTime())) {
+      return res.status(400).json({ error: "Dates invalides." });
+    }
 
     const data = await readData();
     const patrimoineData = data.find((item) => item.model === "Patrimoine");
@@ -227,27 +231,47 @@ app.post("/patrimoine/range", async (req, res) => {
     );
 
     let result = [];
-
     let currentDate = new Date(debut);
+
     while (currentDate <= fin) {
-      const valeur = patrimoine.getValeur(currentDate);
+      const valeur = patrimoine.getValeur(new Date(currentDate));
       result.push({
         date: currentDate.toISOString().split("T")[0],
         valeur: valeur,
       });
 
-      if (type === "month") {
+      if (type === "mois") {
         currentDate.setMonth(currentDate.getMonth() + 1);
         currentDate.setDate(1);
-      } else if (type === "year") {
+      } else if (type === "année") {
         currentDate.setFullYear(currentDate.getFullYear() + 1);
         currentDate.setMonth(0);
         currentDate.setDate(1);
+      } else {
+        currentDate.setDate(currentDate.getDate() + 1);
       }
+    }
+
+    if (type === "mois") {
+      result = result.filter(
+        (entry, index, self) =>
+          index ===
+          self.findIndex((e) => e.date.slice(0, 7) === entry.date.slice(0, 7))
+      );
+    } else if (type === "année") {
+      result = result.filter(
+        (entry, index, self) =>
+          index ===
+          self.findIndex((e) => e.date.slice(0, 4) === entry.date.slice(0, 4))
+      );
     }
 
     res.json({ valeur: result });
   } catch (error) {
+    console.error(
+      "Erreur lors de la récupération de la valeur du patrimoine :",
+      error
+    );
     res.status(500).json({
       error: "Erreur lors de la récupération de la valeur du patrimoine.",
     });

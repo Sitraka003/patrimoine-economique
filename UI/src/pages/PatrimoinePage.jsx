@@ -8,7 +8,7 @@ const PatrimoinePage = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
-  const [jour, setJour] = useState(1);
+  const [timeUnit, setTimeUnit] = useState("jour");
   const [specificDate, setSpecificDate] = useState(new Date());
   const [patrimoineValeur, setPatrimoineValeur] = useState(null);
 
@@ -18,10 +18,9 @@ const PatrimoinePage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "year",
+          type: timeUnit,
           dateDebut: startDate.toISOString().split("T")[0],
           dateFin: endDate.toISOString().split("T")[0],
-          jour: jour,
         }),
       });
       const data = await response.json();
@@ -67,18 +66,16 @@ const PatrimoinePage = () => {
           />
         </Col>
         <Col>
-          <Form.Group controlId="jourSelect">
-            <Form.Label>Jour</Form.Label>
+          <Form.Group controlId="timeUnitSelect">
+            <Form.Label>Unité de temps</Form.Label>
             <Form.Control
               as="select"
-              value={jour}
-              onChange={(e) => setJour(parseInt(e.target.value))}
+              value={timeUnit}
+              onChange={(e) => setTimeUnit(e.target.value)}
             >
-              {[...Array(31).keys()].map((n) => (
-                <option key={n + 1} value={n + 1}>
-                  {n + 1}
-                </option>
-              ))}
+              <option value="jour">Jour</option>
+              <option value="mois">Mois</option>
+              <option value="année">Année</option>
             </Form.Control>
           </Form.Group>
         </Col>

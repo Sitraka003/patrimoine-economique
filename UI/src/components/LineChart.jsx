@@ -28,6 +28,7 @@ const LineChart = ({ data }) => {
         data: data.map((d) => d.valeur),
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
+        fill: true,
       },
     ],
   };
@@ -35,7 +36,7 @@ const LineChart = ({ data }) => {
   const options = {
     plugins: {
       legend: {
-        display: false,
+        display: true,
       },
       tooltip: {
         callbacks: {

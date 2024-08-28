@@ -19,7 +19,7 @@
           "libelle": "Nouveau MacBook",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": "2024-12-31T00:00:00.000Z",
+          "dateFin": "2024-08-28T08:23:11.030Z",
           "tauxAmortissement": 5
         },
         {
@@ -29,7 +29,7 @@
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
+          "dateFin": "2024-08-28T13:15:42.205Z",
           "tauxAmortissement": null,
           "jour": 1,
           "valeurConstante": 500000
@@ -77,7 +77,7 @@
           "libelle": "Montre Rolex",
           "valeur": 1000000,
           "dateDebut": "2010-01-01T00:00:00.000Z",
-          "dateFin": "2024-08-27T12:04:43.946Z",
+          "dateFin": "2024-08-28T13:15:47.412Z",
           "tauxAmortissement": 10
         },
         {
@@ -87,7 +87,7 @@
           "libelle": "Nouvelle Pele",
           "valeur": 0,
           "dateDebut": "2010-12-31T21:00:00.000Z",
-          "dateFin": "2024-12-31T00:00:00.000Z",
+          "dateFin": "2024-08-28T08:23:15.607Z",
           "tauxAmortissement": null
         }
       ]
