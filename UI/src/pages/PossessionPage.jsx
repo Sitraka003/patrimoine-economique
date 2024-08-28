@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Table } from "react-bootstrap";
-import Possession from "../../../models/possessions/Possession"; // Assurez-vous que le chemin est correct
+import { useNavigate } from "react-router-dom"; // Importer le hook useNavigate
+import Possession from "../../../models/possessions/Possession";
 
 const PossessionPage = () => {
   const [possessions, setPossessions] = useState([]);
+  const navigate = useNavigate(); // Initialiser le hook useNavigate
 
   useEffect(() => {
     fetchPossessions();
@@ -30,7 +32,7 @@ const PossessionPage = () => {
               );
               return {
                 ...possessionData,
-                valeurActuelle: possession.getValeur(currentDate) || "N/A", // Affiche "N/A" si la valeur actuelle est vide
+                valeurActuelle: possession.getValeur(currentDate) || "-",
               };
             }
           );
@@ -43,13 +45,11 @@ const PossessionPage = () => {
   };
 
   const handleCreate = () => {
-    // TODO: Add functionality to create a new possession
-    console.log("Create button clicked");
+    navigate("/create"); // Rediriger vers la page Create
   };
 
   const handleEdit = (libelle) => {
-    // TODO: Add functionality to edit a possession
-    console.log("Edit button clicked for:", libelle);
+    navigate(`/edit/${libelle}`); // Rediriger vers la page Edit
   };
 
   const handleClose = (libelle) => {
@@ -58,7 +58,6 @@ const PossessionPage = () => {
     })
       .then((response) => {
         if (response.ok) {
-          // Re-fetch possessions to get updated data after closing a possession
           fetchPossessions();
         } else {
           console.error("Erreur lors de la fermeture de la possession.");
@@ -90,20 +89,20 @@ const PossessionPage = () => {
         <tbody>
           {possessions.map((possession) => (
             <tr key={possession.libelle}>
-              <td>{possession.libelle || "N/A"}</td>
-              <td>{possession.valeur || "N/A"}</td>
+              <td>{possession.libelle || "-"}</td>
+              <td>{possession.valeur || "-"}</td>
               <td>
                 {possession.dateDebut
                   ? new Date(possession.dateDebut).toLocaleDateString()
-                  : "N/A"}
+                  : "-"}
               </td>
               <td>
                 {possession.dateFin
                   ? new Date(possession.dateFin).toLocaleDateString()
-                  : "N/A"}
+                  : "-"}
               </td>
-              <td>{possession.tauxAmortissement || "N/A"}</td>
-              <td>{possession.valeurActuelle || "N/A"}</td>
+              <td>{possession.tauxAmortissement || "-"}</td>
+              <td>{possession.valeurActuelle || "-"}</td>
               <td>
                 <Button
                   variant="warning"

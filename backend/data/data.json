@@ -29,30 +29,6 @@
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": "2024-08-28T13:15:42.205Z",
-          "tauxAmortissement": null,
-          "jour": 1,
-          "valeurConstante": 500000
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "Survie",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 2,
-          "valeurConstante": -300000
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "Alternance",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
           "dateFin": null,
           "tauxAmortissement": null,
           "jour": 1,
@@ -64,7 +40,7 @@
           },
           "libelle": "Survie",
           "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
+          "dateDebut": "2023-12-31T21:00:00.000Z",
           "dateFin": null,
           "tauxAmortissement": null,
           "jour": 2,
@@ -77,7 +53,7 @@
           "libelle": "Montre Rolex",
           "valeur": 1000000,
           "dateDebut": "2010-01-01T00:00:00.000Z",
-          "dateFin": "2024-08-28T13:15:47.412Z",
+          "dateFin": "2019-08-28T13:15:47.412Z",
           "tauxAmortissement": 10
         },
         {
@@ -87,8 +63,18 @@
           "libelle": "Nouvelle Pele",
           "valeur": 0,
           "dateDebut": "2010-12-31T21:00:00.000Z",
-          "dateFin": "2024-08-28T08:23:15.607Z",
+          "dateFin": "2021-08-21T08:23:15.607Z",
           "tauxAmortissement": null
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Gourde ",
+          "valeur": "10000",
+          "dateDebut": "2024-08-16T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": "2"
         }
       ]
     }
