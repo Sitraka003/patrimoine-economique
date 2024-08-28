@@ -28,3 +28,7 @@ h1 {
 .alert {
   font-weight: bold;
 }
+
+.text-primary {
+  color: orange !important;;
+}
