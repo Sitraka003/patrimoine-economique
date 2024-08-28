@@ -13,9 +13,6 @@
       },
       "possessions": [
         {
-          "possesseur": {
-            "nom": "John Doe"
-          },
           "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25",
@@ -23,9 +20,6 @@
           "tauxAmortissement": "5"
         },
         {
-          "possesseur": {
-            "nom": "John Doe"
-          },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -35,9 +29,6 @@
           "valeurConstante": 500000
         },
         {
-          "possesseur": {
-            "nom": "John Doe"
-          },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
@@ -45,47 +36,6 @@
           "tauxAmortissement": null,
           "jour": 2,
           "valeurConstante": -300000
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "MacBook Pro",
-          "valeur": 4000000,
-          "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": 5
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "Alternance",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 1,
-          "valeurConstante": 500000
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "Survie",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 2,
-          "valeurConstante": -300000
-        },
-        {
-          "libelle": "zavatra_vaovao",
-          "valeur": "12000",
-          "dateDebut": "2024-08-26",
-          "dateFin": "2024-08-27",
-          "tauxAmortissement": "4"
         }
       ]
     }

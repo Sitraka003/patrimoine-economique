@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import Flux from '../models/possessions/Flux.js';
+import Possession from '../models/possessions/Possession.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,7 +15,7 @@ app.use(cors());
 
 const dataFilePath = path.join(__dirname, '..', 'data', 'data.json');
 
-//lecture de data.json
+// Lecture des données de data.json
 let data;
 try {
   const fileData = fs.readFileSync(dataFilePath, 'utf8');
@@ -23,22 +25,49 @@ try {
   process.exit(1);
 }
 
-//prise des données dans possessions
+// Prise des données dans possessions
 const possessionsData = data.find(d => d.model === 'Patrimoine').data.possessions;
 
-// Collecte de toutes les possessions
+// Collecte de toutes les possessions avec la valeur actuelle calculée
 app.get('/possession', (req, res) => {
-  const possessions = possessionsData.map(p => ({
-    libelle: p.libelle,
-    valeur: p.valeur,
-    dateDebut: p.dateDebut.split('T')[0],
-    dateFin: p.dateFin ? p.dateFin.split('T')[0] : null,
-    taux: p.tauxAmortissement
-  }));
+  const today = new Date();
+
+  const possessions = possessionsData.map(p => {
+    const possession = p.jour
+      ? new Flux(
+        p.possesseur,
+        p.libelle,
+        p.valeurConstante,
+        new Date(p.dateDebut),
+        p.dateFin ? new Date(p.dateFin) : null,
+        p.tauxAmortissement,
+        p.jour
+      )
+      : new Possession(
+        p.possesseur,
+        p.libelle,
+        p.valeur,
+        new Date(p.dateDebut),
+        p.dateFin ? new Date(p.dateFin) : null,
+        p.tauxAmortissement
+      );
+
+    const valeurActuelle = possession.getValeur(today);
+
+    return {
+      libelle: p.libelle,
+      valeur: p.valeur,
+      dateDebut: p.dateDebut.split('T')[0],
+      dateFin: p.dateFin ? p.dateFin.split('T')[0] : null,
+      taux: p.tauxAmortissement,
+      valeurActuelle: valeurActuelle.toFixed(2)
+    };
+  });
+
   res.json(possessions);
 });
 
-// ajoute d'une nouvelle possession
+// ajout d'une nouvelle possession
 app.post('/possession', (req, res) => {
   const { libelle, valeur, dateDebut, taux } = req.body;
   const newPossession = {
@@ -82,18 +111,18 @@ app.put('/possession/:libelle', (req, res) => {
 });
 
 //clôture d'une possession
-app.delete('/possession/:libelle/close', (req, res) => {
-  console.log('Request to delete possession:', req.params.libelle);
+app.patch('/possession/:libelle/close', (req, res) => {
+  console.log('Request to close possession:', req.params.libelle);
   const { libelle } = req.params;
 
-  const index = possessionsData.findIndex(p => p.libelle === libelle);
-  
-  if (index !== -1) {
-    possessionsData.splice(index, 1);
-    
+  const possession = possessionsData.find(p => p.libelle === libelle);
+
+  if (possession) {
+    possession.dateFin = new Date().toISOString().split('T')[0];
+
     try {
       fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      res.json({ message: 'Possession successfully deleted' });
+      res.json({ message: 'Possession cloture avec', possession });
     } catch (error) {
       console.error('Error saving data:', error);
       res.status(500).send('Server error');
@@ -104,7 +133,27 @@ app.delete('/possession/:libelle/close', (req, res) => {
   }
 });
 
-// Démarrer le serveur
+// supprimer une possession
+app.delete('/possession/:libelle', (req, res) => {
+  const { libelle } = req.params;
+
+  const index = possessionsData.findIndex(p => p.libelle === libelle);
+
+  if (index !== -1) {
+    possessionsData.splice(index, 1);
+
+    try {
+      fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+      res.json({ message: 'Possession supprime avec succes' });
+    } catch (error) {
+      console.error('Error saving data:', error);
+      res.status(500).send('Server error');
+    }
+  } else {
+    res.status(404).send('Possession not found');
+  }
+});
+
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
   console.log(`Serveur en fonctionnement sur le port ${PORT}`);
