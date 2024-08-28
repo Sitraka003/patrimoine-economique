@@ -14,7 +14,8 @@ function PossessionPage() {
     useEffect(() => {
         axios.get('http://localhost:3500/possession')
             .then((response) => {
-                const data = response.data;
+                const data = response.data.data;
+                console.log(data) 
                 setData(data);
                 if (data && data[1] && Array.isArray(data[1].data.possessions)) {
                     instancing(data[1].data.possessions);
@@ -81,9 +82,7 @@ function PossessionPage() {
         setArrayResult(results);
     }
 
-    function ShowList(props) {
-        const { possessions, arrayResult } = props;
-
+    function ShowList({ possessions, arrayResult }) {
         return (
             <tbody>
                 {possessions.map((possession, i) => (
