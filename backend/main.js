@@ -1,34 +1,38 @@
-import express from "express";
-import { readFile } from "../data/index.js";
+import express from 'express';
+import cors from 'cors';
+import { readFile } from '../data/index.js';
 
-const app = express()
+const app = express();
 
-app.get("/possession",(async(request, response)=>{
-    response.send(await readFile("../UI/public/data.json"))
-}))
+app.use(cors());
 
+app.get("/possession", async (request, response) => {
+  try {
+    const data = await readFile("../UI/public/data.json");
+    response.send(data);
+  } catch (error) {
+    response.status(500).send('Error reading data');
+  }
+});
 
-app.get("/patrimoine/:valeur", (async(request, response)=>{
-    const valeur = request.params.valeur
-    const data = await readFile("../UI/public/data.json")
-    const possessions =  data.data[1].data.possessions
+app.get("/patrimoine/:valeur", async (request, response) => {
+  const valeur = request.params.valeur;
+  
+    const data = await readFile("../UI/public/data.json");
+    const possessions = data.data[1].data.possessions;
 
-    const filterPossession =  ()=>{
-   return possessions.filter((valeur) => possessions.valeur <= valeur)
-   } 
-   response.send(filterPossession())
-}))
+    const filterPossession = possessions.filter((possession) => possession.valeur <= valeur);
+    response.send(filterPossession);
+});
 
+app.post("/possession", async (request, response) => {
+  const { libelle, valeur, dateDebut, taux } = request.body;
+  if (!libelle || !valeur || !dateDebut || !taux) {
+    return response.status(400).json({ error: 'Données incomplètes' });
+  }
+  response.send({ libelle, valeur, dateDebut, taux }); // Vous pouvez modifier cette ligne selon vos besoins
+});
 
-app.listen(3000, () =>{
-    console.log("je teste")
-})
-
-app.post("/possesion", (async(request, reponse)=>{
-    const {libelle , valeur , dateDebut , taux } = request.body
-    request.send(body)
-
-    if (!libelle || !valeur || !dateDebut || !taux) {
-        return reponse.status(400).json({ error: 'données incomplètes' });
-      }
-}))
+app.listen(3500, () => {
+  console.log("Mandeha");
+});
