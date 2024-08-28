@@ -30,5 +30,108 @@
         "valeurConstante": -300000
       }
     ]
+  },
+  {
+    "nom": "Toto",
+    "possessions": [
+      {
+        "type": "BienMateriel",
+        "libelle": "Patalon",
+        "valeur": "15000",
+        "dateDebut": "2024-08-22",
+        "dateFin": null,
+        "tauxAmortissement": "2",
+        "valeurConstante": null
+      },
+      {
+        "type": "Flux",
+        "libelle": "Gouter",
+        "valeur": "1000",
+        "dateDebut": "2024-08-01",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "jour": 1,
+        "valeurConstante": -2000
+      }
+    ]
+  },
+  {
+    "nom": "George",
+    "possessions": [
+      {
+        "type": "BienMateriel",
+        "libelle": "Mouchoir",
+        "valeur": "5000",
+        "dateDebut": "2024-08-25",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": null
+      }
+    ]
+  },
+  {
+    "nom": "Lolo",
+    "possessions": [
+      {
+        "type": "Flux",
+        "libelle": "Gouter",
+        "valeur": "200000",
+        "dateDebut": "2024-08-14",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": null
+      }
+    ]
+  },
+  {
+    "nom": "Perlin",
+    "possessions": [
+      {
+        "type": "Argent",
+        "libelle": "Salaire",
+        "valeur": "500000",
+        "dateDebut": "2024-08-01",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": "30000"
+      }
+    ]
+  },
+  {
+    "nom": "Grégoire ",
+    "possessions": [
+      {
+        "type": "BienMateriel",
+        "libelle": "Telephone",
+        "valeur": "400000",
+        "dateDebut": "2024-08-27",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": null
+      }
+    ]
+  },
+  {
+    "nom": "Kelin",
+    "possessions": [
+      {
+        "type": "BienMateriel",
+        "libelle": "Ecouteur",
+        "valeur": "15000",
+        "dateDebut": "2024-08-01",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": null
+      },
+      {
+        "type": "Flux",
+        "libelle": "Frais Bus",
+        "valeur": "1200",
+        "dateDebut": "2024-08-01",
+        "dateFin": null,
+        "tauxAmortissement": null,
+        "valeurConstante": null
+      }
+    ]
   }
 ]
