@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./App.css";
 
 const Possession = () => {
@@ -15,10 +16,10 @@ const Possession = () => {
     type: "",
     libelle: "",
     valeur: "",
-    dateDebut: null,
-    dateFin: null,
-    tauxAmortissement: null,
-    valeurConstante: null,
+    dateDebut: "",
+    dateFin: "",
+    tauxAmortissement: "",
+    valeurConstante: "",
   });
 
   useEffect(() => {
@@ -81,8 +82,13 @@ const Possession = () => {
       return;
     }
 
+    if (!patrimoine || !patrimoine.possessions) {
+      setError("Veuillez sélectionner une personne valide.");
+      return;
+    }
+
     const total = patrimoine.possessions.reduce((acc, possession) => {
-      return acc + Number(possession.valeur || possession.valeurConstante);
+      return acc + Number(possession.valeur || possession.valeurConstante || 0);
     }, 0);
 
     setPatrimoineTotal(total);
@@ -98,10 +104,10 @@ const Possession = () => {
       type: "",
       libelle: "",
       valeur: "",
-      dateDebut: null,
-      dateFin: null,
-      tauxAmortissement: null,
-      valeurConstante: null,
+      dateDebut: "",
+      dateFin: "",
+      tauxAmortissement: "",
+      valeurConstante: "",
     });
   };
 
@@ -133,16 +139,21 @@ const Possession = () => {
         <h3 className="text-success">Ajouter des possessions :</h3>
         <div className="form-group mb-3">
           <label htmlFor="possessionType">Type</label>
-          <input
-            type="text"
+          <select
             id="possessionType"
-            placeholder="Type"
             className="form-control mb-2"
             value={newPossession.type}
             onChange={(e) =>
               setNewPossession({ ...newPossession, type: e.target.value })
             }
-          />
+          >
+            <option value="">Sélectionner le type</option>
+            <option value="BienMateriel">Bien Matériel</option>
+            <option value="Flux">Flux</option>
+            <option value="Argent">Argent</option>
+            <option value="Possession">Possession</option>
+          </select>
+
           <label htmlFor="possessionLibelle">Libellé</label>
           <input
             type="text"
@@ -154,6 +165,7 @@ const Possession = () => {
               setNewPossession({ ...newPossession, libelle: e.target.value })
             }
           />
+
           <label htmlFor="possessionValeur">Valeur</label>
           <input
             type="number"
@@ -165,6 +177,7 @@ const Possession = () => {
               setNewPossession({ ...newPossession, valeur: e.target.value })
             }
           />
+
           <label htmlFor="possessionDateDebut">Date de début</label>
           <input
             type="date"
@@ -175,6 +188,7 @@ const Possession = () => {
               setNewPossession({ ...newPossession, dateDebut: e.target.value })
             }
           />
+
           <label htmlFor="possessionDateFin">Date de fin</label>
           <input
             type="date"
@@ -185,6 +199,7 @@ const Possession = () => {
               setNewPossession({ ...newPossession, dateFin: e.target.value })
             }
           />
+
           <label htmlFor="possessionTauxAmortissement">
             Taux d'amortissement
           </label>
@@ -201,6 +216,7 @@ const Possession = () => {
               })
             }
           />
+
           <label htmlFor="possessionValeurConstante">Valeur constante</label>
           <input
             type="number"

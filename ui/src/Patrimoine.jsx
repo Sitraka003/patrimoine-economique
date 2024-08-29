@@ -5,6 +5,8 @@ import BienMateriel from "../../models/possessions/BienMateriel.js";
 import Flux from "../../models/possessions/Flux.js";
 import Patrimoine from "../../models/Patrimoine.js";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import "./App.css";
 
 const PatrimoineApp = () => {
@@ -13,6 +15,10 @@ const PatrimoineApp = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [error, setError] = useState("");
   const [patrimoineTotal, setPatrimoineTotal] = useState(null);
+
+  // État pour la gestion des modals
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingPossession, setEditingPossession] = useState(null);
 
   useEffect(() => {
     const person = data.find((p) => p.nom === selectedPerson);
@@ -66,12 +72,6 @@ const PatrimoineApp = () => {
     setError("");
   };
 
-  const handleInputChange = (index, field, value) => {
-    const updatedPatrimoine = { ...patrimoine };
-    updatedPatrimoine.possessions[index][field] = value;
-    setPatrimoine(updatedPatrimoine);
-  };
-
   const calculerValeurActuelle = (possession, date) => {
     let valeurActuelle = possession.getValeurApresAmortissement(new Date(date));
     if (possession.valeur === 0 && possession.valeurConstante) {
@@ -98,6 +98,30 @@ const PatrimoineApp = () => {
 
     const total = valeurs.reduce((acc, curr) => acc + curr, 0);
     setPatrimoineTotal(total);
+  };
+
+  const handleEdit = (index) => {
+    setEditingIndex(index);
+    setEditingPossession({ ...patrimoine.possessions[index] });
+  };
+
+  const handleSaveEdit = () => {
+    if (editingIndex !== null && editingPossession) {
+      const updatedPossessions = patrimoine.possessions.map(
+        (possession, index) =>
+          index === editingIndex ? { ...editingPossession } : possession
+      );
+      setPatrimoine({ ...patrimoine, possessions: updatedPossessions });
+      setEditingIndex(null);
+      setEditingPossession(null);
+    }
+  };
+
+  const handleDelete = (index) => {
+    const updatedPossessions = patrimoine.possessions.filter(
+      (_, i) => i !== index
+    );
+    setPatrimoine({ ...patrimoine, possessions: updatedPossessions });
   };
 
   return (
@@ -135,94 +159,52 @@ const PatrimoineApp = () => {
                 <th>Date Fin</th>
                 <th>Taux d'Amortissement</th>
                 <th>Valeur Actuelle</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {patrimoine.possessions.map((possession, index) => (
                 <tr key={index}>
+                  <td>{possession.libelle}</td>
+                  <td>{`${
+                    possession.valeur || possession.valeurConstante
+                  } Ar`}</td>
+                  <td>{possession.dateDebut.toISOString().split("T")[0]}</td>
                   <td>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={possession.libelle}
-                      onChange={(e) =>
-                        handleInputChange(index, "libelle", e.target.value)
-                      }
-                    />
+                    {possession.dateFin
+                      ? possession.dateFin.toLocaleDateString()
+                      : "Non définie"}
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={possession.valeur || possession.valeurConstante}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          possession.valeur !== undefined
-                            ? "valeur"
-                            : "valeurConstante",
-                          parseFloat(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      className="form-control"
-                      value={possession.dateDebut.toISOString().split("T")[0]}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "dateDebut",
-                          new Date(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      className="form-control"
-                      value={
-                        possession.dateFin
-                          ? possession.dateFin.toISOString().split("T")[0]
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "dateFin",
-                          e.target.value ? new Date(e.target.value) : null
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={
-                        possession.tauxAmortissement !== null
-                          ? possession.tauxAmortissement
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "tauxAmortissement",
-                          parseFloat(e.target.value)
-                        )
-                      }
-                    />
+                    {possession.tauxAmortissement !== null
+                      ? `${possession.tauxAmortissement} %`
+                      : "N/A"}
                   </td>
                   <td>
                     {selectedDate
-                      ? calculerValeurActuelle(
+                      ? `${calculerValeurActuelle(
                           possession,
                           selectedDate
-                        ).toFixed(2) + " Ar"
+                        ).toFixed(2)} Ar`
                       : "Sélectionnez une date"}
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-warning me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editModal"
+                      onClick={() => handleEdit(index)}
+                    >
+                      <FaEdit />
+                      
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <FaTrash />
+                      
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -258,6 +240,155 @@ const PatrimoineApp = () => {
           )}
         </div>
       )}
+
+      {/* Modal */}
+      <div
+        className="modal fade"
+        id="editModal"
+        tabIndex="-1"
+        aria-labelledby="editModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="editModalLabel">
+                Modifier la Possession
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              {editingPossession && (
+                <div>
+                  <div className="mb-3">
+                    <label htmlFor="modalLibelle" className="form-label">
+                      Libelle :
+                    </label>
+                    <input
+                      type="text"
+                      id="modalLibelle"
+                      className="form-control"
+                      value={editingPossession.libelle}
+                      onChange={(e) =>
+                        setEditingPossession({
+                          ...editingPossession,
+                          libelle: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="modalValeur" className="form-label">
+                      Valeur Initiale :
+                    </label>
+                    <input
+                      type="number"
+                      id="modalValeur"
+                      className="form-control"
+                      value={
+                        editingPossession.valeur ||
+                        editingPossession.valeurConstante
+                      }
+                      onChange={(e) =>
+                        setEditingPossession({
+                          ...editingPossession,
+                          valeur: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="modalDateDebut" className="form-label">
+                      Date de début :
+                    </label>
+                    <input
+                      type="date"
+                      id="modalDateDebut"
+                      className="form-control"
+                      value={
+                        editingPossession.dateDebut.toISOString().split("T")[0]
+                      }
+                      onChange={(e) =>
+                        setEditingPossession({
+                          ...editingPossession,
+                          dateDebut: new Date(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="modalDateFin" className="form-label">
+                      Date Fin :
+                    </label>
+                    <input
+                      type="date"
+                      id="modalDateFin"
+                      className="form-control"
+                      value={
+                        editingPossession.dateFin
+                          ? editingPossession.dateFin
+                              .toISOString()
+                              .split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditingPossession({
+                          ...editingPossession,
+                          dateFin: e.target.value
+                            ? new Date(e.target.value)
+                            : null,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="modalTauxAmortissement"
+                      className="form-label"
+                    >
+                      Taux d'Amortissement :
+                    </label>
+                    <input
+                      type="number"
+                      id="modalTauxAmortissement"
+                      className="form-control"
+                      value={editingPossession.tauxAmortissement || ""}
+                      onChange={(e) =>
+                        setEditingPossession({
+                          ...editingPossession,
+                          tauxAmortissement: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Fermer
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSaveEdit}
+                data-bs-dismiss="modal"
+              >
+                Sauvegarder les modifications
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
