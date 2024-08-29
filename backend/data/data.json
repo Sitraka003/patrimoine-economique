@@ -16,20 +16,20 @@
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "Nouveau MacBook",
+          "libelle": "okazay",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": "2024-08-28T08:23:11.030Z",
+          "dateFin": "2024-08-29T17:16:52.947Z",
           "tauxAmortissement": 5
         },
         {
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "Alternance",
+          "libelle": "test vaovao",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
+          "dateFin": "2024-08-29T17:11:34.408Z",
           "tauxAmortissement": null,
           "jour": 1,
           "valeurConstante": 500000
@@ -63,7 +63,7 @@
           "libelle": "Nouvelle Pele",
           "valeur": 0,
           "dateDebut": "2010-12-31T21:00:00.000Z",
-          "dateFin": "2021-08-21T08:23:15.607Z",
+          "dateFin": "2024-08-29T06:47:23.868Z",
           "tauxAmortissement": null
         },
         {
@@ -75,6 +75,16 @@
           "dateDebut": "2024-08-16T00:00:00.000Z",
           "dateFin": null,
           "tauxAmortissement": "2"
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Ordinateur ",
+          "valeur": 500000,
+          "dateDebut": "2022-03-01T11:16:42.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 2
         }
       ]
     }

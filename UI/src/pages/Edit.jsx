@@ -1,31 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Container, Button, Form } from "react-bootstrap";
-import DatePickerComponent from "../components/DatePicker";
+import React, { useState } from "react";
+import { Form, Button, Container } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"; // Importer le style du date picker
+import { useParams, useNavigate } from "react-router-dom";
 
 const Edit = () => {
-  const [possession, setPossession] = useState(null);
-  const [dateDebut, setDateDebut] = useState(new Date());
-  const [valeur, setValeur] = useState("");
-  const [tauxAmortissement, setTauxAmortissement] = useState("");
-  const { libelle } = useParams(); // Récupérer le libelle depuis les paramètres d'URL
+  const { libelle } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch(`http://localhost:3001/possession/${libelle}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPossession(data);
-        setDateDebut(new Date(data.dateDebut));
-        setValeur(data.valeur || "");
-        setTauxAmortissement(data.tauxAmortissement || "");
-      })
-      .catch((error) =>
-        console.error("Erreur lors de la récupération de la possession:", error)
-      );
-  }, [libelle]);
+  const [possession, setPossession] = useState({
+    libelle: libelle, // Utiliser le libellé actuel comme valeur par défaut
+    dateFin: new Date(), // Date actuelle comme valeur par défaut
+  });
 
-  const handleSave = () => {
+  const handleChange = (e) => {
+    setPossession({ ...possession, [e.target.name]: e.target.value });
+  };
+
+  const handleDateChange = (date) => {
+    setPossession({ ...possession, dateFin: date });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     fetch(`http://localhost:3001/possession/${libelle}`, {
       method: "PUT",
       headers: {
@@ -33,56 +31,57 @@ const Edit = () => {
       },
       body: JSON.stringify({
         ...possession,
-        dateDebut: dateDebut.toISOString(),
-        valeur: parseFloat(valeur),
-        tauxAmortissement: parseFloat(tauxAmortissement) || null,
+        dateFin: possession.dateFin.toISOString(),
       }),
     })
       .then((response) => {
-        if (response.ok) {
-          navigate("/possession");
-        } else {
-          console.error("Erreur lors de la mise à jour de la possession.");
+        if (!response.ok) {
+          throw new Error("Erreur lors de la mise à jour de la possession.");
         }
+        return response.json();
       })
-      .catch((error) =>
-        console.error("Erreur lors de la mise à jour de la possession:", error)
-      );
+      .then((data) => {
+        console.log("Mise à jour réussie:", data);
+        navigate("/possession");
+      })
+      .catch((error) => {
+        console.error("Erreur:", error);
+      });
   };
 
-  if (!possession) return <p>Loading...</p>;
+  const handleFocus = (e) => {
+    e.target.select(); // Sélectionner automatiquement tout le texte lors du focus
+  };
 
   return (
     <Container>
-      <h1>Edit Possession</h1>
-      <Form>
-        <Form.Group className="mb-3">
+      <h1>Éditer la Possession</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formLibelle">
           <Form.Label>Libellé</Form.Label>
-          <Form.Control type="text" value={possession.libelle} disabled />
-        </Form.Group>
-        <DatePickerComponent
-          selectedDate={dateDebut}
-          onDateChange={setDateDebut}
-          label="Date Début"
-        />
-        <Form.Group className="mb-3">
-          <Form.Label>Valeur</Form.Label>
           <Form.Control
-            type="number"
-            value={valeur}
-            onChange={(e) => setValeur(e.target.value)}
+            type="text"
+            name="libelle"
+            value={possession.libelle}
+            onChange={handleChange}
+            onFocus={handleFocus} // Ajouter l'événement onFocus ici
+            placeholder="Entrez le libellé"
           />
         </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Taux Amortissement</Form.Label>
-          <Form.Control
-            type="number"
-            value={tauxAmortissement}
-            onChange={(e) => setTauxAmortissement(e.target.value)}
+
+        <Form.Group controlId="formDateFin">
+          <Form.Label>Date de Fin</Form.Label>
+          <DatePicker
+            selected={possession.dateFin}
+            onChange={handleDateChange}
+            dateFormat="yyyy-MM-dd"
+            className="form-control"
+            placeholderText="Sélectionnez une date"
           />
         </Form.Group>
-        <Button variant="primary" onClick={handleSave}>
-          Save
+
+        <Button variant="primary" type="submit">
+          Mettre à jour
         </Button>
       </Form>
     </Container>
@@ -90,3 +89,4 @@ const Edit = () => {
 };
 
 export default Edit;
+//ok

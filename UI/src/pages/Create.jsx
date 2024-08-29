@@ -78,6 +78,7 @@ const Create = () => {
             selected={dateDebut}
             onChange={(date) => setDateDebut(date)}
             className="form-control"
+            dateFormat="yyyy-MM-dd"
           />
         </Form.Group>
 

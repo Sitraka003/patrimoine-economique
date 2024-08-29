@@ -12,7 +12,6 @@ function App() {
     <Router>
       <Navbar bg="light" expand="lg" className="mb-4">
         <Container>
-          <Navbar.Brand href="/">Menu</Navbar.Brand>
           <Nav className="mx-auto">
             <Nav.Link as={Link} to="/">
               Patrimoine
