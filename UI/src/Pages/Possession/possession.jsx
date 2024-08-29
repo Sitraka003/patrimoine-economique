@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Possession from '../../../../models/possessions/Possession';
-import Flux from '../../../../models/possessions/Flux';
+import Possession from '../../../../models/possessions/Possession.js';
+import Flux from '../../../../models/possessions/Flux.js';
 import axios from 'axios';
 
 function PossessionPage() {
