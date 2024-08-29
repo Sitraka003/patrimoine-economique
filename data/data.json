@@ -44,5 +44,33 @@
         "valeurConstante": "20000000"
       }
     ]
+  },
+  {
+    "nom": "Malin",
+    "possessions": [
+      {
+        "type": "Argent",
+        "libelle": "Money",
+        "valeur": "200000",
+        "dateDebut": "2024-08-29",
+        "dateFin": "",
+        "tauxAmortissement": "2",
+        "valeurConstante": ""
+      }
+    ]
+  },
+  {
+    "nom": "Paul",
+    "possessions": [
+      {
+        "type": "Argent",
+        "libelle": "Salaire",
+        "valeur": "600000",
+        "dateDebut": "2024-08-29",
+        "dateFin": "",
+        "tauxAmortissement": "4",
+        "valeurConstante": "300000"
+      }
+    ]
   }
 ]

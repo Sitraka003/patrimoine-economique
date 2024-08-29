@@ -145,7 +145,7 @@ const Show = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 bg-dark text-light">
       <h1 className="mb-4 text-center text-primary">
         Liste des Personnes et leurs Possessions
       </h1>
@@ -157,7 +157,6 @@ const Show = () => {
           <FaPlus /> Ajouter une personne
         </button>
       </Link>
-
       {persons.length === 0 ? (
         <p>Aucune personne trouvée.</p>
       ) : (
@@ -236,7 +235,6 @@ const Show = () => {
           </div>
         ))
       )}
-
       {editingPerson && (
         <div
           className="modal fade show"
@@ -245,7 +243,7 @@ const Show = () => {
           role="dialog"
         >
           <div className="modal-dialog" role="document">
-            <div className="modal-content">
+            <div className="modal-content bg-dark text-light">
               <div className="modal-header">
                 <h5 className="modal-title">Modifier la personne</h5>
                 <button
@@ -265,7 +263,7 @@ const Show = () => {
                   onChange={(e) =>
                     setEditingPerson({ ...editingPerson, nom: e.target.value })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Nom"
                 />
               </div>
@@ -284,7 +282,7 @@ const Show = () => {
           </div>
         </div>
       )}
-
+      
       {editingPossession && (
         <div
           className="modal fade show"
@@ -293,7 +291,7 @@ const Show = () => {
           role="dialog"
         >
           <div className="modal-dialog" role="document">
-            <div className="modal-content">
+            <div className="modal-content bg-dark text-light">
               <div className="modal-header">
                 <h5 className="modal-title">Modifier la possession</h5>
                 <button
@@ -316,7 +314,7 @@ const Show = () => {
                       type: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Type"
                 />
                 <input
@@ -330,7 +328,7 @@ const Show = () => {
                       libelle: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Libellé"
                 />
                 <input
@@ -344,7 +342,7 @@ const Show = () => {
                       valeur: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Valeur"
                 />
                 <input
@@ -358,7 +356,7 @@ const Show = () => {
                       dateDebut: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Date de début"
                 />
                 <input
@@ -372,7 +370,7 @@ const Show = () => {
                       dateFin: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Date de fin"
                 />
                 <input
@@ -386,7 +384,7 @@ const Show = () => {
                       tauxAmortissement: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Taux d'amortissement"
                 />
                 <input
@@ -400,7 +398,7 @@ const Show = () => {
                       valeurConstante: e.target.value,
                     })
                   }
-                  className="form-control mb-2"
+                  className="form-control mb-2 bg-secondary text-light"
                   placeholder="Valeur constante"
                 />
               </div>

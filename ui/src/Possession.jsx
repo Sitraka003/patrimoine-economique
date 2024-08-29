@@ -112,21 +112,26 @@ const Possession = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 bg-dark text-white">
       <div className="mt-5">
         <h2 className="text-primary">Ajouter une nouvelle personne</h2>
         <div className="form-group mb-3">
-          <label htmlFor="personName">Nom</label>
+          <label htmlFor="personName" className="text-light">
+            Nom
+          </label>
           <div className="input-group">
             <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon1">
+              <span
+                className="input-group-text bg-secondary text-light"
+                id="basic-addon1"
+              >
                 <i className="fas fa-user"></i>
               </span>
             </div>
             <input
               type="text"
               id="personName"
-              className="form-control"
+              className="form-control bg-secondary text-light"
               placeholder="Nom"
               value={newPerson.nom}
               onChange={(e) =>
@@ -138,10 +143,12 @@ const Possession = () => {
 
         <h3 className="text-success">Ajouter des possessions :</h3>
         <div className="form-group mb-3">
-          <label htmlFor="possessionType">Type</label>
+          <label htmlFor="possessionType" className="text-light">
+            Type
+          </label>
           <select
             id="possessionType"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.type}
             onChange={(e) =>
               setNewPossession({ ...newPossession, type: e.target.value })
@@ -151,63 +158,71 @@ const Possession = () => {
             <option value="BienMateriel">Bien Matériel</option>
             <option value="Flux">Flux</option>
             <option value="Argent">Argent</option>
-            <option value="Possession">Possession</option>
+            <option value="Possession">possession</option>
           </select>
 
-          <label htmlFor="possessionLibelle">Libellé</label>
+          <label htmlFor="possessionLibelle" className="text-light">
+            Libellé
+          </label>
           <input
             type="text"
             id="possessionLibelle"
             placeholder="Libellé"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.libelle}
             onChange={(e) =>
               setNewPossession({ ...newPossession, libelle: e.target.value })
             }
           />
 
-          <label htmlFor="possessionValeur">Valeur</label>
+          <label htmlFor="possessionValeur" className="text-light">
+            Valeur
+          </label>
           <input
             type="number"
             id="possessionValeur"
             placeholder="Valeur"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.valeur}
             onChange={(e) =>
               setNewPossession({ ...newPossession, valeur: e.target.value })
             }
           />
 
-          <label htmlFor="possessionDateDebut">Date de début</label>
+          <label htmlFor="possessionDateDebut" className="text-light">
+            Date de début
+          </label>
           <input
             type="date"
             id="possessionDateDebut"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.dateDebut || ""}
             onChange={(e) =>
               setNewPossession({ ...newPossession, dateDebut: e.target.value })
             }
           />
 
-          <label htmlFor="possessionDateFin">Date de fin</label>
+          <label htmlFor="possessionDateFin" className="text-light">
+            Date de fin
+          </label>
           <input
             type="date"
             id="possessionDateFin"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.dateFin || ""}
             onChange={(e) =>
               setNewPossession({ ...newPossession, dateFin: e.target.value })
             }
           />
 
-          <label htmlFor="possessionTauxAmortissement">
+          <label htmlFor="possessionTauxAmortissement" className="text-light">
             Taux d'amortissement
           </label>
           <input
             type="number"
             id="possessionTauxAmortissement"
             placeholder="Taux d'amortissement"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.tauxAmortissement || ""}
             onChange={(e) =>
               setNewPossession({
@@ -217,12 +232,14 @@ const Possession = () => {
             }
           />
 
-          <label htmlFor="possessionValeurConstante">Valeur constante</label>
+          <label htmlFor="possessionValeurConstante" className="text-light">
+            Valeur constante
+          </label>
           <input
             type="number"
             id="possessionValeurConstante"
             placeholder="Valeur constante"
-            className="form-control mb-2"
+            className="form-control mb-2 bg-secondary text-light"
             value={newPossession.valeurConstante || ""}
             onChange={(e) =>
               setNewPossession({
@@ -240,7 +257,6 @@ const Possession = () => {
           Ajouter Personne
         </button>
       </div>
-
       {error && (
         <div className="alert alert-danger mt-4" role="alert">
           {error}

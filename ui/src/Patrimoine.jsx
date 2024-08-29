@@ -125,7 +125,7 @@ const PatrimoineApp = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 bg-dark text-light">
       <h1 className="mb-4 text-center text-primary">
         Calculateur de Patrimoine
       </h1>
@@ -135,7 +135,7 @@ const PatrimoineApp = () => {
         </label>
         <select
           id="personSelect"
-          className="form-select"
+          className="form-select bg-secondary text-light"
           onChange={handleChange}
           value={selectedPerson}
         >
@@ -150,8 +150,8 @@ const PatrimoineApp = () => {
 
       {patrimoine && patrimoine.possessions.length > 0 && (
         <div className="mt-4">
-          <table className="table table-striped table-hover">
-            <thead className="table-light">
+          <table className="table table-striped table-hover table-dark">
+            <thead>
               <tr>
                 <th>Libelle</th>
                 <th>Valeur Initiale</th>
@@ -196,14 +196,12 @@ const PatrimoineApp = () => {
                       onClick={() => handleEdit(index)}
                     >
                       <FaEdit />
-                      
                     </button>
                     <button
                       className="btn btn-danger"
                       onClick={() => handleDelete(index)}
                     >
                       <FaTrash />
-                      
                     </button>
                   </td>
                 </tr>
@@ -219,7 +217,7 @@ const PatrimoineApp = () => {
               <input
                 type="date"
                 id="dateInput"
-                className="form-control"
+                className="form-control bg-secondary text-light"
                 value={selectedDate}
                 onChange={handleDateChange}
               />
@@ -250,14 +248,14 @@ const PatrimoineApp = () => {
         aria-hidden="true"
       >
         <div className="modal-dialog">
-          <div className="modal-content">
+          <div className="modal-content bg-dark text-light">
             <div className="modal-header">
               <h5 className="modal-title" id="editModalLabel">
                 Modifier la Possession
               </h5>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close btn-close-white"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -272,7 +270,7 @@ const PatrimoineApp = () => {
                     <input
                       type="text"
                       id="modalLibelle"
-                      className="form-control"
+                      className="form-control bg-secondary text-light"
                       value={editingPossession.libelle}
                       onChange={(e) =>
                         setEditingPossession({
@@ -289,7 +287,7 @@ const PatrimoineApp = () => {
                     <input
                       type="number"
                       id="modalValeur"
-                      className="form-control"
+                      className="form-control bg-secondary text-light"
                       value={
                         editingPossession.valeur ||
                         editingPossession.valeurConstante
@@ -309,7 +307,7 @@ const PatrimoineApp = () => {
                     <input
                       type="date"
                       id="modalDateDebut"
-                      className="form-control"
+                      className="form-control bg-secondary text-light"
                       value={
                         editingPossession.dateDebut.toISOString().split("T")[0]
                       }
@@ -328,7 +326,7 @@ const PatrimoineApp = () => {
                     <input
                       type="date"
                       id="modalDateFin"
-                      className="form-control"
+                      className="form-control bg-secondary text-light"
                       value={
                         editingPossession.dateFin
                           ? editingPossession.dateFin
@@ -356,7 +354,7 @@ const PatrimoineApp = () => {
                     <input
                       type="number"
                       id="modalTauxAmortissement"
-                      className="form-control"
+                      className="form-control bg-secondary text-light"
                       value={editingPossession.tauxAmortissement || ""}
                       onChange={(e) =>
                         setEditingPossession({

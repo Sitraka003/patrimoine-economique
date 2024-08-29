@@ -10,9 +10,9 @@ import Show from "./showAll";
 const App = () => {
   return (
     <Router>
-      <div className="">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid d-flex align-items-center">
+      <div className="bg-dark text-light min-vh-100">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div className="container-fluid d-flex align-items-center bg-dark text-warning border border-dark-100 rounded">
             <h1>
               <Link
                 className="navbar-brand text-primary font-weight-bold"
