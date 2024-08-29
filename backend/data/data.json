@@ -19,7 +19,7 @@
           "libelle": "okazay",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": "2024-08-29T17:16:52.947Z",
+          "dateFin": "2024-08-29T19:11:06.452Z",
           "tauxAmortissement": 5
         },
         {
@@ -53,7 +53,7 @@
           "libelle": "Montre Rolex",
           "valeur": 1000000,
           "dateDebut": "2010-01-01T00:00:00.000Z",
-          "dateFin": "2019-08-28T13:15:47.412Z",
+          "dateFin": "2024-08-29T20:26:15.776Z",
           "tauxAmortissement": 10
         },
         {
@@ -84,6 +84,16 @@
           "valeur": 500000,
           "dateDebut": "2022-03-01T11:16:42.000Z",
           "dateFin": null,
+          "tauxAmortissement": 2
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "love love love",
+          "valeur": 20000,
+          "dateDebut": "2024-07-04T19:04:43.000Z",
+          "dateFin": "2024-08-29T20:26:12.987Z",
           "tauxAmortissement": 2
         }
       ]
