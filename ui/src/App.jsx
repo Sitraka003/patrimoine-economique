@@ -4,7 +4,7 @@ import Home from "./Home";
 import Possession from "./Possession";
 import PatrimoineApp from "./Patrimoine";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Importation du script Bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Show from "./showAll";
 
 const App = () => {
@@ -62,6 +62,7 @@ const App = () => {
         <div className="mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
+            {/* <Route path="/line-chart" element={<LineChart />} /> */}
             <Route path="/possession" element={<Possession />} />
             <Route path="/patrimoine" element={<PatrimoineApp />} />
             <Route path="/show" element={<Show />} />
