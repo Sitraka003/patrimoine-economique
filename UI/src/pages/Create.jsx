@@ -14,7 +14,7 @@ const Create = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedValeur = parseInt(valeur, 10); // Supprime les zéros initiaux
+    const formattedValeur = parseInt(valeur, 10);
     const formattedTauxAmortissement = tauxAmortissement
       ? parseInt(tauxAmortissement, 10)
       : null;
@@ -49,31 +49,35 @@ const Create = () => {
   };
 
   return (
-    <Container>
-      <h1>Créer une nouvelle possession</h1>
+    <Container className="">
+      <h1 className="fw-normal text-secondary mt-5 mb-5">
+        Create New Possession
+      </h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="libelle">
-          <Form.Label>Libellé</Form.Label>
+          <Form.Label className="fs-5 fw-bold">Label</Form.Label>
           <Form.Control
             type="text"
             value={libelle}
             onChange={(e) => setLibelle(e.target.value)}
             required
+            className="w-50"
           />
         </Form.Group>
 
         <Form.Group controlId="valeur">
-          <Form.Label>Valeur</Form.Label>
+          <Form.Label className="fs-5 fw-bold">Value</Form.Label>
           <Form.Control
             type="number"
             value={valeur}
             onChange={(e) => setValeur(e.target.value)}
             required
+            className="w-50"
           />
         </Form.Group>
 
+        <label className="fs-5 fw-bold">Start date</label>
         <Form.Group controlId="dateDebut">
-          <Form.Label>Date Début</Form.Label>
           <DatePicker
             selected={dateDebut}
             onChange={(date) => setDateDebut(date)}
@@ -83,17 +87,20 @@ const Create = () => {
         </Form.Group>
 
         <Form.Group controlId="tauxAmortissement">
-          <Form.Label>Taux d'Amortissement</Form.Label>
+          <Form.Label className="fs-5 fw-bold">Depreciation rate</Form.Label>
           <Form.Control
             type="number"
             value={tauxAmortissement}
             onChange={(e) => setTauxAmortissement(e.target.value)}
-            placeholder=""
+            className="w-50"
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Créer
+        <Button
+          className="mt-4 fs-5 px-4 bg-light text-info border border-2 border-info"
+          type="submit"
+        >
+          Create
         </Button>
       </Form>
     </Container>

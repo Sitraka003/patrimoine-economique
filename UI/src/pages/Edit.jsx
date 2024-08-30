@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Importer le style du date picker
+import "react-datepicker/dist/react-datepicker.css";
 import { useParams, useNavigate } from "react-router-dom";
 
 const Edit = () => {
@@ -9,8 +9,8 @@ const Edit = () => {
   const navigate = useNavigate();
 
   const [possession, setPossession] = useState({
-    libelle: libelle, // Utiliser le libellé actuel comme valeur par défaut
-    dateFin: new Date(), // Date actuelle comme valeur par défaut
+    libelle: libelle,
+    dateFin: new Date(),
   });
 
   const handleChange = (e) => {
@@ -50,27 +50,28 @@ const Edit = () => {
   };
 
   const handleFocus = (e) => {
-    e.target.select(); // Sélectionner automatiquement tout le texte lors du focus
+    e.target.select();
   };
 
   return (
     <Container>
-      <h1>Éditer la Possession</h1>
+      <h1 className="fw-normal text-secondary mt-5 mb-5">Edit Possession</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formLibelle">
-          <Form.Label>Libellé</Form.Label>
+          <Form.Label className="fs-5 fw-bold">Label</Form.Label>
           <Form.Control
             type="text"
             name="libelle"
             value={possession.libelle}
             onChange={handleChange}
-            onFocus={handleFocus} // Ajouter l'événement onFocus ici
+            onFocus={handleFocus}
             placeholder="Entrez le libellé"
+            className="w-50"
           />
         </Form.Group>
 
+        <label className="fs-5 fw-bold">End date</label>
         <Form.Group controlId="formDateFin">
-          <Form.Label>Date de Fin</Form.Label>
           <DatePicker
             selected={possession.dateFin}
             onChange={handleDateChange}
@@ -80,8 +81,11 @@ const Edit = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Mettre à jour
+        <Button
+          className="mt-4 fs-5 px-4 bg-light text-warning border border-2 border-warning"
+          type="submit"
+        >
+          Update
         </Button>
       </Form>
     </Container>
@@ -89,4 +93,3 @@ const Edit = () => {
 };
 
 export default Edit;
-//ok

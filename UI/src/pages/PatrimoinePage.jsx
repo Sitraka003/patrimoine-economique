@@ -48,67 +48,71 @@ const PatrimoinePage = () => {
   };
 
   return (
-    <Container>
-      <h1 className="my-4">Patrimoine</h1>
+    <Container className="mb-5">
+      <h1 className="my-5 fw-normal text-secondary">Patrimony</h1>
       <Row className="mb-3">
         <Col>
-          <DatePicker
-            selectedDate={startDate}
-            onDateChange={setStartDate}
-            label="Date de début"
-          />
+          <label className="fs-5 fw-bold">Start date :</label>
+          <DatePicker selectedDate={startDate} onDateChange={setStartDate} />
         </Col>
         <Col>
-          <DatePicker
-            selectedDate={endDate}
-            onDateChange={setEndDate}
-            label="Date de fin"
-          />
+          <label className="fs-5 fw-bold">End date :</label>
+          <DatePicker selectedDate={endDate} onDateChange={setEndDate} />
         </Col>
         <Col>
+          <label className="fs-5 fw-bold">Unit of time :</label>
           <Form.Group controlId="timeUnitSelect">
-            <Form.Label>Unité de temps</Form.Label>
             <Form.Control
               as="select"
               value={timeUnit}
               onChange={(e) => setTimeUnit(e.target.value)}
             >
-              <option value="jour">Jour</option>
-              <option value="mois">Mois</option>
-              <option value="année">Année</option>
+              <option value="jour">Day</option>
+              <option value="mois">Month</option>
+              <option value="année">Year</option>
             </Form.Control>
           </Form.Group>
         </Col>
       </Row>
-      <Button variant="primary" onClick={fetchData}>
+      <Button
+        className="fs-5 px-4 bg-light text-success border border-2 border-success"
+        onClick={fetchData}
+      >
         Validate
       </Button>
       <div className="mt-4">
         <LineChart data={chartData} />
       </div>
 
-      <Row className="mt-4">
+      <Row className="mt-4 w-50 mt-5">
         <Col>
+          <label className="fs-5 fw-bold">Select a date :</label>
           <DatePicker
             selectedDate={specificDate}
             onDateChange={setSpecificDate}
-            label="Sélectionnez une date"
           />
         </Col>
         <Col>
-          <Button variant="primary" onClick={fetchPatrimoineValeur}>
+          <Button
+            className="bg-light border-2 border-success text-success px-4 py-2 me-1 mt-4"
+            onClick={fetchPatrimoineValeur}
+          >
             Validate
           </Button>
         </Col>
       </Row>
 
-      {patrimoineValeur !== null && (
-        <div className="mt-3">
-          <h5>
-            Valeur du patrimoine à la date sélectionnée: {patrimoineValeur}
-          </h5>
-        </div>
-      )}
+      <div>
+        <span className="fs-5">
+          Value of the Patrimony on the selected date{" "}
+          <span className="fw-bold">=&gt;</span>
+        </span>
+        {patrimoineValeur !== null && (
+          <span className="mt-3">
+            <span className="h5 ps-3 text-primary">{patrimoineValeur}</span>
+          </span>
+        )}
+      </div>
     </Container>
   );
 };

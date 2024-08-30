@@ -16,10 +16,10 @@
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "okazay",
+          "libelle": "MacBook Pro",
           "valeur": 4000000,
           "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": "2024-08-29T19:11:06.452Z",
+          "dateFin": "2024-08-30T19:36:36.483Z",
           "tauxAmortissement": 5
         },
         {
@@ -29,7 +29,7 @@
           "libelle": "test vaovao",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": "2024-08-29T17:11:34.408Z",
+          "dateFin": "2024-08-30T07:40:29.708Z",
           "tauxAmortissement": null,
           "jour": 1,
           "valeurConstante": 500000
@@ -41,7 +41,7 @@
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2023-12-31T21:00:00.000Z",
-          "dateFin": null,
+          "dateFin": "2024-08-30T07:58:53.536Z",
           "tauxAmortissement": null,
           "jour": 2,
           "valeurConstante": -300000
@@ -73,7 +73,7 @@
           "libelle": "Gourde ",
           "valeur": "10000",
           "dateDebut": "2024-08-16T00:00:00.000Z",
-          "dateFin": null,
+          "dateFin": "2024-08-30T07:59:00.690Z",
           "tauxAmortissement": "2"
         },
         {
@@ -95,6 +95,56 @@
           "dateDebut": "2024-07-04T19:04:43.000Z",
           "dateFin": "2024-08-29T20:26:12.987Z",
           "tauxAmortissement": 2
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Ferrarri",
+          "valeur": 4000000000,
+          "dateDebut": "2021-01-12T05:11:26.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 0
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "fafa",
+          "valeur": 40000000,
+          "dateDebut": "2024-08-30T05:13:00.558Z",
+          "dateFin": "2028-08-30T05:13:35.000Z",
+          "tauxAmortissement": 2
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "fefe",
+          "valeur": 40000000,
+          "dateDebut": "2021-08-10T05:14:09.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 2
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "ddd",
+          "valeur": 23,
+          "dateDebut": "2024-08-30T05:51:38.682Z",
+          "dateFin": "2024-08-30T05:52:57.267Z",
+          "tauxAmortissement": 1
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "coco",
+          "valeur": 1000,
+          "dateDebut": "2024-08-30T07:32:40.469Z",
+          "dateFin": "2024-08-30T07:40:34.539Z",
+          "tauxAmortissement": 4
         }
       ]
     }

@@ -16,14 +16,14 @@ function App() {
             <Nav.Link
               as={Link}
               to="/"
-              className="mx-3 text-secondary border-bottom"
+              className="mx-3 text-secondary border-bottom border-secondary"
             >
-              Patrimoine
+              Patrimony
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/possession"
-              className="mx-3 text-secondary border-bottom"
+              className="mx-3 text-secondary border-bottom border-secondary"
             >
               Possession
             </Nav.Link>

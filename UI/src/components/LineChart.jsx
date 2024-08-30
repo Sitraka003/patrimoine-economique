@@ -26,9 +26,9 @@ const LineChart = ({ data }) => {
       {
         label: "Valeur du Patrimoine",
         data: data.map((d) => d.valeur),
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(255, 165, 0, 1)",
         fill: true,
+        tension: 0.4,
       },
     ],
   };
@@ -48,6 +48,44 @@ const LineChart = ({ data }) => {
     },
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      onProgress: function (animation) {
+        const chartInstance = animation.chart;
+        const ctx = chartInstance.ctx;
+        const chartData = chartInstance.data;
+        const datasets = chartData.datasets;
+        datasets.forEach((dataset) => {
+          const meta = chartInstance.getDatasetMeta(dataset.index);
+          meta.data.forEach((element) => {
+            const { x, y } = element;
+            element.hidden = false;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 0, 0, 2 * Math.PI);
+            ctx.fillStyle = "rgba(255, 165, 0, 1)";
+            ctx.fill();
+            ctx.restore();
+          });
+        });
+      },
+      onComplete: function (animation) {
+        const chartInstance = animation.chart;
+        const ctx = chartInstance.ctx;
+        const datasets = chartInstance.data.datasets;
+        datasets.forEach((dataset) => {
+          const meta = chartInstance.getDatasetMeta(dataset.index);
+          meta.data.forEach((element) => {
+            const { x, y } = element;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = "rgba(255, 165, 0, 1)";
+            ctx.fill();
+            ctx.restore();
+          });
+        });
+      },
+    },
   };
 
   return (

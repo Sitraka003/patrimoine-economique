@@ -12,13 +12,13 @@ const PORT = 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// chemin du fichier JSON
+// chemin du JSON
 const filePath = path.join(__dirname, "data/data.json");
 
 app.use(cors());
 app.use(express.json());
 
-// lecture des données du fichier JSON
+// lecture du JSON
 async function readData() {
   try {
     const data = await fs.readFile(filePath, { encoding: "utf8" });
@@ -36,7 +36,7 @@ async function readData() {
   }
 }
 
-// écrire les données dans le fichier JSON
+// écrire les données dans le JSON
 async function writeData(data) {
   console.log("Écriture des données dans le fichier...");
   console.log("Données à écrire :", JSON.stringify(data, null, 2));
@@ -184,7 +184,7 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // cr&ation d'instnance avec les données récupérées
+    // creation d'instnance avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
