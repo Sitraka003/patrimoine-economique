@@ -4,67 +4,22 @@ import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 
-
 function TablePossession() {
-  return (
-    <div className="d-flex flex-column justify-content-evenly m-5">
-      <Table responsive="xl" className="w-100 table-bordered table-striped table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Libelle</th>
-            <th>Valeur</th>
-            <th>Début</th>
-            <th>Fin</th>
-            <th>Amortissement</th>
-            <th>Valeur Actuelle</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>PC</td>
-            <td>10000</td>
-            <td>2024-01-01</td>
-            <td>2024-12-31</td>
-            <td>5%</td>
-            <td>950</td>
-            <td>
-              <Link to={`/possessions/edit/example`} >
-                <Button variant="primary" className="me-2">Edit</Button>
-              </Link>
-              <Button variant="danger">Close</Button>
-            </td>
-          </tr>
-        </tbody>
-      </Table>
-      <div className='d-flex flex-column align-items-center justify-content-evenly mt-5'>
-        <Link to="/possessions/create">
-          <Button variant="success">Create Possession</Button>
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function Possessions() {
-  /*const [possessions, setPossessions] = useState([]);
-  const [error, setError] = useState(null);
+  const [possessions, setPossessions] = useState([]);
 
   useEffect(() => {
     const fetchPossessions = async () => {
       try {
-        const response = await axios.get('/possession');
-        // Ensure that response.data is an array
+        const response = await axios.get('http://localhost:3000/possessions');
         if (Array.isArray(response.data)) {
           setPossessions(response.data);
         } else {
-          setError('Unexpected response format');
+          console.error('Unexpected data format:', response.data);
+          setPossessions([]);
         }
       } catch (error) {
-        setError('Error fetching possessions');
-        console.error('Error fetching possessions:', error);
+        console.error('There was an error fetching the possessions!', error);
+        setPossessions([]);
       }
     };
 
@@ -73,62 +28,87 @@ function Possessions() {
 
   const handleClose = async (libelle) => {
     try {
-      await axios.post(`/possession/${libelle}/close`);
-      // Update local state to reflect changes
-      setPossessions(possessions.filter(possession => possession.libelle !== libelle));
+      await axios.put(`http://localhost:3000/possession/${libelle}/close`);
+      setPossessions(prevPossessions =>
+        prevPossessions.map(possession =>
+          possession.libelle === libelle
+            ? { ...possession, Fin: new Date().toISOString().split('T')[0] }
+            : possession
+        )
+      );
     } catch (error) {
       console.error('Error closing possession:', error);
     }
   };
 
+  const handleDelete = async (libelle) => {
+    try {
+      await axios.delete(`http://localhost:3000/possession/${libelle}`);
+      setPossessions(prevPossessions =>
+        prevPossessions.filter(possession => possession.libelle !== libelle)
+      );
+    } catch (error) {
+      console.error('Error deleting possession:', error);
+    }
+  };
+  
   return (
-    <div>
-      <h1>Possessions</h1>
-      <Link to="/possessions/create">
-        <button>Create Possession</button>
-      </Link>
-      {error && <p>{error}</p>}
-      <table>
+    <div className="d-flex flex-column justify-content-evenly m-5">
+      <Table responsive="xl" className="w-100 table-bordered table-striped table-hover">
         <thead>
           <tr>
-            <th>Libelle</th>
-            <th>Valeur</th>
-            <th>Date Début</th>
-            <th>Date Fin</th>
-            <th>Taux</th>
-            <th>Valeur actuelle</th>
-            <th>Action</th>
+            <th className="text-center">#</th>
+            <th className="text-center">Libelle</th>
+            <th className="text-center">Valeur</th>
+            <th className="text-center">Debut</th>
+            <th className="text-center">Fin</th>
+            <th className="text-center">Amortissement</th>
+            <th className="text-center">Valeur Actuelle</th>
+            <th className="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(possessions) && possessions.length > 0 ? (
-            possessions.map(possession => (
-              <tr key={possession.libelle}>
-                <td>{possession.libelle}</td>
-                <td>{possession.valeur}</td>
-                <td>{possession.dateDebut}</td>
-                <td>{possession.dateFin}</td>
-                <td>{possession.taux}</td>
-                <td>{possession.valeurActuelle}</td>
-                <td>
-                  <Link to={`/possessions/${possession.libelle}/update`}>
-                    <button>Edit</button>
-                  </Link>
-                  <button onClick={() => handleClose(possession.libelle)}>Close</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7">No possessions found</td>
+          {possessions.map((possession) => (
+            <tr key={possession.libelle}>
+              <td className="text-center">{possessions.indexOf(possession) + 1}</td>
+              <td className="text-center">{possession.libelle}</td>
+              <td className="text-center">{possession.valeur} Ariary</td>
+              <td className="text-center">{possession.Debut.split('T')[0]}</td>
+              <td className="text-center">{possession.Fin ? possession.Fin.split('T')[0] : '-'}</td>
+              <td className="text-center">{possession.Amortissement} %</td>
+              <td className="text-center">{possession.valeurActuelle || '-'}</td>
+              <td className="text-center">
+                <Link to={`/possession/${possession.libelle}/update`} className="btn btn-warning btn-sm">
+                  Edit
+                </Link>
+                <Button
+                  variant="dark"
+                  size="sm"
+                  className="ms-2"
+                  onClick={() => handleClose(possession.libelle)}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="ms-2"
+                  onClick={() => handleDelete(possession.libelle)}
+                >
+                  Delete
+                </Button>
+              </td>
             </tr>
-          )}
+          ))}
         </tbody>
-      </table>
+      </Table>
+      <div className='align-items-center'>
+        <Link to="/possession/create" className="btn btn-primary mb-3">
+          Create Possession
+        </Link>
+      </div>
     </div>
-  );*/
-
+  );
 }
 
-//export default Possessions;
 export default TablePossession;
