@@ -151,14 +151,14 @@ const Show = () => {
       </h1>
       <Link to="/possession">
         <button
-          className="btn btn-success mb-4"
+          className="btn btn-outline-success mb-4"
           onClick={() => setEditingPerson({ nom: "", possessions: [] })}
         >
           <FaPlus /> Ajouter une personne
         </button>
       </Link>
       {persons.length === 0 ? (
-        <p>Aucune personne trouvée.</p>
+        <p className="text-warning">Aucune personne trouvée.</p>
       ) : (
         persons.map((person, personIndex) => (
           <div key={personIndex} className="mb-4">
@@ -166,21 +166,21 @@ const Show = () => {
               <h3>{person.nom}</h3>
               <div>
                 <button
-                  className="btn btn-warning mx-2"
+                  className="btn btn-outline-warning mx-2"
                   onClick={() => editPerson(person.nom)}
                 >
                   <FaEdit /> Modifier
                 </button>
                 <button
-                  className="btn btn-danger mx-2"
+                  className="btn btn-outline-danger mx-2"
                   onClick={() => deletePerson(person.nom)}
                 >
                   <FaTrash /> Supprimer
                 </button>
               </div>
             </div>
-            <table className="table table-striped table-hover">
-              <thead className="table-light">
+            <table className="table table-striped table-dark table-hover table-custom">
+              <thead className="table-dark">
                 <tr>
                   <th>Type</th>
                   <th>Libellé</th>
@@ -212,7 +212,7 @@ const Show = () => {
                     </td>
                     <td>
                       <button
-                        className="btn btn-warning btn-sm mx-1"
+                        className="btn btn-outline-warning btn-sm mx-1"
                         onClick={() =>
                           handleEditPossession(person.nom, possessionIndex)
                         }
@@ -220,7 +220,7 @@ const Show = () => {
                         <FaEdit />
                       </button>
                       <button
-                        className="btn btn-danger btn-sm mx-1"
+                        className="btn btn-outline-danger btn-sm mx-1"
                         onClick={() =>
                           handleDeletePossession(person.nom, possessionIndex)
                         }
@@ -243,7 +243,7 @@ const Show = () => {
           role="dialog"
         >
           <div className="modal-dialog" role="document">
-            <div className="modal-content bg-dark text-light">
+            <div className="modal-content bg-secondary text-light">
               <div className="modal-header">
                 <h5 className="modal-title">Modifier la personne</h5>
                 <button
@@ -263,18 +263,18 @@ const Show = () => {
                   onChange={(e) =>
                     setEditingPerson({ ...editingPerson, nom: e.target.value })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Nom"
                 />
               </div>
               <div className="modal-footer">
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={() => setEditingPerson(null)}
                 >
                   Annuler
                 </button>
-                <button className="btn btn-primary" onClick={updatePerson}>
+                <button className="btn btn-info" onClick={updatePerson}>
                   Enregistrer
                 </button>
               </div>
@@ -282,7 +282,7 @@ const Show = () => {
           </div>
         </div>
       )}
-      
+
       {editingPossession && (
         <div
           className="modal fade show"
@@ -291,7 +291,7 @@ const Show = () => {
           role="dialog"
         >
           <div className="modal-dialog" role="document">
-            <div className="modal-content bg-dark text-light">
+            <div className="modal-content bg-secondary text-light">
               <div className="modal-header">
                 <h5 className="modal-title">Modifier la possession</h5>
                 <button
@@ -314,7 +314,7 @@ const Show = () => {
                       type: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Type"
                 />
                 <input
@@ -328,7 +328,7 @@ const Show = () => {
                       libelle: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Libellé"
                 />
                 <input
@@ -342,7 +342,7 @@ const Show = () => {
                       valeur: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Valeur"
                 />
                 <input
@@ -356,7 +356,7 @@ const Show = () => {
                       dateDebut: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Date de début"
                 />
                 <input
@@ -370,7 +370,7 @@ const Show = () => {
                       dateFin: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Date de fin"
                 />
                 <input
@@ -384,7 +384,7 @@ const Show = () => {
                       tauxAmortissement: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Taux d'amortissement"
                 />
                 <input
@@ -398,18 +398,18 @@ const Show = () => {
                       valeurConstante: e.target.value,
                     })
                   }
-                  className="form-control mb-2 bg-secondary text-light"
+                  className="form-control mb-2 bg-dark text-light"
                   placeholder="Valeur constante"
                 />
               </div>
               <div className="modal-footer">
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={() => setEditingPossession(null)}
                 >
                   Annuler
                 </button>
-                <button className="btn btn-primary" onClick={savePossession}>
+                <button className="btn btn-info" onClick={savePossession}>
                   Enregistrer
                 </button>
               </div>
