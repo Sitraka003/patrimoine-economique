@@ -65,6 +65,7 @@ function PatrimoinePage() {
     return (
         <div>
             <MyChart data={chartData} />
+            
         </div>
     );
 }

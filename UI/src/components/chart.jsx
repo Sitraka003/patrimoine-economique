@@ -112,17 +112,25 @@ function MyChart(){
         <>
         <div className="mainContainer">
             <div className="leftContainer">
+                <h1>VOTRE PATRIMOINE</h1>
                 <p className="explanation">Veuillez nous fournir la date de début et la date de fin afin de calculer la valeur de votre Patrimoine </p>
-            <div class="input-group mb-3 oneInput">
-  <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-  
-  <input type="date" className="form-control " aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-</div>
-<div class="input-group mb-3 oneInput">
-  <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-  
-  <input type="date" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
-</div>
+                <div class="input-group mb-3 oneInput">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Date début</span>
+                    <input type="date" className="form-control " aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
+                </div>
+                <div class="input-group mb-3 oneInput">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Date fin</span>
+                    <input type="date" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"></input>
+                </div>
+
+                <select class="form-select form-select-sm selectDay" aria-label="Small select example">
+                    <option selected>Jour</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+
+                <input class="btn btn-primary bouton" type="submit" value="Valider"></input>
             </div>
         
 

@@ -3,6 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Possession from '../../../../models/possessions/Possession.js';
 import Flux from '../../../../models/possessions/Flux.js';
 import axios from 'axios';
+import EditPossession from '../../components/editPossession.jsx';
+
+import "./possession.css"
+import { AddPossession, ToggleAddPossession } from '../../components/addPossession.jsx';
+import { ToggleEdit} from '../../components/editPossession.jsx';
 
 function PossessionPage() {
     const [data, setData] = useState(null);
@@ -12,19 +17,28 @@ function PossessionPage() {
     const [arrayResult, setArrayResult] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:3500/possession')
-            .then((response) => {
-                const data = response.data.data;
-                console.log(data) 
-                setData(data);
-                if (data && data[1] && Array.isArray(data[1].data.possessions)) {
-                    instancing(data[1].data.possessions);
+        const getData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3500/possession');
+                const newData = response.data.data;
+
+                if (JSON.stringify(newData) !== JSON.stringify(data)) {
+                    setData(newData);
+                    if (newData && newData[1] && Array.isArray(newData[1].data.possessions)) {
+                        instancing(newData[1].data.possessions);
+                    }
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error(error);
-            });
-    }, []);
+            }
+        };
+
+        getData();
+
+        const intervalId = setInterval(getData, 1000);
+
+        return () => clearInterval(intervalId);
+    }, [data]);
 
     function instancing(possessionsData) {
         const newPossessions = possessionsData.map((oneData) => {
@@ -56,11 +70,16 @@ function PossessionPage() {
         setDatePicker(e.target.value);
     }
 
+
     function getNewValue() {
         const date = new Date(datePicker);
         const values = possessions.map((possession) => possession.getValeurApresAmortissement(date));
         const results = values.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
         setPatrimonyValue(results);
+    }
+
+    function editPossession(){
+        axios.put()
     }
 
     useEffect(() => {
@@ -93,6 +112,8 @@ function PossessionPage() {
                         <td>{possession.dateFin ? possession.dateFin.toDateString() : 'inconnue'}</td>
                         <td>{possession.tauxAmortissement}</td>
                         <td>{arrayResult[i]}</td>
+                        <button type="button" className="btn btn-secondary modifier" onClick={ToggleEdit}>modifier</button>
+                        <button type="button" className="btn btn-secondary cloture">clôture</button>
                     </tr>
                 ))}
             </tbody>
@@ -102,29 +123,38 @@ function PossessionPage() {
     return (
         <>
             <div className="inputContainer">
-                <div className="input-group mb-3 oneInput">
-                    <span className="input-group-text oneSpan" id="inputGroup-sizing-default">Date Picker</span>
-                    <input 
-                        type="date" 
-                        className="form-control" 
-                        aria-label="Sizing example input" 
-                        aria-describedby="inputGroup-sizing-default" 
-                        onChange={getDatePicker}
-                    />
+                <div className="leftcontainer">
+                    <div className="input-group mb-3 oneInput dateInput">
+                        <span className="input-group-text oneSpan" id="inputGroup-sizing-default">Date Picker</span>
+                        <input 
+                            type="date" 
+                            className="form-control" 
+                            aria-label="Sizing example input" 
+                            aria-describedby="inputGroup-sizing-default" 
+                            onChange={getDatePicker}
+                        />
+                    </div>
+                    <button 
+                        type="button" 
+                        className="btn btn-primary bouton" 
+                        onClick={getNewValue}>
+                        Calculer
+                    </button>
+                    <button 
+                        type="button" 
+                        className="btn btn-primary bouton" 
+                        onClick={ToggleAddPossession}>
+                        Ajouter
+                    </button>
                 </div>
-                <button 
-                    type="button" 
-                    className="btn btn-primary bouton" 
-                    onClick={getNewValue}>
-                    Calculer
-                </button>
+                
                 <div className='resultats'>
-                    LA VALEUR DU PATRIMOINE : {patrimonyValue} Ariary
+                    RESULTAT: {patrimonyValue} Ariary
                 </div>
             </div>
-            <table className="table table-dark table-striped tableau">
-                <thead>
-                    <tr>
+            <table className="table table-dark tableau">
+                <thead className='head'>
+                    <tr className='tableHead'>
                         <th scope="col">Libelle</th>
                         <th scope="col">Valeur initiale</th>
                         <th scope="col">Date de début</th>
@@ -135,6 +165,8 @@ function PossessionPage() {
                 </thead>
                 <ShowList possessions={possessions} arrayResult={arrayResult} />
             </table>
+            <AddPossession />
+            <EditPossession/>
         </>
     );
 }

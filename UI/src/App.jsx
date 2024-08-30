@@ -11,7 +11,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<PossessionPage />} />
-        <Route path="/PatrimoinePage" element={<PatrimoinePage />} />
+        <Route path="/patrimoine" element={<PatrimoinePage />} />
+        <Route path="/possession" element={<PossessionPage />} />
       </Routes>
     </Router>
   );

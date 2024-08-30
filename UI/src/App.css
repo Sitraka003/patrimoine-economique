@@ -9,12 +9,9 @@
   display: flex;
   flex-direction: row;
   align-items:first baseline;
-  gap: 1vw;
+  
 }
-.oneInput{
-  width: 30%;
 
-}
 .oneSpan{
   background-color: rgb(66, 70, 69);
   border-color: rgb(66, 70, 69) ;
@@ -53,8 +50,29 @@ th{
 
 .resultats{
   color: white;
-  background-color: rgb(58, 58, 58);
+  background-color: rgb(196, 134, 20);
   padding: 2vh;
-  margin-left: 20vw;
+  margin-left: 0vw;
   border-radius: 10px;
+}
+
+.modifier{
+  background-color: rgb(112, 112, 112) !important;
+  border: none;
+  font-weight: bold;
+  margin-left: 5%;
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+
+.cloture{
+  background-color: rgb(196, 134, 20) !important;
+  border: none;
+  margin-left: 5%;
+  margin-bottom: 2%;
+  margin-top: 2%;
+}
+
+.tableHead th{
+  background-color: rgb(82, 82, 82) !important;
 }
