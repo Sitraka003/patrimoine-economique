@@ -60,26 +60,29 @@ const addPossession = (req, res) => {
 
 
 const updatePossession = (req, res) => {
-    const { libelle, dateFin } = req.body;
+    const { nom, libelle, dateFin } = req.body;
     const data = readData();
 
     let updated = false;
     data.forEach(person => {
-        person.possessions.forEach(possession => {
-            if (possession.libelle === libelle) {
-                possession.dateFin = dateFin;
-                updated = true;
-            }
-        });
+        if (person.nom === nom) {
+            person.possessions.forEach(possession => {
+                if (possession.libelle === libelle) {
+                    possession.dateFin = dateFin;
+                    updated = true;
+                }
+            });
+        }
     });
 
     if (updated) {
         writeData(data);
         res.json({ message: "Possession mise à jour avec succès" });
     } else {
-        res.status(404).json({ message: "Possession non trouvée" });
+        res.status(404).json({ message: "Personne ou possession non trouvée" });
     }
 };
+
 
 const updatePerson = async (req, res) => {
     try {

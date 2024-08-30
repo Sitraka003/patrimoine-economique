@@ -13,7 +13,7 @@ const {
     getPersonByName,
     updatePerson
 
-} = require("../controllers/personController");
+} = require("../controllers/PersonController");
 
 router.get("/", getPersons);
 router.get("/possession", getPossessions);
