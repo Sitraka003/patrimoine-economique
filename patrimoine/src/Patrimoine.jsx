@@ -100,84 +100,94 @@ const Patrimoine = () => {
 
   return (
     <Container>
-      <Row>
-        <Col>
+      <Row className="justify-content-center text-center mb-4">
+        <Col xs={12}>
           <h1>Patrimoine</h1>
+        </Col>
+      </Row>
 
-          {/* Section DatePicker et Calcul de Valeur Actuelle */}
-          <div className="mb-3">
-            <h3>Calcul de la Valeur Actuelle</h3>
-            <DatePicker
-              selected={selectedDate}
-              onChange={(newDate) => setSelectedDate(newDate)}
-              dateFormat="dd/MM/yyyy"
-            />
-            <Button onClick={handleValidateDate} className="mt-3">
-              Calculer Valeur Actuelle
-            </Button>
-          </div>
+      {/* Section DatePicker et Calcul de Valeur Actuelle */}
+      <Row className="justify-content-center mb-4">
+        <Col xs={12} md={6} lg={4}>
+          <h3>Calcul de la Valeur Actuelle</h3>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(newDate) => setSelectedDate(newDate)}
+            dateFormat="dd/MM/yyyy"
+            className="form-control"
+          />
+          <Button onClick={handleValidateDate} className="mt-3 w-100">
+            Calculer Valeur Actuelle
+          </Button>
+        </Col>
+      </Row>
 
-          {/* Section Gestion des Possessions */}
-          <div className="mb-3">
-            <h3>Gestion des Possessions</h3>
-            <Button onClick={() => setShowCreateForm(true)} className="mt-3">
-              Créer une Possession
-            </Button>
-          </div>
+      {/* Section Gestion des Possessions */}
+      <Row className="justify-content-center mb-4">
+        <Col xs={12} md={6} lg={4}>
+          <h3>Gestion des Possessions</h3>
+          <Button onClick={() => setShowCreateForm(true)} className="mt-3 w-100">
+            Créer une Possession
+          </Button>
+        </Col>
+      </Row>
 
-          {/* Formulaire de création de Possession */}
-          <Modal show={showCreateForm} onHide={() => setShowCreateForm(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Créer une Nouvelle Possession</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="libelle">
-                  <Form.Label>Libellé</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={newPossession.libelle}
-                    onChange={(e) => setNewPossession({ ...newPossession, libelle: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="valeur">
-                  <Form.Label>Valeur</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={newPossession.valeur}
-                    onChange={(e) => setNewPossession({ ...newPossession, valeur: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="dateDebut">
-                  <Form.Label>Date de Début</Form.Label>
-                  <DatePicker
-                    selected={newPossession.dateDebut}
-                    onChange={(newDate) => setNewPossession({ ...newPossession, dateDebut: newDate })}
-                    dateFormat="dd/MM/yyyy"
-                  />
-                </Form.Group>
-                <Form.Group controlId="tauxAmortissement">
-                  <Form.Label>Taux d'Amortissement</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={newPossession.tauxAmortissement}
-                    onChange={(e) => setNewPossession({ ...newPossession, tauxAmortissement: e.target.value })}
-                  />
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowCreateForm(false)}>
-                Annuler
-              </Button>
-              <Button variant="primary" onClick={handleCreatePossession}>
-                Créer
-              </Button>
-            </Modal.Footer>
-          </Modal>
+      {/* Formulaire de création de Possession */}
+      <Modal show={showCreateForm} onHide={() => setShowCreateForm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Créer une Nouvelle Possession</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="libelle">
+              <Form.Label>Libellé</Form.Label>
+              <Form.Control
+                type="text"
+                value={newPossession.libelle}
+                onChange={(e) => setNewPossession({ ...newPossession, libelle: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="valeur">
+              <Form.Label>Valeur</Form.Label>
+              <Form.Control
+                type="number"
+                value={newPossession.valeur}
+                onChange={(e) => setNewPossession({ ...newPossession, valeur: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="dateDebut">
+              <Form.Label>Date de Début</Form.Label>
+              <DatePicker
+                selected={newPossession.dateDebut}
+                onChange={(newDate) => setNewPossession({ ...newPossession, dateDebut: newDate })}
+                dateFormat="dd/MM/yyyy"
+                className="form-control"
+              />
+            </Form.Group>
+            <Form.Group controlId="tauxAmortissement">
+              <Form.Label>Taux d'Amortissement</Form.Label>
+              <Form.Control
+                type="number"
+                value={newPossession.tauxAmortissement}
+                onChange={(e) => setNewPossession({ ...newPossession, tauxAmortissement: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateForm(false)}>
+            Annuler
+          </Button>
+          <Button variant="primary" onClick={handleCreatePossession}>
+            Créer
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-          {/* Tableau des possessions */}
-          <Table striped bordered hover>
+      {/* Tableau des possessions */}
+      <Row className="justify-content-center mb-4">
+        <Col xs={12}>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th>Libelle</th>
@@ -199,44 +209,47 @@ const Patrimoine = () => {
                   <td>{possession.tauxAmortissement || "N/A"}</td>
                   <td>{validatedDate ? possession.getValeur(validatedDate).toFixed(2) : "N/A"}</td>
                   <td>
-                    <Button variant="warning" onClick={() => { /* Logique pour mettre à jour la possession ici */ }}>Mettre à jour</Button>{' '}
-                    <Button variant="danger" onClick={() => handleDeletePossession(index)}>Supprimer</Button>
+                    <Button variant="warning" size="sm" className="me-2">Mettre à jour</Button>
+                    <Button variant="danger" size="sm" onClick={() => handleDeletePossession(index)}>Supprimer</Button>
                   </td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan="6"><strong>Total Valeur Actuelle:</strong></td>
-                <td><strong>{totalValeurActuelle.toFixed(2)}</strong></td>
-              </tr>
             </tbody>
           </Table>
         </Col>
       </Row>
 
-      {/* Section pour la plage de dates et le graphique */}
-      <Row>
-        <Col>
-          <h3>Visualisation de l'évolution du patrimoine</h3>
-          <Form>
-            <Form.Group>
-              <Form.Label>Date de début</Form.Label>
-              <DatePicker
-                selected={startDate}
-                onChange={(newDate) => setStartDate(newDate)}
-                dateFormat="dd/MM/yyyy"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Date de fin</Form.Label>
-              <DatePicker
-                selected={endDate}
-                onChange={(newDate) => setEndDate(newDate)}
-                dateFormat="dd/MM/yyyy"
-              />
-            </Form.Group>
-            <Button onClick={handleUpdateChart} className="mt-3">Afficher</Button>
-          </Form>
+      {/* Graphique des valeurs */}
+      <Row className="justify-content-center mb-4">
+        <Col xs={12} md={8}>
+          <h3>Valeur Patrimoine sur la Période</h3>
+          <Form.Group controlId="startDate" className="mb-2">
+            <Form.Label>Date de Début</Form.Label>
+            <DatePicker
+              selected={startDate}
+              onChange={(newDate) => setStartDate(newDate)}
+              dateFormat="dd/MM/yyyy"
+              className="form-control"
+            />
+          </Form.Group>
+          <Form.Group controlId="endDate" className="mb-2">
+            <Form.Label>Date de Fin</Form.Label>
+            <DatePicker
+              selected={endDate}
+              onChange={(newDate) => setEndDate(newDate)}
+              dateFormat="dd/MM/yyyy"
+              className="form-control"
+            />
+          </Form.Group>
+          <Button onClick={handleUpdateChart} className="mb-3 w-100">Afficher le Graphique</Button>
           <Line data={data} />
+        </Col>
+      </Row>
+
+      {/* Affichage du total */}
+      <Row className="justify-content-center text-center">
+        <Col xs={12}>
+          <h3>Total Valeur Actuelle: {totalValeurActuelle.toFixed(2)} €</h3>
         </Col>
       </Row>
     </Container>
