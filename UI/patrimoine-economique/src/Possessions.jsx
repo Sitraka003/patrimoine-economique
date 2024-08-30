@@ -12,7 +12,12 @@ function TablePossession() {
       try {
         const response = await axios.get('http://localhost:3000/possessions');
         if (Array.isArray(response.data)) {
-          setPossessions(response.data);
+          // Calculate the current value of each possession
+          const updatedPossessions = response.data.map(possession => ({
+            ...possession,
+            valeurActuelle: calculateCurrentValue(possession)
+          }));
+          setPossessions(updatedPossessions);
         } else {
           console.error('Unexpected data format:', response.data);
           setPossessions([]);
@@ -25,6 +30,17 @@ function TablePossession() {
 
     fetchPossessions();
   }, []);
+
+  const calculateCurrentValue = (possession) => {
+    const { valeur, Amortissement, Debut } = possession;
+    const depreciationRate = Amortissement / 100;
+    const startDate = new Date(Debut);
+    const currentDate = new Date();
+    const ageInYears = (currentDate - startDate) / (1000 * 60 * 60 * 24 * 365.25); // Convert milliseconds to years
+
+    const currentValue = valeur * Math.pow(1 - depreciationRate, ageInYears);
+    return currentValue.toFixed(2); // Round to 2 decimal places
+  };
 
   const handleClose = async (libelle) => {
     try {
@@ -51,7 +67,7 @@ function TablePossession() {
       console.error('Error deleting possession:', error);
     }
   };
-  
+
   return (
     <div className="d-flex flex-column justify-content-evenly m-5">
       <Table responsive="xl" className="w-100 table-bordered table-striped table-hover">
@@ -76,7 +92,7 @@ function TablePossession() {
               <td className="text-center">{possession.Debut.split('T')[0]}</td>
               <td className="text-center">{possession.Fin ? possession.Fin.split('T')[0] : '-'}</td>
               <td className="text-center">{possession.Amortissement} %</td>
-              <td className="text-center">{possession.valeurActuelle || '-'}</td>
+              <td className="text-center">{possession.valeurActuelle || '-'} Ariary</td>
               <td className="text-center">
                 <Link to={`/possession/${possession.libelle}/update`} className="btn btn-warning btn-sm">
                   Edit

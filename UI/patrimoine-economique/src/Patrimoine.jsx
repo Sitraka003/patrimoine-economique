@@ -1,14 +1,15 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { Chart } from 'chart.js/auto';
-import React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import DatePicker from 'react-datepicker';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import 'react-datepicker/dist/react-datepicker.css';
 
-function MyChart() {
+function MyChart({ labels, data }) {
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
 
@@ -21,11 +22,11 @@ function MyChart() {
         chartInstance.current = new Chart(myChartRef, {
             type: "line",
             data: {
-                labels: ['Jan', 'Feb', 'March', 'Apr', 'May'],
+                labels: labels,
                 datasets: [
                     {
                         label: "Votre patrimoine economique",
-                        data: [65, 34, 65, 34, 56],
+                        data: data,
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)',
                         borderWidth: 2,
@@ -39,14 +40,12 @@ function MyChart() {
                 chartInstance.current.destroy();
             }
         };
-    }, []);
+    }, [labels, data]);
 
     return (
         <Container className="my-4">
             <Row className="justify-content-center">
-                <Col md={0
-
-                }>
+                <Col md={12}>
                     <canvas
                         ref={chartRef}
                         style={{ width: "100%", height: "100px" }}
@@ -57,10 +56,7 @@ function MyChart() {
     );
 }
 
-function Choices() {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-
+function Choices({ startDate, setStartDate, endDate, setEndDate }) {
     return (
         <Container className="my-4">
             <Form>
@@ -73,7 +69,7 @@ function Choices() {
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
                             className="form-control"
-                            dateFormat="MMMM d, yyyy"
+                            dateFormat="yyyy-MM-dd"
                             placeholderText="Select a date"
                         />
                     </Col>
@@ -88,7 +84,7 @@ function Choices() {
                             selected={endDate}
                             onChange={(date) => setEndDate(date)}
                             className="form-control"
-                            dateFormat="MMMM d, yyyy"
+                            dateFormat="yyyy-MM-dd"
                             placeholderText="Select a date"
                         />
                     </Col>
@@ -106,42 +102,127 @@ function Choices() {
     );
 }
 
-function GetValeurPatrimoine() {
-    const [endDate, setEndDate] = useState(new Date());
+function GetValeurPatrimoine({ startDate, endDate }) {
+    const [chartData, setChartData] = useState({ labels: [], data: [] });
+
+    useEffect(() => {
+        const fetchPossessionsAndCalculatePatrimoine = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/possessions');
+                const possessions = response.data;
+
+                const labels = [];
+                const data = [];
+
+                let currentDate = new Date(startDate);
+                const end = new Date(endDate);
+
+                while (currentDate <= end) {
+                    const formattedDate = currentDate.toISOString().split('T')[0];
+
+                    const totalPatrimoine = possessions.reduce((total, possession) => {
+                        const { valeur, Amortissement, Debut } = possession;
+                        const depreciationRate = Amortissement / 100;
+                        const possessionStartDate = new Date(Debut);
+                        const ageInYears = (currentDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
+
+                        return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
+                    }, 0);
+
+                    labels.push(formattedDate);
+                    data.push(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
+
+                    // Move to the next month
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                }
+
+                setChartData({ labels, data });
+
+            } catch (error) {
+                console.error('Error fetching possessions:', error);
+            }
+        };
+
+        fetchPossessionsAndCalculatePatrimoine();
+    }, [startDate, endDate]);
 
     return (
-        <Form lassName="my-4">
-            <Form.Group as={Row} className="mb-3" controlId="formDate">
-                <Form.Label column sm="2">
-                    Pick a date:
-                </Form.Label>
-                <Col sm="5">
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        className="form-control"
-                        dateFormat="MMMM d, yyyy"
-                        placeholderText="Select a date"
-                    />
-                </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3">
-                <Col sm={{ span: 5, offset: 2 }}>
-                    <Button variant="primary" type="submit">
-                        Confirm
-                    </Button>
-                </Col>
-            </Form.Group>
-        </Form>
+        <MyChart labels={chartData.labels} data={chartData.data} />
     );
 }
+
+function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    const handleConfirm = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/possessions');
+            const possessions = response.data;
+
+            const totalPatrimoine = possessions.reduce((total, possession) => {
+                const { valeur, Amortissement, Debut } = possession;
+                const depreciationRate = Amortissement / 100;
+                const possessionStartDate = new Date(Debut);
+                const ageInYears = (selectedDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
+
+                return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
+            }, 0);
+
+            onCalculatePatrimoine(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
+        } catch (error) {
+            console.error('Error calculating patrimoine:', error);
+        }
+    };
+
+    return (
+        <Container className="my-4">
+            <Form>
+                <Form.Group as={Row} className="mb-3" controlId="formDate">
+                    <Form.Label column sm="2">
+                        Choisissez une date :
+                    </Form.Label>
+                    <Col sm="5">
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            className="form-control"
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="Select a date"
+                        />
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} className="mb-3">
+                    <Col sm={{ span: 5, offset: 2 }}>
+                        <Button variant="primary" type="button" onClick={handleConfirm}>
+                            Confirm
+                        </Button>
+                    </Col>
+                </Form.Group>
+            </Form>
+        </Container>
+    );
+}
+
 function Patrimoine() {
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [patrimoineValue, setPatrimoineValue] = useState(null);
+
+    const handleCalculatePatrimoine = (value) => {
+        setPatrimoineValue(value);
+    };
+
     return (
         <div>
-            <Choices />
-            <MyChart />
-            <GetValeurPatrimoine/>
+            <Choices startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+            <GetValeurPatrimoine startDate={startDate} endDate={endDate} />
+            <PatrimoineOnTheActualDay onCalculatePatrimoine={handleCalculatePatrimoine} />
+            {patrimoineValue !== null && (
+                <div className="text-center my-4">
+                    <h4>{patrimoineValue} Ariary</h4>
+                </div>
+            )}
         </div>
     );
 }

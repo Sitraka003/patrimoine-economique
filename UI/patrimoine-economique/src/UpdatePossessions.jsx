@@ -22,7 +22,6 @@ function UpdatePossession() {
                 const response = await axios.get(`/possession/${libelle}`);
                 setCurrentLibelle(response.data.libelle || '');
                 setNewLibelle(response.data.libelle || '');
-
                 if (response.data.dateFin) {
                     setStartDate(new Date(response.data.dateFin));
                 }
@@ -38,16 +37,10 @@ function UpdatePossession() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setSubmitting(true);
-        try {
-            const url = `/possession/${currentLibelle}`;
-            console.log(`Updating possession at URL: ${url}`);
-            console.log('Payload:', {
-                dateFin: startDate.toISOString().split('T')[0],
-                libelle: newLibelle
-            });
 
-            await axios.put(url, {
+        console.log(`Updating possession at URL: /possession/${currentLibelle}`); // Debug log
+        try {
+            await axios.put(`/possession/${currentLibelle}`, {
                 dateFin: startDate.toISOString().split('T')[0],
                 libelle: newLibelle
             });

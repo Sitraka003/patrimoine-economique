@@ -16,21 +16,31 @@
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "MacBook Pro",
-          "valeur": 4000000,
-          "Debut": "2023-12-25T00:00:00.000Z",
-          "Fin": "2024-08-30",
-          "Amortissement": 5
+          "libelle": "Porsche 911 gt3RS",
+          "valeur": "9000000000",
+          "Debut": "2024-08-30",
+          "Fin": null,
+          "Amortissement": "2"
         },
         {
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "Porsche 911 gt3RS",
-          "valeur": "50000000",
+          "libelle": "MacBook Pro",
+          "valeur": "1000000",
           "Debut": "2024-08-30",
           "Fin": null,
           "Amortissement": "2"
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Car",
+          "valeur": "1000000",
+          "Debut": "2024-08-30",
+          "Fin": "2024-08-30",
+          "Amortissement": "5"
         }
       ]
     }

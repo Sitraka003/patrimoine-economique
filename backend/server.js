@@ -60,8 +60,9 @@ app.post('/possession', (req, res) => {
 // Update Possession by libelle
 app.put('/possession/:libelle', (req, res) => {
     const { libelle } = req.params;
-    const { dateFin } = req.body;
-    console.log(`Received PUT request for libelle: ${libelle}, dateFin: ${dateFin}`);
+    const { dateFin, newLibelle } = req.body;
+
+    console.log(`Received PUT request for libelle: ${libelle}`); // Debug log
 
     readData((err, json) => {
         if (err) return res.status(500).send(err.message);
@@ -71,6 +72,9 @@ app.put('/possession/:libelle', (req, res) => {
             const possession = patrimoine.data.possessions.find(p => p.libelle === libelle);
             if (possession) {
                 possession.Fin = dateFin;
+                if (newLibelle && newLibelle !== libelle) {
+                    possession.libelle = newLibelle;
+                }
                 writeData(json, (err) => {
                     if (err) return res.status(500).send(err.message);
                     res.json({ message: 'Possession updated successfully' });
@@ -93,7 +97,7 @@ app.put('/possession/:libelle/close', (req, res) => {
         if (patrimoine) {
             const possession = patrimoine.data.possessions.find(p => p.libelle === libelle);
             if (possession) {
-                possession.Fin = new Date().toISOString().split('T')[0]; 
+                possession.Fin = new Date().toISOString().split('T')[0];
                 writeData(json, (err) => {
                     if (err) return res.status(500).send(err.message);
                     res.json({ message: 'Possession closed successfully' });
