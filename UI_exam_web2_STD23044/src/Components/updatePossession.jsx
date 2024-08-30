@@ -45,6 +45,7 @@ export default function UpdatePossessionPage() {
       }
       const updatedPossession = await response.json();
       alert('Possession mise à jour:', updatedPossession);
+      window.location.href = '/possession';
     } catch (error) {
       alert('Erreur lors de la mise à jour:', error);
     }

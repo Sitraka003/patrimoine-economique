@@ -20,6 +20,7 @@ export default function CreatePossessionPage() {
             }
             const newPossession = await response.json();
             alert('Nouvelle possession créée:', newPossession);
+            window.location.href = '/possession';
         } catch (error) {
             alert('Erreur dans la création de la possession:', error);
         }

@@ -33,12 +33,12 @@ export default function ListPossessionPage() {
                 throw new Error('Network response was not ok');
             }
             const result = await response.json();
+            setPossessions();
             setPossessions((prevPossessions) =>
                 prevPossessions.map((p) =>
                     p.libelle === libelle ? { ...p, dateFin: new Date(result.possession.dateFin).toLocaleDateString() } : p
                 )
             );
-            alert('Possession clôturée');
         } catch (error) {
             console.error('Erreur lors de la clôture de la possession:', error);
             alert('Erreur lors de la clôture de la possession');
