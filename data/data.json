@@ -27,7 +27,7 @@
         "dateFin": "2025-01-01",
         "tauxAmortissement": null,
         "jour": 2,
-        "valeurConstante": -300000
+        "valeurConstante": "-300000"
       }
     ]
   }
