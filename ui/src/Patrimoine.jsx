@@ -1,13 +1,15 @@
+// ... autres importations
 import React, { useState, useEffect } from "react";
 import data from "../../data/data.json";
 import Argent from "../../models/possessions/Argent.js";
 import BienMateriel from "../../models/possessions/BienMateriel.js";
 import Flux from "../../models/possessions/Flux.js";
 import Patrimoine from "../../models/Patrimoine.js";
+import LineChart from "./components/chart/LineChart";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { Link } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import axios from "axios";
 import "./App.css";
 
 const PatrimoineApp = () => {
@@ -16,6 +18,10 @@ const PatrimoineApp = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [error, setError] = useState("");
   const [patrimoineTotal, setPatrimoineTotal] = useState(null);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingPossession, setEditingPossession] = useState(null);
+  const [editError, setEditError] = useState("");
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     const person = data.find((p) => p.nom === selectedPerson);
@@ -67,6 +73,7 @@ const PatrimoineApp = () => {
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
     setError("");
+    setPatrimoineTotal(null);
   };
 
   const calculerValeurActuelle = (possession, date) => {
@@ -95,6 +102,13 @@ const PatrimoineApp = () => {
 
     const total = valeurs.reduce((acc, curr) => acc + curr, 0);
     setPatrimoineTotal(total);
+
+    // Préparation des données pour les graphiques
+    const chartData = patrimoine.possessions.map((possession) => ({
+      libelle: possession.libelle,
+      valeur: calculerValeurActuelle(possession, selectedDate),
+    }));
+    setChartData(chartData);
   };
 
   return (
@@ -164,11 +178,17 @@ const PatrimoineApp = () => {
                   <td>
                     <button
                       className="btn btn-warning me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editModal"
                       onClick={() => handleEdit(index)}
                     >
-                      <Link to="/show" className="nav-link">
-                        <FaEdit />
-                      </Link>
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <FaTrash />
                     </button>
                   </td>
                 </tr>
@@ -176,33 +196,28 @@ const PatrimoineApp = () => {
             </tbody>
           </table>
 
-          <div className="mt-4">
-            <label htmlFor="dateInput" className="form-label">
-              Choisissez une date :
+          <div className="mb-3">
+            <label htmlFor="dateSelect" className="form-label">
+              Sélectionnez une date :
             </label>
-            <div className="input-group">
-              <input
-                type="date"
-                id="dateInput"
-                className="form-control bg-secondary text-light"
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
-              <button className="btn btn-success" onClick={handleValider}>
-                Valider
-              </button>
-            </div>
+            <input
+              type="date"
+              id="dateSelect"
+              className="form-control bg-secondary text-light"
+              onChange={handleDateChange}
+              value={selectedDate}
+            />
+            {error && <div className="alert alert-danger mt-2">{error}</div>}
+            <button className="btn btn-primary mt-2" onClick={handleValider}>
+              Valider
+            </button>
+            {patrimoineTotal !== null && (
+              <div className="alert alert-info mt-3">
+                Valeur Totale du Patrimoine: {patrimoineTotal.toFixed(2)} Ar
+              </div>
+            )}
           </div>
-
-          {error && <div className="alert alert-danger mt-3">{error}</div>}
-
-          {patrimoineTotal !== null && (
-            <div>
-              <h2 className="mt-4 text-success">
-                Valeur totale du patrimoine : {patrimoineTotal.toFixed(2)} Ar
-              </h2>
-            </div>
-          )}
+          {chartData.length > 0 && <LineChart data={chartData} />}
         </div>
       )}
     </div>
