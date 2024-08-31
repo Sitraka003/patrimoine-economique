@@ -58,11 +58,9 @@ const App = () => {
             </div>
           </div>
         </nav>
-
         <div className="mt-4">
           <Routes>
             <Route path="/" element={<Home />} />
-            {/* <Route path="/line-chart" element={<LineChart />} /> */}
             <Route path="/possession" element={<Possession />} />
             <Route path="/patrimoine" element={<PatrimoineApp />} />
             <Route path="/show" element={<Show />} />
