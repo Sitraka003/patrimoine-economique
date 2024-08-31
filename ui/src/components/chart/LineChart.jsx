@@ -22,8 +22,6 @@ ChartJS.register(
 );
 
 const LineChart = ({ data }) => {
-  console.log("Data passed to LineChart:", data); // Vérifiez le type de data ici
-
   const prepareLineChartData = () => {
     return {
       labels: data.map((item) => item.libelle),
@@ -47,6 +45,5 @@ const LineChart = ({ data }) => {
     </div>
   );
 };
-
 
 export default LineChart;
