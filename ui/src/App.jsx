@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./Home";
-import Possession from "./Possession";
-import PatrimoineApp from "./Patrimoine";
+import Home from "./components/home/Home";
+import Possession from "./components/possession/Possession";
+import PatrimoineApp from "./components/patrimoine/Patrimoine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Show from "./showAll";
+import Show from "./components/crud/showAll";
 import Footer from "./components/footer/footer";
 
 const App = () => {
