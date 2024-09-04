@@ -2,29 +2,22 @@ const express = require("express");
 const router = express.Router();
 const {
     getPersons,
-    addPerson,
-    getPossessions,
-    addPossession,
-    updatePossession,
-    closePossession,
-    getPatrimoineByDate,
-    getPatrimoineByDateRange,
+    deletePossession,
     deletePerson,
-    getPersonByName,
-    updatePerson
-
+    updatePossession,
+    updatePerson,
+    addPerson,
+    addPossession,
+    closePossession
 } = require("../controllers/PersonController");
 
-router.get("/", getPersons);
-router.get("/possession", getPossessions);
-router.get("/patrimoine/:date", getPatrimoineByDate);
-router.get("/patrimoine/range", getPatrimoineByDateRange);
-router.get("/:nom", getPersonByName);
-router.post("/", addPerson);
-router.post("/possession", addPossession);
-router.post("/close", closePossession);
-router.put("/:nom", updatePerson); 
-router.put("/possession", updatePossession);
-router.delete("/:nom", deletePerson);
+router.get("/personnes", getPersons);
+router.delete("/possessions/:nomPossesseur/:libelle", deletePossession);
+router.delete("/personnes/:nom", deletePerson);
+router.put("/personnes/:nom", updatePerson);
+router.put("/possessions/:possesseurNom/:libelle", updatePossession);
+router.post("/personnes", addPerson);
+router.post("/possessions", addPossession);
+router.put('/possessions/:nom/:libelle/close', closePossession);
 
 module.exports = router;
