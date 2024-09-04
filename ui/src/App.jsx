@@ -16,7 +16,7 @@ const App = () => {
           <div className="container-fluid d-flex align-items-center bg-dark text-warning border border-dark-100 rounded">
             <h1>
               <Link
-                className="navbar-brand text-primary font-weight-bold text-uppercase"
+                className="navbar-brand text-primary fw-bold text-uppercase"
                 to="/"
               >
                 PatriManage
