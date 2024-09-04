@@ -1,15 +1,14 @@
 const fs = require("fs");
 const path = require('path');
 
+const dataFilePath = path.join(__dirname, "../data/data.json");
+
 const readData = () => {
-    const dataPath = path.join(__dirname, './../data/data.json');
-    const rawData = fs.readFileSync(dataPath);
-    return JSON.parse(rawData);
+    const data = fs.readFileSync(dataFilePath, "utf8");
+    return JSON.parse(data);
 };
 
 const writeData = (data) => {
-    const dataPath = path.join(__dirname, './../data/data.json');
-    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 };
-
 module.exports = { readData, writeData };
