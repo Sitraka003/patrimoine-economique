@@ -19,7 +19,6 @@ const Possession = () => {
     jour: null,
   });
 
-  // Charger les personnes existantes depuis l'API
   useEffect(() => {
     const fetchPersons = async () => {
       try {
@@ -32,7 +31,6 @@ const Possession = () => {
     fetchPersons();
   }, []);
 
-  // Ajouter une nouvelle personne avec ses possessions
   const handleAddPerson = async () => {
     if (!newPerson.nom) return;
 
@@ -49,7 +47,6 @@ const Possession = () => {
     }
   };
 
-  // Ajouter une nouvelle possession à la personne en cours de création
   const handleAddPossession = () => {
     if (!newPossession.libelle) return;
     setNewPerson((prev) => ({
@@ -59,13 +56,11 @@ const Possession = () => {
     resetNewPossessionForm();
   };
 
-  // Réinitialiser le formulaire de nouvelle personne
   const resetNewPersonForm = () => {
     setNewPerson({ nom: "", possessions: [] });
     resetNewPossessionForm();
   };
 
-  // Réinitialiser le formulaire de nouvelle possession
   const resetNewPossessionForm = () => {
     setNewPossession({
       type: "",

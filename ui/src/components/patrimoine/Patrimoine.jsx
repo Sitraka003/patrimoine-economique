@@ -1,5 +1,3 @@
-// src/components/PatrimoineApp.js
-
 import React, { useState, useEffect } from "react";
 import data from "../../../../data/data.json";
 import Argent from "../../../../models/possessions/Argent.js";
@@ -51,7 +49,6 @@ const PatrimoineApp = () => {
             if (!possession || !possession.libelle) {
               return null;
             }
-            // Utiliser les propriétés disponibles dans data.json
             if (possession.valeurConstante !== undefined) {
               return new Flux(
                 selectedPerson,

@@ -52,7 +52,7 @@ const App = () => {
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/show">
-                    Show All Patrimoine
+                    ShowPossession
                   </Link>
                 </li>
               </ul>
