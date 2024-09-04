@@ -160,13 +160,11 @@ function instancing(possessionsData) {
   return possessionsData.map((oneData) => {
       const dateDebut = new Date(oneData.dateDebut);
       const dateFin = oneData.dateFin ? new Date(oneData.dateFin) : null;
-      
-      
       const tauxAmortissement = Number(oneData.tauxAmortissement || 0);
       const valeurConstante = oneData.valeurConstante !== undefined ? Number(oneData.valeurConstante) : 0;
 
       if (oneData.libelle === "Alternance" || oneData.libelle === "Survie") {
-          return new Flux(
+          const newFlux =  new Flux(
               oneData.possesseur.nom,
               oneData.libelle,
               Number(oneData.valeur || 0),  
@@ -176,6 +174,8 @@ function instancing(possessionsData) {
               oneData.jour,
               valeurConstante
           );
+          newFlux.valeurConstante = valeurConstante;
+          return newFlux
       }
 
       return new Possession(
@@ -226,17 +226,6 @@ app.get("/patrimoine/:date", async (request, response) => {
       response.status(500).json({ error: 'Erreur lors de la récupération de la valeur du patrimoine', details: error.message });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 app.listen(3500, () => {
   console.log("Yayyy ça marche enfin");
