@@ -43,7 +43,7 @@ const HomeChart = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="p-5 bg-white m-1"
+      className="p-5 bg-white m-1 rounded-2"
     >
       <Line data={data} options={options} />
     </motion.div>
