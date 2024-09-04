@@ -7,12 +7,13 @@ import EditPossession from '../../components/editPossession.jsx';
 import "./possession.css";
 import { AddPossession, ToggleAddPossession } from '../../components/addPossession.jsx';
 import { ToggleEdit } from '../../components/editPossession.jsx';
+import Patrimoine from '../../../../models/Patrimoine.js';
 
 function PossessionPage() {
     const [data, setData] = useState(null);
     const [possessions, setPossessions] = useState([]);
-    const [datePicker, setDatePicker] = useState();
-    const [patrimonyValue, setPatrimonyValue] = useState(0);
+    const [datePicker, setDatePicker] = useState("");
+    const [patrimonyValue, setPatrimonyValue] = useState(null);
     const [arrayResult, setArrayResult] = useState([]);
     const [selectedPossession, setSelectedPossession] = useState(null);
 
@@ -41,60 +42,113 @@ function PossessionPage() {
 
     function instancing(possessionsData) {
         const newPossessions = possessionsData.map((oneData) => {
+            const dateDebut = new Date(oneData.dateDebut);
+            const dateFin = oneData.dateFin ? new Date(oneData.dateFin) : null;
+    
             if (oneData.libelle === "Alternance" || oneData.libelle === "Survie") {
-                return new Flux(
+                const valeurConstante = Number(oneData.valeurConstante || 0);
+                console.log('Instanciation Flux avec valeurConstante:', valeurConstante);
+                const oneFlux = 
+                 new Flux(
                     oneData.possesseur.nom,
                     oneData.libelle,
-                    oneData.valeur,
-                    new Date(oneData.dateDebut),
-                    oneData.dateFin,
-                    oneData.tauxAmortissement || "0",
+                    0,
+                    dateDebut,
+                    dateFin,
+                    Number(oneData.tauxAmortissement || 0),
                     oneData.jour,
                     oneData.valeurConstante
                 );
+
+                oneFlux.valeurConstante = valeurConstante
+                console.log(oneFlux)
+                return oneFlux
             }
+    
             return new Possession(
                 oneData.possesseur.nom,
                 oneData.libelle,
                 oneData.valeur,
-                new Date(oneData.dateDebut),
-                oneData.dateFin,
-                oneData.tauxAmortissement || 0
+                dateDebut,
+                dateFin,
+                Number(oneData.tauxAmortissement || 0)
             );
         });
         setPossessions(newPossessions);
     }
+    
+    
 
     function getDatePicker(e) {
         setDatePicker(e.target.value);
     }
 
     function getNewValue() {
+        console.log('Selected datePicker:', datePicker);
+    
+        if (!datePicker) {
+            console.error('datePicker is not defined');
+            return;
+        }
+    
         const date = new Date(datePicker);
-        const values = possessions.map((possession) => possession.getValeurApresAmortissement(date));
-        const results = values.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-        setPatrimonyValue(results);
+    
+        if (isNaN(date.getTime())) {
+            console.error('Invalid date:', datePicker);
+            return;
+        }
+    
+        console.log('Converted date:', date.toISOString().split('T')[0]);
+    
+        axios.get(`http://localhost:3500/patrimoine/${date.toISOString().split('T')[0]}`)
+            .then(response => {
+                const newValue = response.data;
+                console.log('New value retrieved:', newValue);
+
+                if (typeof newValue === 'number' || typeof newValue === 'string') {
+                    setPatrimonyValue(newValue);
+                } else if (newValue && newValue.valeur) {
+                    setPatrimonyValue(newValue.valeur);
+                } else {
+                    console.error('Unexpected format of newValue:', newValue);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching new value:', error);
+            });
     }
 
     function getActualValue() {
         const today = new Date();
         const results = possessions.map(possession => {
-            if (possession.libelle === "Alternance" || possession.libelle === "Survie") {
-                const month = today.getMonth() - possession.dateDebut.getMonth();
-                return (possession.valeur + possession.valeurConstante * month);
-            } else {
+            if (possession instanceof Flux) {
+                let month = 0;
+                const daysToMonth = (today.getDay()-possession.dateDebut.getDay())/30;
+                if(today.getFullYear() != possession.dateDebut.getFullYear()){
+                    const difference = (today.getFullYear() - possession.dateDebut.getFullYear())*12;
+                    month = today.getMonth() - possession.dateDebut.getMonth() + difference + daysToMonth
+                } else{
+                    month = today.getMonth() - possession.dateDebut.getMonth() + daysToMonth;
+                }
+                 
+                console.log('je Calcule un flux avec la valeur constante :' , possession.valeurConstante)
+                return (possession.valeur + (possession.valeurConstante) * month);
+                
+            } else if (possession instanceof Possession) {
                 return possession.getValeurApresAmortissement(today);
-            } 
+            } else {
+                console.warn('Unknown possession type:', possession);
+            }
         });
-        setArrayResult(results); 
+        setArrayResult(results);
     }
-
+    
     useEffect(() => {
         if (possessions.length > 0) {
             getActualValue();
         }
     }, [possessions]);
-
+    
 
     function closePossession(libelle) {
         console.log(`Tentative de clôture de la possession : ${libelle}`);
@@ -107,13 +161,6 @@ function PossessionPage() {
                 console.error('Erreur lors de la clôture de la possession :', error);
             });
     }
-    
-    
-    
-    
-    
-    
-    
 
     function ShowList({ possessions, arrayResult }) {
         return (
@@ -133,8 +180,6 @@ function PossessionPage() {
                             modifier
                         </button>
                         <button type="button" className="btn btn-secondary cloture" onClick={() => closePossession(possession.libelle)}>clôture</button>
-
-
                     </tr>
                 ))}
             </tbody>
@@ -170,7 +215,7 @@ function PossessionPage() {
                 </div>
                 
                 <div className='resultats'>
-                    RESULTAT: {patrimonyValue} Ariary
+                    RESULTAT: {patrimonyValue !== null ? `${patrimonyValue} Ariary` : '0 Ariary'}
                 </div>
             </div>
             <table className="table table-dark tableau">

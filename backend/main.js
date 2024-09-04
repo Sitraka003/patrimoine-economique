@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import { readFile, writeFile } from '../data/index.js';
+import Possession from '../models/possessions/Possession.js';
+import Flux from '../models/possessions/Flux.js';
+import Patrimoine from '../models/Patrimoine.js';
+import { promises as fs } from 'fs';
+
 
 const app = express();
 
@@ -126,7 +131,7 @@ app.put("/possession/:libelle/close", async (request, response) => {
     const possession = possessions.find(onePossession => onePossession.libelle === libelle);
 
     if (possession) {
-      // Met à jour la date de fin seulement si elle est actuellement "inconnue" ou null
+         
       if (possession.dateFin === "inconnue" || !possession.dateFin) {
         possession.dateFin = dateFin;
         const writeResult = await writeFile("../UI/public/data.json", data);
@@ -147,6 +152,91 @@ app.put("/possession/:libelle/close", async (request, response) => {
     return response.status(500).json({ error: 'Erreur lors de la clôture de la possession' });
   }
 });
+
+
+   
+
+function instancing(possessionsData) {
+  return possessionsData.map((oneData) => {
+      const dateDebut = new Date(oneData.dateDebut);
+      const dateFin = oneData.dateFin ? new Date(oneData.dateFin) : null;
+      
+      
+      const tauxAmortissement = Number(oneData.tauxAmortissement || 0);
+      const valeurConstante = oneData.valeurConstante !== undefined ? Number(oneData.valeurConstante) : 0;
+
+      if (oneData.libelle === "Alternance" || oneData.libelle === "Survie") {
+          return new Flux(
+              oneData.possesseur.nom,
+              oneData.libelle,
+              Number(oneData.valeur || 0),  
+              dateDebut,
+              dateFin,
+              tauxAmortissement,
+              oneData.jour,
+              valeurConstante
+          );
+      }
+
+      return new Possession(
+          oneData.possesseur.nom,
+          oneData.libelle,
+          Number(oneData.valeur || 0),
+          dateDebut,
+          dateFin,
+          tauxAmortissement
+      );
+  });
+}
+
+
+
+app.get("/patrimoine/:date", async (request, response) => {
+  const dateStr = request.params.date;
+  const convertedDate = new Date(dateStr);
+
+  // Vérifie que la date a bien ete convertie
+  if (isNaN(convertedDate.getTime())) {
+      return response.status(400).json({ error: "Date invalide" });
+  }
+
+  try {
+      const file = await readFile("../UI/public/data.json");
+      const possesseur = file.data[1].data.possesseur;
+      const possessions = file.data[1].data.possessions;
+
+      console.log("File content:", file);
+
+      if (!file || !file.data[1].data.possessions) {
+          console.error("Invalid file structure");
+          return response.status(500).json({ error: "Structure incorrecte du fichier" });
+      }
+
+      const instanced = instancing(possessions);
+      console.log("Instanced Data:", instanced);
+
+      const newPatrimoine = new Patrimoine(possesseur.nom, instanced);
+      console.log("New Patrimoine:", newPatrimoine);
+
+      const valeur = newPatrimoine.getValeur(convertedDate);
+
+      response.json({valeur}); 
+  } catch (error) {
+      console.error('Error:', error);
+      response.status(500).json({ error: 'Erreur lors de la récupération de la valeur du patrimoine', details: error.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
 
 app.listen(3500, () => {
   console.log("Yayyy ça marche enfin");
