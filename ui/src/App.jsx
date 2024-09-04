@@ -6,6 +6,7 @@ import PatrimoineApp from "./Patrimoine";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Show from "./showAll";
+import Footer from "./components/footer/footer";
 
 const App = () => {
   return (
@@ -15,10 +16,10 @@ const App = () => {
           <div className="container-fluid d-flex align-items-center bg-dark text-warning border border-dark-100 rounded">
             <h1>
               <Link
-                className="navbar-brand text-primary font-weight-bold"
+                className="navbar-brand text-primary font-weight-bold text-uppercase"
                 to="/"
               >
-                Patrimoine App
+                PatriManage
               </Link>
             </h1>
             <button
@@ -40,18 +41,18 @@ const App = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/possession">
-                    Possession
-                  </Link>
-                </li>
-                <li className="nav-item">
                   <Link className="nav-link" to="/patrimoine">
                     Patrimoine
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link className="nav-link" to="/possession">
+                    AddPossession
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link className="nav-link" to="/show">
-                    Show
+                    Show All Patrimoine
                   </Link>
                 </li>
               </ul>
@@ -67,6 +68,7 @@ const App = () => {
           </Routes>
         </div>
       </div>
+      <Footer />
     </Router>
   );
 };

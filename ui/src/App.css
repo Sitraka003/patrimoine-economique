@@ -34,5 +34,71 @@ h1 {
 }
 
 .bg-dark {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e) !important;
+  background: conic-gradient(#2f5fab, #72b91c) !important;
+  /* background: radial-gradient(circle, #1e3c72, #2a5298) !important; */
+}
+
+.bg-dark-custom {
+  background: radial-gradient(circle, #1e3c72, #2a5298) !important;
+  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.bg-secondary {
+  background: #16334e !important;
+}
+
+.bg-custom {
+  background: #16334e !important;
+}
+
+.table-gradient {
+  background: conic-gradient(#2f5fab, #72b91c) !important;
+  color: white;
+}
+
+/* add possession */
+
+.container-custom {
+  background: conic-gradient(#2f5fab, #72b91c) !important;
+  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.text-primary-custom {
+  color: white;
+  border-color: white;
+}
+
+.text-success-custom {
+  color: #d7d7d7;
+  border-color: #a2f5a2;
+}
+
+.input-group-prepend-custom {
+  background-color: #324a72;
+  border-color: white;
+}
+
+.form-control-custom {
+  background-color: #324a72;
+  color: #ffffff;
+  border-color: white;
+}
+
+.btn-outline-success-custom {
+  border-color: #a2f5a2;
+  color: #a2f5a2;
+}
+
+.btn-outline-info-custom {
+  border-color: white;
+  color: white;
+}
+
+.btn-outline-success-custom:hover,
+.btn-outline-info-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
