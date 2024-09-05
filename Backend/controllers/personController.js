@@ -10,7 +10,9 @@ const deletePerson = (req, res) => {
     let data = readData();
 
     const updatedData = data.filter(
-        (item) => item.model !== "Personne" || item.data.nom.trim() !== nom.trim()
+        (item) =>
+            (item.model !== "Personne" || item.data.nom.trim() !== nom.trim()) &&
+            (item.model !== "Patrimoine" || item.data.possesseur.nom.trim() !== nom.trim())
     );
 
     if (data.length === updatedData.length) {
@@ -18,7 +20,7 @@ const deletePerson = (req, res) => {
     }
 
     writeData(updatedData);
-    res.status(200).json({ message: "Personne supprimée avec succès" });
+    res.status(200).json({ message: "Personne et possessions supprimées avec succès" });
 };
 
 
@@ -84,8 +86,9 @@ const updatePerson = (req, res) => {
 
 const updatePossession = (req, res) => {
     const { possesseurNom, libelle } = req.params;
-    const { libelle: nouveauLibelle, dateFin } = req.body;
+    const { libelle: nouveauLibelle, dateFin, valeur, valeurConstante, tauxAmortissement } = req.body;
 
+    // Validation de l'entrée
     if (!nouveauLibelle || typeof nouveauLibelle !== 'string') {
         return res.status(400).json({ message: "Libellé invalide fourni." });
     }
@@ -93,6 +96,7 @@ const updatePossession = (req, res) => {
     let data = readData();
     let possessionTrouvee = false;
 
+    // Mise à jour des données
     const updatedData = data.map((item) => {
         if (item.model === "Patrimoine" && item.data.possesseur.nom.trim() === possesseurNom.trim()) {
             const updatedPossessions = item.data.possessions.map((possession) => {
@@ -101,7 +105,10 @@ const updatePossession = (req, res) => {
                     return {
                         ...possession,
                         libelle: nouveauLibelle.trim(),
-                        dateFin: dateFin ? new Date(dateFin).toISOString() : null,
+                        dateFin: dateFin ? new Date(dateFin).toISOString() : possession.dateFin, // Garde l'ancienne date si non fournie
+                        valeur: typeof valeur === 'number' ? valeur : possession.valeur, // Mise à jour si valeur fournie
+                        valeurConstante: typeof valeurConstante === 'boolean' ? valeurConstante : possession.valeurConstante, // Mise à jour si booléen fourni
+                        tauxAmortissement: typeof tauxAmortissement === 'number' ? tauxAmortissement : possession.tauxAmortissement, // Mise à jour si fourni
                     };
                 }
                 return possession;
@@ -124,6 +131,7 @@ const updatePossession = (req, res) => {
     writeData(updatedData);
     res.status(200).json({ message: 'Possession mise à jour avec succès', data: updatedData });
 };
+
 
 
 const addPerson = (req, res) => {
@@ -222,8 +230,6 @@ const closePossession = (req, res) => {
         res.status(500).json({ message: 'Erreur serveur' });
     }
 };
-
-
 
 module.exports = {
     getPersons,
