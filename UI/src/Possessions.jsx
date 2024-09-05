@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Possession from './models/possessions/Possession';
+import Flux from './models/possessions/Flux'; 
 
 function TablePossession() {
   const [possessions, setPossessions] = useState([]);
@@ -12,10 +14,32 @@ function TablePossession() {
       try {
         const response = await axios.get('http://localhost:3000/possessions');
         if (Array.isArray(response.data)) {
-          const updatedPossessions = response.data.map(possession => ({
-            ...possession,
-            valeurActuelle: calculateCurrentValue(possession)
-          }));
+          const updatedPossessions = response.data.map(possessionData => {
+            const isFlux = possessionData.tauxAmortissement === 0;
+            const possession = isFlux
+              ? new Flux(
+                possessionData.possesseur,
+                possessionData.libelle,
+                possessionData.valeur,
+                new Date(possessionData.dateDebut),
+                possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+                possessionData.tauxAmortissement,
+                possessionData.jour 
+              )
+              : new Possession(
+                possessionData.possesseur,
+                possessionData.libelle,
+                possessionData.valeur,
+                new Date(possessionData.dateDebut),
+                possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+                possessionData.tauxAmortissement
+              );
+
+            return {
+              ...possessionData,
+              valeurActuelle: possession.getValeur(new Date()).toFixed(2)
+            };
+          });
           setPossessions(updatedPossessions);
         } else {
           console.error('Unexpected data format:', response.data);
@@ -30,24 +54,13 @@ function TablePossession() {
     fetchPossessions();
   }, []);
 
-  const calculateCurrentValue = (possession) => {
-    const { valeur, Amortissement, Debut } = possession;
-    const depreciationRate = Amortissement / 100;
-    const startDate = new Date(Debut);
-    const currentDate = new Date();
-    const ageInYears = (currentDate - startDate) / (1000 * 60 * 60 * 24 * 365.25);
-
-    const currentValue = valeur * Math.pow(1 - depreciationRate, ageInYears);
-    return currentValue.toFixed(2);
-  };
-
   const handleClose = async (libelle) => {
     try {
       await axios.put(`http://localhost:3000/possession/${libelle}/close`);
       setPossessions(prevPossessions =>
         prevPossessions.map(possession =>
           possession.libelle === libelle
-            ? { ...possession, Fin: new Date().toISOString().split('T')[0] }
+            ? { ...possession, dateFin: new Date().toISOString().split('T')[0] }
             : possession
         )
       );
@@ -88,9 +101,9 @@ function TablePossession() {
               <td className="text-center">{possessions.indexOf(possession) + 1}</td>
               <td className="text-center">{possession.libelle}</td>
               <td className="text-center">{possession.valeur} Ariary</td>
-              <td className="text-center">{possession.Debut ? possession.Debut.split('T')[0] : '-'}</td>
-              <td className="text-center">{possession.Fin ? possession.Fin.split('T')[0] : '-'}</td>
-              <td className="text-center">{possession.Amortissement} %</td>
+              <td className="text-center">{possession.dateDebut ? possession.dateDebut.split('T')[0] : '-'}</td>
+              <td className="text-center">{possession.dateFin ? possession.dateFin.split('T')[0] : '-'}</td>
+              <td className="text-center">{possession.tauxAmortissement} %</td>
               <td className="text-center">{possession.valeurActuelle || '-'} Ariary</td>
               <td className="text-center">
                 <Link to={`/possession/${possession.libelle}/update`} className="btn btn-warning btn-sm">

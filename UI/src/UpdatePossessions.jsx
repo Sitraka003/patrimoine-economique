@@ -42,7 +42,7 @@ function UpdatePossession() {
                 dateFin: startDate.toISOString().split('T')[0],
                 newLibelle
             });
-            navigate('/possession');
+            navigate('/possessions');
         } catch (error) {
             console.error('Error updating possession:', error);
         } finally {

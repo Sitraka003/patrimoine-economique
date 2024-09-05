@@ -18,8 +18,8 @@ function CreatePossession() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!libelle || !valeur || !dateDebut || !amortissement) {
-            console.error('All fields are required');
+        if (!libelle || !valeur || !dateDebut) {
+            console.error('Libelle, Valeur, and Debut are required');
             return;
         }
 
@@ -27,9 +27,9 @@ function CreatePossession() {
             possesseur: { nom: "John Doe" },
             libelle,
             valeur,
-            Debut: formatDate(dateDebut),
-            Fin: null, 
-            Amortissement: amortissement || null
+            dateDebut: formatDate(dateDebut),
+            dateFin: null,  
+            tauxAmortissement: amortissement || 0  
         };
 
         try {
@@ -37,17 +37,7 @@ function CreatePossession() {
             console.log('Possession created successfully:', response.data);
             navigate('/possessions'); 
         } catch (error) {
-            console.error('An error occurred during the request.');
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                console.error('Status code:', error.response.status);
-                console.error('Headers:', error.response.headers);
-            } else if (error.request) {
-                console.error('Error request:', error.request);
-            } else {
-                console.error('Error message:', error.message);
-            }
-            console.error('Error config:', error.config);
+            console.error('An error occurred during the request.', error);
         }
     };
 
@@ -94,7 +84,7 @@ function CreatePossession() {
                         className="form-control"
                         value={amortissement}
                         onChange={(e) => setAmortissement(e.target.value)}
-                        required
+                    // Make this field optional or set default
                     />
                 </div>
                 <button type="submit" className="btn btn-primary">Confirm</button>

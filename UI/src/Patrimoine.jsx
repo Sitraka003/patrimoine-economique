@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Chart } from 'chart.js/auto';
 import axios from 'axios';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import { Container, Form, Row, Col, Button, Alert } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function MyChart({ labels, data }) {
@@ -56,7 +52,7 @@ function MyChart({ labels, data }) {
     );
 }
 
-function Choices({ startDate, setStartDate, endDate, setEndDate }) {
+function Choices({ startDate, setStartDate, endDate, setEndDate, onConfirm }) {
     return (
         <Container className="my-4">
             <Form>
@@ -92,7 +88,7 @@ function Choices({ startDate, setStartDate, endDate, setEndDate }) {
 
                 <Form.Group as={Row} className="mb-3">
                     <Col sm={{ span: 5, offset: 2 }}>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="button" onClick={onConfirm}>
                             Confirm
                         </Button>
                     </Col>
@@ -102,7 +98,7 @@ function Choices({ startDate, setStartDate, endDate, setEndDate }) {
     );
 }
 
-function GetValeurPatrimoine({ startDate, endDate, onChartUpdate }) {
+function GetValeurPatrimoine({ startDate, endDate }) {
     const [chartData, setChartData] = useState({ labels: [], data: [] });
 
     useEffect(() => {
@@ -113,62 +109,37 @@ function GetValeurPatrimoine({ startDate, endDate, onChartUpdate }) {
 
                 const labels = [];
                 const data = [];
-                let endDateLocal = new Date(endDate);
-
                 let currentDate = new Date(startDate);
 
-                // Calculate patrimoine data
-                while (currentDate <= endDateLocal) {
+                while (currentDate <= endDate) {
                     const formattedDate = currentDate.toISOString().split('T')[0];
+                    labels.push(formattedDate);
 
-                    // Calculate the total patrimoine for the current month
                     const totalPatrimoine = possessions.reduce((total, possession) => {
-                        const { valeur, Amortissement, Debut } = possession;
-                        const possessionStartDate = new Date(Debut);
-                        if (possessionStartDate <= currentDate && possessionStartDate.getFullYear() === currentDate.getFullYear()) {
-                            const depreciationRate = Amortissement / 100;
+                        const { valeur, tauxAmortissement, dateDebut } = possession;
+                        const possessionStartDate = new Date(dateDebut);
+                        if (possessionStartDate <= currentDate) {
+                            const depreciationRate = tauxAmortissement / 100;
                             const ageInYears = (currentDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
                             return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
                         }
                         return total;
                     }, 0);
 
-                    labels.push(formattedDate);
                     data.push(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
 
                     // Move to the next month
                     currentDate.setMonth(currentDate.getMonth() + 1);
                 }
 
-                // Handle the last period
-                if (endDateLocal < currentDate) {
-                    const formattedDate = endDateLocal.toISOString().split('T')[0];
-
-                    const totalPatrimoine = possessions.reduce((total, possession) => {
-                        const { valeur, Amortissement, Debut } = possession;
-                        const possessionStartDate = new Date(Debut);
-                        if (possessionStartDate <= endDateLocal && possessionStartDate.getFullYear() === endDateLocal.getFullYear()) {
-                            const depreciationRate = Amortissement / 100;
-                            const ageInYears = (endDateLocal - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
-                            return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
-                        }
-                        return total;
-                    }, 0);
-
-                    labels.push(formattedDate);
-                    data.push(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
-                }
-
                 setChartData({ labels, data });
-                onChartUpdate(data[data.length - 1]); // Update the patrimoine value based on chart data
-
             } catch (error) {
                 console.error('Error fetching possessions:', error);
             }
         };
 
         fetchPossessionsAndCalculatePatrimoine();
-    }, [startDate, endDate, onChartUpdate]);
+    }, [startDate, endDate]);
 
     return (
         <MyChart labels={chartData.labels} data={chartData.data} />
@@ -177,6 +148,7 @@ function GetValeurPatrimoine({ startDate, endDate, onChartUpdate }) {
 
 function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [patrimoineValue, setPatrimoineValue] = useState(null);
 
     const handleConfirm = async () => {
         try {
@@ -184,17 +156,20 @@ function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
             const possessions = response.data;
 
             const totalPatrimoine = possessions.reduce((total, possession) => {
-                const { valeur, Amortissement, Debut } = possession;
-                const depreciationRate = Amortissement / 100;
-                const possessionStartDate = new Date(Debut);
+                const { valeur, tauxAmortissement, dateDebut } = possession;
+                const depreciationRate = tauxAmortissement / 100;
+                const possessionStartDate = new Date(dateDebut);
                 const ageInYears = (selectedDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
 
                 return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
             }, 0);
 
-            onCalculatePatrimoine(totalPatrimoine.toFixed(2));
+
+            setPatrimoineValue(totalPatrimoine.toFixed(2));
+
         } catch (error) {
             console.error('Error calculating patrimoine:', error);
+            setPatrimoineValue('Error calculating patrimoine');
         }
     };
 
@@ -224,6 +199,16 @@ function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
                     </Col>
                 </Form.Group>
             </Form>
+
+            {patrimoineValue !== null && (
+                <Row className="mt-3">
+                    <Col sm={{ span: 5, offset: 2 }}>
+                        <Alert variant="info">
+                            <strong>Patrimoine Value: </strong> {patrimoineValue} Ariary
+                        </Alert>
+                    </Col>
+                </Row>
+            )}
         </Container>
     );
 }
@@ -233,22 +218,18 @@ function Patrimoine() {
     const [endDate, setEndDate] = useState(new Date());
     const [patrimoineValue, setPatrimoineValue] = useState(null);
 
-    const handleCalculatePatrimoine = (value) => {
-        setPatrimoineValue(value);
+    const handleConfirm = () => {
+        // Just trigger a re-render of the chart with new dates
     };
 
     return (
         <div>
-            <Choices startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+            <Choices startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} onConfirm={handleConfirm} />
             <GetValeurPatrimoine startDate={startDate} endDate={endDate} />
-            <PatrimoineOnTheActualDay onCalculatePatrimoine={handleCalculatePatrimoine} />
-            {patrimoineValue !== null && (
-                <div className="text-center my-4">
-                    <h4>{patrimoineValue} Ariary</h4>
-                </div>
-            )}
+            <PatrimoineOnTheActualDay />
         </div>
     );
 }
+
 
 export default Patrimoine;
