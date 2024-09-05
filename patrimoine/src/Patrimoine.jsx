@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Table, Container, Row, Col, Button, Form, Modal } from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import possessionsData from "../public/possession.json";
-import Flux from "./Flux";
-import BienMateriel from "./BienMateriel";
-import Argent from "./Argent";
-import { Line } from "react-chartjs-2";
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -16,73 +12,20 @@ const Patrimoine = () => {
   const [validatedDate, setValidatedDate] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [possessions, setPossessions] = useState([]);
+  const [totalValeurActuelle, setTotalValeurActuelle] = useState(0);
   const [dates, setDates] = useState([]);
   const [valuesOverTime, setValuesOverTime] = useState([]);
-  const [totalValeurActuelle, setTotalValeurActuelle] = useState(0);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newPossession, setNewPossession] = useState({
-    libelle: '',
-    valeur: 0,
-    dateDebut: new Date(),
-    tauxAmortissement: 0,
-  });
 
   useEffect(() => {
-    const parsedPossessions = possessionsData[1].data.possessions.map((item) => {
-      let possession;
-      if (item.jour !== undefined) {
-        possession = new Flux(item.possesseur, item.libelle, item.valeur, item.dateDebut, item.dateFin, item.tauxAmortissement, item.jour);
-      } else if (item.type !== undefined) {
-        possession = new Argent(item.possesseur, item.libelle, item.valeur, item.dateDebut, item.dateFin, item.tauxAmortissement, item.type);
-      } else {
-        possession = new BienMateriel(item.possesseur, item.libelle, item.valeur, item.dateDebut, item.dateFin, item.tauxAmortissement);
-      }
-      return possession;
-    });
-
-    setPossessions(parsedPossessions);
+    // Fetch or update possessions data
   }, []);
 
   const handleValidateDate = () => {
-    setValidatedDate(selectedDate);
-    const calculatedTotal = possessions.reduce((total, possession) => total + possession.getValeur(selectedDate), 0);
-    setTotalValeurActuelle(calculatedTotal);
+    // Calculate and update totalValeurActuelle
   };
 
   const handleUpdateChart = () => {
-    if (startDate && endDate) {
-      const dateRange = [];
-      const valueRange = [];
-      let currentDate = new Date(startDate);
-
-      while (currentDate <= endDate) {
-        const valueForDate = possessions.reduce((total, possession) => total + possession.getValeur(currentDate), 0);
-        dateRange.push(new Date(currentDate));
-        valueRange.push(valueForDate);
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      setDates(dateRange);
-      setValuesOverTime(valueRange);
-    }
-  };
-
-  const handleCreatePossession = () => {
-    const newPoss = new BienMateriel(
-      { nom: 'Default' },
-      newPossession.libelle,
-      parseFloat(newPossession.valeur),
-      newPossession.dateDebut,
-      null,
-      parseFloat(newPossession.tauxAmortissement)
-    );
-    setPossessions([...possessions, newPoss]);
-    setShowCreateForm(false);
-  };
-
-  const handleDeletePossession = (index) => {
-    setPossessions(possessions.filter((_, i) => i !== index));
+    // Update chart data based on date range
   };
 
   const data = {
@@ -100,156 +43,46 @@ const Patrimoine = () => {
 
   return (
     <Container>
-      <Row className="justify-content-center text-center mb-4">
-        <Col xs={12}>
+      <Row className="mb-4">
+        <Col>
           <h1>Patrimoine</h1>
-        </Col>
-      </Row>
-
-      {/* Section DatePicker et Calcul de Valeur Actuelle */}
-      <Row className="justify-content-center mb-4">
-        <Col xs={12} md={6} lg={4}>
-          <h3>Calcul de la Valeur Actuelle</h3>
-          <DatePicker
-            selected={selectedDate}
-            onChange={(newDate) => setSelectedDate(newDate)}
-            dateFormat="dd/MM/yyyy"
-            className="form-control"
-          />
-          <Button onClick={handleValidateDate} className="mt-3 w-100">
-            Calculer Valeur Actuelle
-          </Button>
-        </Col>
-      </Row>
-
-      {/* Section Gestion des Possessions */}
-      <Row className="justify-content-center mb-4">
-        <Col xs={12} md={6} lg={4}>
-          <h3>Gestion des Possessions</h3>
-          <Button onClick={() => setShowCreateForm(true)} className="mt-3 w-100">
-            Créer une Possession
-          </Button>
-        </Col>
-      </Row>
-
-      {/* Formulaire de création de Possession */}
-      <Modal show={showCreateForm} onHide={() => setShowCreateForm(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Créer une Nouvelle Possession</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="libelle">
-              <Form.Label>Libellé</Form.Label>
-              <Form.Control
-                type="text"
-                value={newPossession.libelle}
-                onChange={(e) => setNewPossession({ ...newPossession, libelle: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="valeur">
-              <Form.Label>Valeur</Form.Label>
-              <Form.Control
-                type="number"
-                value={newPossession.valeur}
-                onChange={(e) => setNewPossession({ ...newPossession, valeur: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="dateDebut">
-              <Form.Label>Date de Début</Form.Label>
-              <DatePicker
-                selected={newPossession.dateDebut}
-                onChange={(newDate) => setNewPossession({ ...newPossession, dateDebut: newDate })}
-                dateFormat="dd/MM/yyyy"
-                className="form-control"
-              />
-            </Form.Group>
-            <Form.Group controlId="tauxAmortissement">
-              <Form.Label>Taux d'Amortissement</Form.Label>
-              <Form.Control
-                type="number"
-                value={newPossession.tauxAmortissement}
-                onChange={(e) => setNewPossession({ ...newPossession, tauxAmortissement: e.target.value })}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCreateForm(false)}>
-            Annuler
-          </Button>
-          <Button variant="primary" onClick={handleCreatePossession}>
-            Créer
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Tableau des possessions */}
-      <Row className="justify-content-center mb-4">
-        <Col xs={12}>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Libelle</th>
-                <th>Valeur Initiale</th>
-                <th>Date Début</th>
-                <th>Date Fin</th>
-                <th>Amortissement</th>
-                <th>Valeur Actuelle</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {possessions.map((possession, index) => (
-                <tr key={index}>
-                  <td>{possession.libelle}</td>
-                  <td>{possession.valeur}</td>
-                  <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
-                  <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "N/A"}</td>
-                  <td>{possession.tauxAmortissement || "N/A"}</td>
-                  <td>{validatedDate ? possession.getValeur(validatedDate).toFixed(2) : "N/A"}</td>
-                  <td>
-                    <Button variant="warning" size="sm" className="me-2">Mettre à jour</Button>
-                    <Button variant="danger" size="sm" onClick={() => handleDeletePossession(index)}>Supprimer</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-
-      {/* Graphique des valeurs */}
-      <Row className="justify-content-center mb-4">
-        <Col xs={12} md={8}>
-          <h3>Valeur Patrimoine sur la Période</h3>
-          <Form.Group controlId="startDate" className="mb-2">
-            <Form.Label>Date de Début</Form.Label>
+          <div className="mb-3">
+            <h3>Calcul de la Valeur Actuelle</h3>
             <DatePicker
-              selected={startDate}
-              onChange={(newDate) => setStartDate(newDate)}
+              selected={selectedDate}
+              onChange={(newDate) => setSelectedDate(newDate)}
               dateFormat="dd/MM/yyyy"
-              className="form-control"
             />
-          </Form.Group>
-          <Form.Group controlId="endDate" className="mb-2">
-            <Form.Label>Date de Fin</Form.Label>
-            <DatePicker
-              selected={endDate}
-              onChange={(newDate) => setEndDate(newDate)}
-              dateFormat="dd/MM/yyyy"
-              className="form-control"
-            />
-          </Form.Group>
-          <Button onClick={handleUpdateChart} className="mb-3 w-100">Afficher le Graphique</Button>
-          <Line data={data} />
-        </Col>
-      </Row>
-
-      {/* Affichage du total */}
-      <Row className="justify-content-center text-center">
-        <Col xs={12}>
-          <h3>Total Valeur Actuelle: {totalValeurActuelle.toFixed(2)} €</h3>
+            <Button onClick={handleValidateDate} className="mt-3">
+              Calculer Valeur Actuelle
+            </Button>
+            <div>Total Valeur Actuelle: {totalValeurActuelle.toFixed(2)}</div>
+          </div>
+          <div>
+            <h3>Visualisation de l'évolution du patrimoine</h3>
+            <Form>
+              <Form.Group>
+                <Form.Label>Date de début</Form.Label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(newDate) => setStartDate(newDate)}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Date de fin</Form.Label>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(newDate) => setEndDate(newDate)}
+                  dateFormat="dd/MM/yyyy"
+                />
+              </Form.Group>
+              <Button onClick={handleUpdateChart} className="mt-3">
+                Mettre à jour le Graphique
+              </Button>
+            </Form>
+            <Line data={data} />
+          </div>
         </Col>
       </Row>
     </Container>
