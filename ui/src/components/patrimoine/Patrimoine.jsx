@@ -28,7 +28,7 @@ const PatrimoineApp = () => {
       },
     ],
   });
-  const [showChart, setShowChart] = useState(false); // Nouvel état pour contrôler l'affichage du graphique
+  const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
     if (selectedPerson) {
@@ -45,10 +45,7 @@ const PatrimoineApp = () => {
       if (patrimoineData) {
         const possessionsInstances = patrimoineData.data.possessions
           .map((possession) => {
-            console.log("Traitement de possession :", possession);
-            if (!possession || !possession.libelle) {
-              return null;
-            }
+            if (!possession || !possession.libelle) return null;
             if (possession.valeurConstante !== undefined) {
               return new Flux(
                 selectedPerson,
@@ -82,8 +79,6 @@ const PatrimoineApp = () => {
             return null;
           })
           .filter((item) => item !== null);
-
-        console.log("Instances de possessions :", possessionsInstances);
 
         setPatrimoine(new Patrimoine(selectedPerson, possessionsInstances));
         setPatrimoineTotal(null);
@@ -119,8 +114,10 @@ const PatrimoineApp = () => {
   };
 
   const handleValider = () => {
-    if (!selectedDate) {
-      setError("Veuillez sélectionner une date avant de valider.");
+    if (!selectedDate || !selectedPerson) {
+      setError(
+        "Veuillez sélectionner une date et une personne avant de valider."
+      );
       return;
     }
 
@@ -132,7 +129,6 @@ const PatrimoineApp = () => {
       const total = valeurs.reduce((acc, curr) => acc + curr, 0);
       setPatrimoineTotal(total);
 
-      // Mettre à jour les données du graphique
       const labels = patrimoine.possessions.map(
         (p) => p.libelle || "Non spécifié"
       );
@@ -199,8 +195,11 @@ const PatrimoineApp = () => {
                 <tr key={index}>
                   <td>{possession.libelle || "Non spécifié"}</td>
                   <td>
-                    {possession.valeur || possession.valeurConstante || "N/A"}{" "}
-                    Ar
+                    {possession.valeur
+                      ? possession.valeur + " Ar"
+                      : possession.valeurConstante
+                      ? possession.valeurConstante + " Ar"
+                      : "N/A"}
                   </td>
                   <td>
                     {possession.dateDebut
@@ -258,7 +257,7 @@ const PatrimoineApp = () => {
 
             {patrimoineTotal !== null && (
               <h2
-                className={`mt-4 p-3 rounded ${
+                className={`mt-4 p-2 rounded ${
                   patrimoineTotal <= 0 ? "bg-danger" : "bg-success"
                 }`}
               >
@@ -270,7 +269,9 @@ const PatrimoineApp = () => {
           </div>
         </div>
       ) : (
-        ""
+        <p className="text-warning">
+          Aucune possession trouvée
+        </p>
       )}
     </div>
   );
