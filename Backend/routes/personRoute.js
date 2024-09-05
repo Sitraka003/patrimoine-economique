@@ -9,7 +9,8 @@ const {
     addPerson,
     addPossession,
     closePossession
-} = require("../controllers/PersonController");
+} = require("../controllers/personController");
+const { getPatrimoineInRange, getPatrimoineAtDate } = require("../controllers/patrimoineController");
 
 router.get("/personnes", getPersons);
 router.delete("/possessions/:nomPossesseur/:libelle", deletePossession);
@@ -19,5 +20,7 @@ router.put("/possessions/:possesseurNom/:libelle", updatePossession);
 router.post("/personnes", addPerson);
 router.post("/possessions", addPossession);
 router.put('/possessions/:nom/:libelle/close', closePossession);
+router.get('/patrimoine/:date', getPatrimoineAtDate);
+router.get("/patrimoine/range", getPatrimoineInRange);
 
 module.exports = router;
