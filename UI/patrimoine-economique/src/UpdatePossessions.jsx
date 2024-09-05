@@ -10,7 +10,6 @@ import Button from 'react-bootstrap/Button';
 function UpdatePossession() {
     const { libelle } = useParams();
     const [startDate, setStartDate] = useState(new Date());
-    const [currentLibelle, setCurrentLibelle] = useState('');
     const [newLibelle, setNewLibelle] = useState('');
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -19,11 +18,10 @@ function UpdatePossession() {
     useEffect(() => {
         const fetchPossession = async () => {
             try {
-                const response = await axios.get(`/possession/${libelle}`);
-                setCurrentLibelle(response.data.libelle || '');
+                const response = await axios.get(`http://localhost:3000/possession/${libelle}`);
                 setNewLibelle(response.data.libelle || '');
-                if (response.data.dateFin) {
-                    setStartDate(new Date(response.data.dateFin));
+                if (response.data.Fin) {
+                    setStartDate(new Date(response.data.Fin));
                 }
                 setLoading(false);
             } catch (error) {
@@ -37,12 +35,12 @@ function UpdatePossession() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSubmitting(true);
 
-        console.log(`Updating possession at URL: /possession/${currentLibelle}`); // Debug log
         try {
-            await axios.put(`/possession/${currentLibelle}`, {
+            await axios.put(`http://localhost:3000/possession/${libelle}`, {
                 dateFin: startDate.toISOString().split('T')[0],
-                libelle: newLibelle
+                newLibelle
             });
             navigate('/possession');
         } catch (error) {
@@ -64,40 +62,32 @@ function UpdatePossession() {
                     <Form.Label column sm="2">
                         Libelle:
                     </Form.Label>
-                    <Col sm="5">
+                    <Col sm="10">
                         <Form.Control
                             type="text"
-                            value={newLibelle || ''}
+                            value={newLibelle}
                             onChange={(e) => setNewLibelle(e.target.value)}
-                            placeholder={currentLibelle}
                             required
                         />
                     </Col>
                 </Form.Group>
-
-                <Form.Group as={Row} className="mb-3" controlId="formDate">
+                <Form.Group as={Row} className="mb-3" controlId="formDateFin">
                     <Form.Label column sm="2">
                         Date Fin:
                     </Form.Label>
-                    <Col sm="5">
+                    <Col sm="10">
                         <DatePicker
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
+                            dateFormat="yyyy/MM/dd"
                             className="form-control"
-                            dateFormat="yyyy-MM-dd"
-                            placeholderText="Select a date"
                             required
                         />
                     </Col>
                 </Form.Group>
-
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm={{ span: 5, offset: 2 }}>
-                        <Button variant="primary" type="submit" disabled={submitting}>
-                            {submitting ? 'Updating...' : 'Edit Possession'}
-                        </Button>
-                    </Col>
-                </Form.Group>
+                <Button variant="primary" type="submit" disabled={submitting}>
+                    {submitting ? 'Submitting...' : 'Submit'}
+                </Button>
             </Form>
         </div>
     );

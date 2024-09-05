@@ -25,7 +25,7 @@ function MyChart({ labels, data }) {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Votre patrimoine economique",
+                        label: "Votre patrimoine économique",
                         data: data,
                         fill: false,
                         borderColor: 'rgb(75, 192, 192)',
@@ -102,7 +102,7 @@ function Choices({ startDate, setStartDate, endDate, setEndDate }) {
     );
 }
 
-function GetValeurPatrimoine({ startDate, endDate }) {
+function GetValeurPatrimoine({ startDate, endDate, onChartUpdate }) {
     const [chartData, setChartData] = useState({ labels: [], data: [] });
 
     useEffect(() => {
@@ -113,20 +113,24 @@ function GetValeurPatrimoine({ startDate, endDate }) {
 
                 const labels = [];
                 const data = [];
+                let endDateLocal = new Date(endDate);
 
                 let currentDate = new Date(startDate);
-                const end = new Date(endDate);
 
-                while (currentDate <= end) {
+                // Calculate patrimoine data
+                while (currentDate <= endDateLocal) {
                     const formattedDate = currentDate.toISOString().split('T')[0];
 
+                    // Calculate the total patrimoine for the current month
                     const totalPatrimoine = possessions.reduce((total, possession) => {
                         const { valeur, Amortissement, Debut } = possession;
-                        const depreciationRate = Amortissement / 100;
                         const possessionStartDate = new Date(Debut);
-                        const ageInYears = (currentDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
-
-                        return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
+                        if (possessionStartDate <= currentDate && possessionStartDate.getFullYear() === currentDate.getFullYear()) {
+                            const depreciationRate = Amortissement / 100;
+                            const ageInYears = (currentDate - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
+                            return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
+                        }
+                        return total;
                     }, 0);
 
                     labels.push(formattedDate);
@@ -136,7 +140,27 @@ function GetValeurPatrimoine({ startDate, endDate }) {
                     currentDate.setMonth(currentDate.getMonth() + 1);
                 }
 
+                // Handle the last period
+                if (endDateLocal < currentDate) {
+                    const formattedDate = endDateLocal.toISOString().split('T')[0];
+
+                    const totalPatrimoine = possessions.reduce((total, possession) => {
+                        const { valeur, Amortissement, Debut } = possession;
+                        const possessionStartDate = new Date(Debut);
+                        if (possessionStartDate <= endDateLocal && possessionStartDate.getFullYear() === endDateLocal.getFullYear()) {
+                            const depreciationRate = Amortissement / 100;
+                            const ageInYears = (endDateLocal - possessionStartDate) / (1000 * 60 * 60 * 24 * 365.25);
+                            return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
+                        }
+                        return total;
+                    }, 0);
+
+                    labels.push(formattedDate);
+                    data.push(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
+                }
+
                 setChartData({ labels, data });
+                onChartUpdate(data[data.length - 1]); // Update the patrimoine value based on chart data
 
             } catch (error) {
                 console.error('Error fetching possessions:', error);
@@ -144,7 +168,7 @@ function GetValeurPatrimoine({ startDate, endDate }) {
         };
 
         fetchPossessionsAndCalculatePatrimoine();
-    }, [startDate, endDate]);
+    }, [startDate, endDate, onChartUpdate]);
 
     return (
         <MyChart labels={chartData.labels} data={chartData.data} />
@@ -168,7 +192,7 @@ function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
                 return total + valeur * Math.pow(1 - depreciationRate, ageInYears);
             }, 0);
 
-            onCalculatePatrimoine(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
+            onCalculatePatrimoine(totalPatrimoine.toFixed(2));
         } catch (error) {
             console.error('Error calculating patrimoine:', error);
         }

@@ -12,7 +12,6 @@ function TablePossession() {
       try {
         const response = await axios.get('http://localhost:3000/possessions');
         if (Array.isArray(response.data)) {
-          // Calculate the current value of each possession
           const updatedPossessions = response.data.map(possession => ({
             ...possession,
             valeurActuelle: calculateCurrentValue(possession)
@@ -36,10 +35,10 @@ function TablePossession() {
     const depreciationRate = Amortissement / 100;
     const startDate = new Date(Debut);
     const currentDate = new Date();
-    const ageInYears = (currentDate - startDate) / (1000 * 60 * 60 * 24 * 365.25); // Convert milliseconds to years
+    const ageInYears = (currentDate - startDate) / (1000 * 60 * 60 * 24 * 365.25);
 
     const currentValue = valeur * Math.pow(1 - depreciationRate, ageInYears);
-    return currentValue.toFixed(2); // Round to 2 decimal places
+    return currentValue.toFixed(2);
   };
 
   const handleClose = async (libelle) => {
@@ -89,7 +88,7 @@ function TablePossession() {
               <td className="text-center">{possessions.indexOf(possession) + 1}</td>
               <td className="text-center">{possession.libelle}</td>
               <td className="text-center">{possession.valeur} Ariary</td>
-              <td className="text-center">{possession.Debut.split('T')[0]}</td>
+              <td className="text-center">{possession.Debut ? possession.Debut.split('T')[0] : '-'}</td>
               <td className="text-center">{possession.Fin ? possession.Fin.split('T')[0] : '-'}</td>
               <td className="text-center">{possession.Amortissement} %</td>
               <td className="text-center">{possession.valeurActuelle || '-'} Ariary</td>

@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const dataPath = path.join(__dirname, './data/data.json');
+const dataPath = path.join(__dirname, '../data/data.json');
 
 app.use(cors());
 app.use(express.json()); // Add this line to parse JSON request bodies
@@ -84,10 +84,9 @@ app.put('/possession/:libelle', (req, res) => {
 
         const patrimoine = json.find(model => model.model === 'Patrimoine');
         if (patrimoine) {
-            const possessionIndex = patrimoine.data.possessions.findIndex(p => p.libelle === libelle);
-            if (possessionIndex !== -1) {
-                const possession = patrimoine.data.possessions[possessionIndex];
-                possession.Fin = dateFin || possession.Fin;
+            const possession = patrimoine.data.possessions.find(p => p.libelle === libelle);
+            if (possession) {
+                possession.Fin = dateFin;
                 if (newLibelle && newLibelle !== libelle) {
                     possession.libelle = newLibelle;
                 }
