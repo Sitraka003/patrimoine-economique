@@ -24,16 +24,19 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`http://localhost:3001/possession/${libelle}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...possession,
-        dateFin: possession.dateFin.toISOString(),
-      }),
-    })
+    fetch(
+      `https://patrimoine-economique-hnz4.onrender.com/possession/${libelle}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...possession,
+          dateFin: possession.dateFin.toISOString(),
+        }),
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erreur lors de la mise à jour de la possession.");

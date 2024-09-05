@@ -14,15 +14,18 @@ const PatrimoinePage = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:3001/patrimoine/range", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: timeUnit,
-          dateDebut: startDate.toISOString().split("T")[0],
-          dateFin: endDate.toISOString().split("T")[0],
-        }),
-      });
+      const response = await fetch(
+        "https://patrimoine-economique-hnz4.onrender.com/patrimoine/range",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: timeUnit,
+            dateDebut: startDate.toISOString().split("T")[0],
+            dateFin: endDate.toISOString().split("T")[0],
+          }),
+        }
+      );
       const data = await response.json();
       setChartData(data.valeur);
     } catch (error) {
@@ -33,7 +36,7 @@ const PatrimoinePage = () => {
   const fetchPatrimoineValeur = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/patrimoine/${
+        `https://patrimoine-economique-hnz4.onrender.com/patrimoine/${
           specificDate.toISOString().split("T")[0]
         }`
       );

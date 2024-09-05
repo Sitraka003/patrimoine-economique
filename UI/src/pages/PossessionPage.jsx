@@ -12,7 +12,7 @@ const PossessionPage = () => {
   }, []);
 
   const fetchPossessions = () => {
-    fetch("http://localhost:3001/possession")
+    fetch("https://patrimoine-economique-hnz4.onrender.com/possession")
       .then((response) => response.json())
       .then((data) => {
         const patrimoineData = data.find((item) => item.model === "Patrimoine");
@@ -53,9 +53,12 @@ const PossessionPage = () => {
   };
 
   const handleClose = (libelle) => {
-    fetch(`http://localhost:3001/possession/${libelle}/close`, {
-      method: "POST",
-    })
+    fetch(
+      `https://patrimoine-economique-hnz4.onrender.com/possession/${libelle}/close`,
+      {
+        method: "POST",
+      }
+    )
       .then((response) => {
         if (response.ok) {
           fetchPossessions();

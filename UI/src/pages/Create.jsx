@@ -29,7 +29,7 @@ const Create = () => {
       tauxAmortissement: formattedTauxAmortissement,
     };
 
-    fetch("http://localhost:3001/possession", {
+    fetch("https://patrimoine-economique-hnz4.onrender.com/possession", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
