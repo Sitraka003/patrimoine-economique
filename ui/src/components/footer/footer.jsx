@@ -4,7 +4,7 @@ import "./footer.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-light py-4">
+    <footer className="bg-conic text-light py-4">
       <div className=" text-center">
         <p>© 2024 Patrimoine Calculator. Tous droits réservés</p>
         <div className="d-flex justify-content-center">
