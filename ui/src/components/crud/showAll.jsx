@@ -369,6 +369,14 @@ const ShowAll = () => {
                     onChange={(e) => setNewValeur(e.target.value)}
                   />
                 </Form.Group>
+                <Form.Group controlId="formBasicDateFin">
+                  <Form.Label>Date Fin</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newDateFin}
+                    onChange={(e) => setNewDateFin(e.target.value)}
+                  />
+                </Form.Group>
                 <Form.Group controlId="formBasicTauxAmortissement">
                   <Form.Label>Taux d'Amortissement</Form.Label>
                   <Form.Control
@@ -382,8 +390,8 @@ const ShowAll = () => {
                   <Form.Label>Valeur Constante</Form.Label>
                   <Form.Control
                     type="number"
-                    value={newValeurConstante} // Nouvelle valeur pour valeurConstante
-                    onChange={(e) => setNewValeurConstante(e.target.value)} // Mise à jour de l'état
+                    value={newValeurConstante}
+                    onChange={(e) => setNewValeurConstante(e.target.value)}
                   />
                 </Form.Group>
               </>
