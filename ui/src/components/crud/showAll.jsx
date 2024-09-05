@@ -14,12 +14,23 @@ const ShowAll = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [newValue, setNewValue] = useState("");
   const [newDateFin, setNewDateFin] = useState("");
+  const [newValeur, setNewValeur] = useState("");
+  const [newTauxAmortissement, setNewTauxAmortissement] = useState("");
+  const [newValeurConstante, setNewValeurConstante] = useState("");
 
   const handleClose = () => setShowModal(false);
+
   const handleShow = (type, item) => {
     setEditType(type);
     setCurrentItem(item);
     setNewValue(type === "personne" ? item.data.nom : item.libelle);
+    setNewValeur(type === "possession" ? item.valeur : "");
+    setNewValeurConstante(type === "possession" ? item.valeurConstante : "");
+    setNewTauxAmortissement(
+      type === "possession" && item.tauxAmortissement
+        ? item.tauxAmortissement
+        : ""
+    );
     setNewDateFin(
       type === "possession" && item.dateFin
         ? new Date(item.dateFin).toISOString().split("T")[0]
@@ -40,7 +51,10 @@ const ShowAll = () => {
         method = "PUT";
         body = JSON.stringify({
           libelle: newValue,
+          valeur: newValeur,
+          tauxAmortissement: newTauxAmortissement || null,
           dateFin: newDateFin || null,
+          valeurConstante: newValeurConstante || null,
         });
       }
 
@@ -72,7 +86,10 @@ const ShowAll = () => {
                 ? {
                     ...possession,
                     libelle: newValue,
+                    valeur: newValeur,
+                    tauxAmortissement: newTauxAmortissement || null,
                     dateFin: newDateFin || null,
+                    valeurConstante: newValeurConstante || null,
                   }
                 : possession
             );
@@ -98,6 +115,12 @@ const ShowAll = () => {
   };
 
   const handleDeletePerson = async (nom) => {
+      const isConfirmed = window.confirm(
+        `Êtes-vous sûr de vouloir supprimer cette personne" ?`
+      );
+      if (!isConfirmed) {
+        return;
+      }
     try {
       const response = await fetch(
         `http://localhost:5000/api/personnes/${nom}`,
@@ -129,6 +152,12 @@ const ShowAll = () => {
   };
 
   const handleClosePossession = async (possession, possesseurNom) => {
+      const isConfirmed = window.confirm(
+        `Êtes-vous sûr de vouloir clôturer la possession "${possession.libelle}" ?`
+      );
+      if (!isConfirmed) {
+        return;
+      }
     try {
       const response = await fetch(
         `http://localhost:5000/api/possessions/${possesseurNom}/${possession.libelle}/close`,
@@ -169,6 +198,12 @@ const ShowAll = () => {
   };
 
   const handleDelete = async (possession, possesseurNom) => {
+      const isConfirmed = window.confirm(
+        `Êtes-vous sûr de vouloir supprimer la possession "${possession.libelle}" ?`
+      );
+      if (!isConfirmed) {
+        return;
+      }
     try {
       const response = await fetch(
         `http://localhost:5000/api/possessions/${possesseurNom}/${possession.libelle}`,
@@ -305,14 +340,14 @@ const ShowAll = () => {
       </div>
 
       <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-dark">
           <Modal.Title>
             {editType === "personne"
               ? "Modifier Personne"
               : "Modifier Possession"}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="bg-dark">
           <Form>
             <Form.Group controlId="formBasicValue">
               <Form.Label>
@@ -325,18 +360,37 @@ const ShowAll = () => {
               />
             </Form.Group>
             {editType === "possession" && (
-              <Form.Group controlId="formBasicDateFin">
-                <Form.Label>Date Fin</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={newDateFin}
-                  onChange={(e) => setNewDateFin(e.target.value)}
-                />
-              </Form.Group>
+              <>
+                <Form.Group controlId="formBasicValeur">
+                  <Form.Label>Valeur</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={newValeur}
+                    onChange={(e) => setNewValeur(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formBasicTauxAmortissement">
+                  <Form.Label>Taux d'Amortissement</Form.Label>
+                  <Form.Control
+                    type="number"
+                    step="0.01"
+                    value={newTauxAmortissement}
+                    onChange={(e) => setNewTauxAmortissement(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formBasicValeurConstante">
+                  <Form.Label>Valeur Constante</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={newValeurConstante} // Nouvelle valeur pour valeurConstante
+                    onChange={(e) => setNewValeurConstante(e.target.value)} // Mise à jour de l'état
+                  />
+                </Form.Group>
+              </>
             )}
           </Form>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={handleClose}>
             Annuler
           </Button>
