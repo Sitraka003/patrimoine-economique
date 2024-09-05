@@ -34,8 +34,8 @@ h1 {
 }
 
 .bg-dark {
-  background: conic-gradient(#2f5fab, #72b91c) !important;
-  /* background: radial-gradient(circle, #1e3c72, #2a5298) !important; */
+  /* background: conic-gradient(#2f5fab, #72b91c) !important; */
+  background: linear-gradient(135deg, #003366, #008d9f) !important;
 }
 
 .bg-dark-custom {
@@ -53,15 +53,19 @@ h1 {
   background: #16334e !important;
 }
 
+.bg-conic {
+  background: conic-gradient(#008d9f, #003366) !important;
+}
+
 .table-gradient {
-  background: conic-gradient(#2f5fab, #72b91c) !important;
+  background: linear-gradient(135deg, #003366, #007989) !important;
   color: white;
 }
 
 /* add possession */
 
 .container-custom {
-  background: conic-gradient(#2f5fab, #72b91c) !important;
+  background: linear-gradient(135deg, #003366, #007e8f) !important;
   padding: 3rem;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
