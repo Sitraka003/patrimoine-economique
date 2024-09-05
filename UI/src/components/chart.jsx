@@ -82,6 +82,10 @@ function MyChart() {
         setDateFin(e.target.value);
     }
 
+    function dayPicker(e){
+        setDay(e.target.value);
+    }
+
     function getMonthsInRange(startDate, endDate) {
         const monthsArray = [];
         const current = new Date(startDate);
@@ -116,27 +120,9 @@ function MyChart() {
     }
 
     function getValuePerMonth() {
-        const monthsArray = getMonthsInRange(new Date(dateDebut), new Date(dateFin));
-        setMonths(monthsArray);
+        const valuePermonth = axios.get('http://localhost:3500/patrimoine/range')
 
-        const monthlyValues = monthsArray.map(monthYear => {
-            let totalValue = 0;
-            const [month, year] = monthYear.split(' ');
-            const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
-            const start = new Date(`${month} 1, ${year}`);
-            const end = new Date(start);
-            end.setMonth(end.getMonth() + 1);
-            end.setDate(0); // End of the month
-
-            possessions.forEach(possession => {
-                const valueForMonth = calculateValueForMonth(possession, new Date(dateDebut), end, day);
-                totalValue += valueForMonth;
-            });
-
-            return totalValue;
-        });
-
-        setValues(monthlyValues);
+        return valuePermonth;
     }
 
     const options = {};
@@ -151,6 +137,15 @@ function MyChart() {
             }
         ]
     };
+
+    function ShowOption(){
+        for(let i = 1; i<= 31; i++){
+            return (
+                <option value={i}>{i}</option>
+            )
+        }
+    }
+    
 
     return (
         <>
@@ -168,10 +163,10 @@ function MyChart() {
                     </div>
 
                     <select className="form-select form-select-sm selectDay" onChange={(e) => setDay(Number(e.target.value))}>
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        {/* Ajoutez d'autres options de jour si nécessaire */}
+                        
+                            
+                            
+
                     </select>
 
                     <input className="btn btn-primary bouton" type="button" value="Valider" onClick={getValuePerMonth} />

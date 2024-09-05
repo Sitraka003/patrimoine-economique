@@ -123,7 +123,7 @@ function PossessionPage() {
         const results = possessions.map(possession => {
             if (possession instanceof Flux) {
                 let month = 0;
-                const daysToMonth = (today.getDay()-possession.dateDebut.getDay())/30;
+                const daysToMonth = (today.getDate()-possession.dateDebut.getDate())/30;
                 if(today.getFullYear() != possession.dateDebut.getFullYear()){
                     const difference = (today.getFullYear() - possession.dateDebut.getFullYear())*12;
                     month = today.getMonth() - possession.dateDebut.getMonth() + difference + daysToMonth
