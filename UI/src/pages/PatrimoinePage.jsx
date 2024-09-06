@@ -41,6 +41,7 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
+      console.log("Valeur récupérée du patrimoine:", data.valeur);
       setPatrimoineValeur(data.valeur);
     } catch (error) {
       console.error(
