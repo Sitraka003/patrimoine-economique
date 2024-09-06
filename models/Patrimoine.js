@@ -1,3 +1,4 @@
+// Patrimoine.js
 import Possession from "./Possession.js";
 import Flux from "./Flux.js";
 
@@ -34,25 +35,5 @@ export default class Patrimoine {
       result += item.getValeur(date);
     }
     return result;
-  }
-
-  addPossession(possession) {
-    if (possession.possesseur !== this.possesseur) {
-      console.log(
-        `${possession.libelle} n'appartient pas à ${this.possesseur}`
-      );
-    } else {
-      if (!this.possessions.some((p) => p.libelle === possession.libelle)) {
-        this.possessions.push(possession);
-      } else {
-        console.log(`${possession.libelle} est déjà dans le patrimoine.`);
-      }
-    }
-  }
-
-  removePossession(possession) {
-    this.possessions = this.possessions.filter(
-      (p) => p.libelle !== possession.libelle
-    );
   }
 }
