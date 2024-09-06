@@ -19,10 +19,15 @@ export default class Patrimoine {
   }
 
   getValeur(date) {
+    console.log(`Calculating value for date: ${date}`);
     let result = 0;
     for (const item of this.possessions) {
-      result += item.getValeur(date);
+      console.log(`Processing possession: ${item.libelle}`);
+      const valeur = item.getValeur(date);
+      console.log(`Value for ${item.libelle}: ${valeur}`);
+      result += valeur;
     }
+    console.log(`Total value: ${result}`);
     return result;
   }
 
