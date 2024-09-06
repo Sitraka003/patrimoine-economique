@@ -35,13 +35,17 @@ const PatrimoinePage = () => {
 
   const fetchPatrimoineValeur = async () => {
     try {
+      console.log(
+        "Fetching patrimoine value for date:",
+        specificDate.toISOString().split("T")[0]
+      );
       const response = await fetch(
         `https://patrimoine-economique-hnz4.onrender.com/patrimoine/${
           specificDate.toISOString().split("T")[0]
         }`
       );
       const data = await response.json();
-      console.log("Valeur récupérée du patrimoine:", data.valeur);
+      console.log("Patrimoine value response data:", data);
       setPatrimoineValeur(data.valeur);
     } catch (error) {
       console.error(
