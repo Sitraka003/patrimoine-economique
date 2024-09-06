@@ -1,22 +1,31 @@
-import Possession from "./possessions/Possession.js"; // Assurez-vous que le chemin est correct
+import Possession from "./possessions/Possession.js";
+import Flux from "./possessions/Flux.js";
 
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    // Conversion des données en instances de Possession
-    this.possessions = possessions.map(
-      (p) =>
-        new Possession(
+    this.possessions = possessions.map((p) => {
+      if (p.jour !== undefined) {
+        return new Flux(
+          p.possesseur,
+          p.libelle,
+          p.valeurConstante,
+          new Date(p.dateDebut),
+          p.dateFin ? new Date(p.dateFin) : null,
+          p.tauxAmortissement,
+          p.jour
+        );
+      } else {
+        return new Possession(
           p.possesseur,
           p.libelle,
           p.valeur,
           new Date(p.dateDebut),
           p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement,
-          p.jour,
-          p.valeurConstante
-        )
-    );
+          p.tauxAmortissement
+        );
+      }
+    });
   }
 
   getValeur(date) {
@@ -33,7 +42,6 @@ export default class Patrimoine {
         `${possession.libelle} n'appartient pas à ${this.possesseur}`
       );
     } else {
-      // Ajouter uniquement si ce n'est pas déjà dans la liste
       if (!this.possessions.some((p) => p.libelle === possession.libelle)) {
         this.possessions.push(possession);
       } else {
