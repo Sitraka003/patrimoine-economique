@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Possession from "../../../models/possessions/Possession";
-import Flux from "../../../models/possessions/Flux";
 
 const PossessionPage = () => {
   const [possessions, setPossessions] = useState([]);
@@ -22,9 +21,10 @@ const PossessionPage = () => {
           const updatedPossessions = patrimoineData.data.possessions.map(
             (possessionData) => {
               let possession;
+
               if (
-                possessionData.jour !== undefined &&
-                possessionData.valeurConstante !== undefined
+                "jour" in possessionData &&
+                "valeurConstante" in possessionData
               ) {
                 possession = new Flux(
                   possessionData.possesseur,
@@ -49,6 +49,7 @@ const PossessionPage = () => {
                   possessionData.tauxAmortissement
                 );
               }
+
               return {
                 ...possessionData,
                 valeurActuelle: possession.getValeur(currentDate) || "-",
@@ -104,26 +105,43 @@ const PossessionPage = () => {
           <tr>
             <th>Label</th>
             <th className="text-center">Value</th>
-            <th className="text-center">Current Value</th>
+            <th className="text-center">Start date</th>
+            <th className="text-center">End date</th>
+            <th className="text-center">Depreciation rate</th>
+            <th className="text-center">Current value</th>
             <th className="text-center">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {possessions.map((possession, index) => (
-            <tr key={index}>
-              <td>{possession.libelle}</td>
-              <td className="text-center">{possession.valeur}</td>
-              <td className="text-center">{possession.valeurActuelle}</td>
+        <tbody className="fw-normal ">
+          {possessions.map((possession) => (
+            <tr key={possession.libelle}>
+              <td className="pt-4">{possession.libelle || "-"}</td>
+              <td className="text-center pt-4">{possession.valeur || "-"}</td>
+              <td className="text-center pt-4">
+                {possession.dateDebut
+                  ? new Date(possession.dateDebut).toLocaleDateString()
+                  : "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.dateFin
+                  ? new Date(possession.dateFin).toLocaleDateString()
+                  : "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.tauxAmortissement || "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.valeurActuelle || "-"}
+              </td>
               <td className="text-center">
                 <Button
-                  variant="secondary"
-                  className="me-2"
+                  className="bg-light border-1 border-secondary text-secondary px-4 py-2 me-1 my-2"
                   onClick={() => handleEdit(possession.libelle)}
                 >
                   Edit
                 </Button>
                 <Button
-                  variant="danger"
+                  className="bg-light border-1 border-danger text-danger px-3 py-2 ms-1 my-2"
                   onClick={() => handleClose(possession.libelle)}
                 >
                   Close
