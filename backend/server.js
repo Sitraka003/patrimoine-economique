@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const dataPath = path.join(__dirname, '../UI/data/data.json');
+const dataPath = path.join(__dirname, '../UI/src/data/data.json');
 
 app.use(cors());
 app.use(express.json()); 
