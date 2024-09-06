@@ -27,7 +27,7 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      console.log("Chart Data:", data);
+      console.log("Data fetched for range:", data); // Debugging line
       setChartData(data.valeur);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
@@ -42,6 +42,7 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
+      console.log("Data fetched for specific date:", data); // Debugging line
       setPatrimoineValeur(data.valeur);
     } catch (error) {
       console.error(
