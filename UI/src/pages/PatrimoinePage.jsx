@@ -11,8 +11,12 @@ const PatrimoinePage = () => {
   const [timeUnit, setTimeUnit] = useState("jour");
   const [specificDate, setSpecificDate] = useState(new Date());
   const [patrimoineValeur, setPatrimoineValeur] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchData = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await fetch(
         "https://patrimoine-economique-hnz4.onrender.com/patrimoine/range",
@@ -26,32 +30,37 @@ const PatrimoinePage = () => {
           }),
         }
       );
+      if (!response.ok) throw new Error("Failed to fetch data");
       const data = await response.json();
-      setChartData(data.valeur);
+      setChartData(data.valeur || []);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
+      setError("Erreur lors de la récupération des données");
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchPatrimoineValeur = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      console.log(
-        "Fetching patrimoine value for date:",
-        specificDate.toISOString().split("T")[0]
-      );
       const response = await fetch(
         `https://patrimoine-economique-hnz4.onrender.com/patrimoine/${
           specificDate.toISOString().split("T")[0]
         }`
       );
+      if (!response.ok) throw new Error("Failed to fetch patrimoine value");
       const data = await response.json();
-      console.log("Patrimoine value response data:", data);
-      setPatrimoineValeur(data.valeur);
+      setPatrimoineValeur(data.valeur || null);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
         error
       );
+      setError("Erreur lors de la récupération de la valeur du patrimoine");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,9 +94,12 @@ const PatrimoinePage = () => {
       <Button
         className="fs-5 px-4 bg-light text-success border border-2 border-success"
         onClick={fetchData}
+        disabled={loading}
       >
         Validate
       </Button>
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-danger">{error}</p>}
       <div className="mt-4">
         <LineChart data={chartData} />
       </div>
@@ -104,6 +116,7 @@ const PatrimoinePage = () => {
           <Button
             className="bg-light border-2 border-success text-success px-4 py-2 me-1 mt-4"
             onClick={fetchPatrimoineValeur}
+            disabled={loading}
           >
             Validate
           </Button>
@@ -115,10 +128,12 @@ const PatrimoinePage = () => {
           Value of the Patrimony on the selected date{" "}
           <span className="fw-bold">=&gt;</span>
         </span>
-        {patrimoineValeur !== null && (
+        {patrimoineValeur !== null ? (
           <span className="mt-3">
             <span className="h5 ps-3 text-primary">{patrimoineValeur}</span>
           </span>
+        ) : (
+          <span className="mt-3 text-secondary">No data available</span>
         )}
       </div>
     </Container>
