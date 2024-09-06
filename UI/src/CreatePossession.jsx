@@ -28,14 +28,14 @@ function CreatePossession() {
             libelle,
             valeur,
             dateDebut: formatDate(dateDebut),
-            dateFin: null,  
-            tauxAmortissement: amortissement || 0  
+            dateFin: null,
+            tauxAmortissement: amortissement || 0
         };
 
         try {
-            const response = await axios.post('http://backend-patrimoine-economique-jrpz.onrender.com/possession', data);
+            const response = await axios.post('https://backend-patrimoine-economique-c484.onrender.com/possession', data);
             console.log('Possession created successfully:', response.data);
-            navigate('/possessions'); 
+            navigate('/possessions');
         } catch (error) {
             console.error('An error occurred during the request.', error);
         }
