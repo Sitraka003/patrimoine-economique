@@ -100,6 +100,12 @@ const PatrimoineApp = () => {
 
   const calculerValeurActuelle = (possession, date) => {
     if (!possession) return 0;
+
+    const selectedDateObj = new Date(date);
+    if (possession.dateFin && new Date(possession.dateFin) < selectedDateObj) {
+      return 0;
+    }
+
     let valeurActuelle = possession.getValeurApresAmortissement(new Date(date));
     if (possession.valeur === 0 && possession.valeurConstante) {
       const dateDebut = new Date(possession.dateDebut);
@@ -269,9 +275,7 @@ const PatrimoineApp = () => {
           </div>
         </div>
       ) : (
-        <p className="text-warning">
-          Aucune possession trouvée
-        </p>
+        <p className="text-warning">Aucune possession trouvée</p>
       )}
     </div>
   );
