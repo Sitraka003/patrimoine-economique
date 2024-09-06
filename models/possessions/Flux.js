@@ -6,43 +6,57 @@ import Possession from "./Possession.js";
 export default class Flux extends Possession {
   // Si salaire => +
   // Si train de vie => -
-  constructor(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement, jour) {
-    super(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement)
+  constructor(
+    possesseur,
+    libelle,
+    valeur,
+    dateDebut,
+    dateFin,
+    tauxAmortissement,
+    jour
+  ) {
+    super(possesseur, libelle, valeur, dateDebut, dateFin, tauxAmortissement);
     this.valeur = 0;
     this.jour = jour;
     // this.source = source; // null || Compte
     // this.destination = destination; // Compte
     this.dateDebut = dateDebut;
     this.dateFin = dateFin;
-    this.valeurConstante = valeur
+    this.valeurConstante = valeur;
   }
 
-
   getValeur(date) {
-
     const nombreDeMois = (debut, dateEvaluation, jourJ) => {
-        
-        let compteur = 0;
-    
-        if (debut.getDate() < jourJ) {
-            compteur++;
-        }
-        
-        if (dateEvaluation.getDate() >= jourJ && !(debut.getFullYear() === dateEvaluation.getFullYear() && debut.getMonth() === dateEvaluation.getMonth())) {
-            compteur++;
-        }
-        
-        let totalMois = (dateEvaluation.getFullYear() - debut.getFullYear()) * 12 + (dateEvaluation.getMonth() - debut.getMonth()) - 1;
-    
-        compteur += Math.max(0, totalMois);
-    
-        return compteur;
-    }
+      let compteur = 0;
 
-    // calcul montant total
+      if (debut.getDate() < jourJ) {
+        compteur++;
+      }
 
-    this.valeur += nombreDeMois(this.dateDebut, date, this.jour) * this.valeurConstante;
+      if (
+        dateEvaluation.getDate() >= jourJ &&
+        !(
+          debut.getFullYear() === dateEvaluation.getFullYear() &&
+          debut.getMonth() === dateEvaluation.getMonth()
+        )
+      ) {
+        compteur++;
+      }
 
-    return this.valeur;
+      let totalMois =
+        (dateEvaluation.getFullYear() - debut.getFullYear()) * 12 +
+        (dateEvaluation.getMonth() - debut.getMonth()) -
+        1;
+
+      compteur += Math.max(0, totalMois);
+
+      return compteur;
+    };
+
+    // Calculer le montant total sans modifier this.valeur
+    const totalMois = nombreDeMois(this.dateDebut, date, this.jour);
+    const montantTotal = totalMois * this.valeurConstante;
+
+    return montantTotal;
   }
 }
