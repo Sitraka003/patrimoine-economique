@@ -1,123 +1,154 @@
-import React, { useState } from "react";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import DatePicker from "../components/DatePicker";
-import LineChart from "../components/LineChart";
+import React, { useState, useEffect } from "react";
+import { Container, Button, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Possession from "../../../models/possessions/Possession";
+import Flux from "../../../models/possessions/Flux";
 
 const PatrimoinePage = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [chartData, setChartData] = useState([]);
-  const [timeUnit, setTimeUnit] = useState("jour");
-  const [specificDate, setSpecificDate] = useState(new Date());
-  const [patrimoineValeur, setPatrimoineValeur] = useState(null);
+  const [possessions, setPossessions] = useState([]);
+  const navigate = useNavigate();
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        "https://patrimoine-economique-hnz4.onrender.com/patrimoine/range",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: timeUnit,
-            dateDebut: startDate.toISOString().split("T")[0],
-            dateFin: endDate.toISOString().split("T")[0],
-          }),
+  useEffect(() => {
+    fetchPossessions();
+  }, []);
+
+  const fetchPossessions = () => {
+    fetch("https://patrimoine-economique-hnz4.onrender.com/patrimoine")
+      .then((response) => response.json())
+      .then((data) => {
+        const patrimoineData = data.find((item) => item.model === "Patrimoine");
+        if (patrimoineData) {
+          const currentDate = new Date();
+          const updatedPossessions = patrimoineData.data.possessions.map(
+            (possessionData) => {
+              let possession;
+              if (possessionData.jour !== undefined) {
+                // Identifie si c'est un Flux
+                possession = new Flux(
+                  possessionData.possesseur,
+                  possessionData.libelle,
+                  possessionData.valeurConstante, // Utilisation de valeurConstante
+                  new Date(possessionData.dateDebut),
+                  possessionData.dateFin
+                    ? new Date(possessionData.dateFin)
+                    : null,
+                  possessionData.tauxAmortissement,
+                  possessionData.jour
+                );
+              } else {
+                possession = new Possession(
+                  possessionData.possesseur,
+                  possessionData.libelle,
+                  possessionData.valeur,
+                  new Date(possessionData.dateDebut),
+                  possessionData.dateFin
+                    ? new Date(possessionData.dateFin)
+                    : null,
+                  possessionData.tauxAmortissement
+                );
+              }
+
+              return {
+                ...possessionData,
+                valeurActuelle: possession.getValeur(currentDate) || "-",
+              };
+            }
+          );
+          setPossessions(updatedPossessions);
         }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la récupération des possessions:", error)
       );
-      const data = await response.json();
-      console.log("Data fetched for range:", data); // Debugging line
-      setChartData(data.valeur);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des données:", error);
-    }
   };
 
-  const fetchPatrimoineValeur = async () => {
-    try {
-      const response = await fetch(
-        `https://patrimoine-economique-hnz4.onrender.com/patrimoine/${
-          specificDate.toISOString().split("T")[0]
-        }`
+  const handleCreate = () => {
+    navigate("/create");
+  };
+
+  const handleEdit = (libelle) => {
+    navigate(`/edit/${libelle}`);
+  };
+
+  const handleClose = (libelle) => {
+    fetch(
+      `https://patrimoine-economique-hnz4.onrender.com/possession/${libelle}/close`,
+      {
+        method: "POST",
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          fetchPossessions();
+        } else {
+          console.error("Erreur lors de la fermeture de la possession.");
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la fermeture de la possession:", error)
       );
-      const data = await response.json();
-      console.log("Data fetched for specific date:", data); // Debugging line
-      setPatrimoineValeur(data.valeur);
-    } catch (error) {
-      console.error(
-        "Erreur lors de la récupération de la valeur du patrimoine:",
-        error
-      );
-    }
   };
 
   return (
-    <Container className="mb-5">
-      <h1 className="my-5 fw-normal text-secondary">Patrimony</h1>
-      <Row className="mb-3">
-        <Col>
-          <label className="fs-5 fw-bold">Start date :</label>
-          <DatePicker selectedDate={startDate} onDateChange={setStartDate} />
-        </Col>
-        <Col>
-          <label className="fs-5 fw-bold">End date :</label>
-          <DatePicker selectedDate={endDate} onDateChange={setEndDate} />
-        </Col>
-        <Col>
-          <label className="fs-5 fw-bold">Unit of time :</label>
-          <Form.Group controlId="timeUnitSelect">
-            <Form.Control
-              as="select"
-              value={timeUnit}
-              onChange={(e) => setTimeUnit(e.target.value)}
-            >
-              <option value="jour">Day</option>
-              <option value="mois">Month</option>
-              <option value="année">Year</option>
-            </Form.Control>
-          </Form.Group>
-        </Col>
-      </Row>
+    <Container>
+      <h1 className="fw-normal text-secondary mt-5">List of Possessions</h1>
       <Button
-        className="fs-5 px-4 bg-light text-success border border-2 border-success"
-        onClick={fetchData}
+        className="mt-4 fs-5 px-4 bg-light text-info border border-2 border-info"
+        onClick={handleCreate}
       >
-        Validate
+        Create
       </Button>
-      <div className="mt-4">
-        <LineChart data={chartData} />
-      </div>
-
-      <Row className="mt-4 w-50 mt-5">
-        <Col>
-          <label className="fs-5 fw-bold">Select a date :</label>
-          <DatePicker
-            selectedDate={specificDate}
-            onDateChange={setSpecificDate}
-          />
-        </Col>
-        <Col>
-          <Button
-            className="bg-light border-2 border-success text-success px-4 py-2 me-1 mt-4"
-            onClick={fetchPatrimoineValeur}
-          >
-            Validate
-          </Button>
-        </Col>
-      </Row>
-
-      <div>
-        <span className="fs-5">
-          Value of the Patrimony on the selected date{" "}
-          <span className="fw-bold">=&gt;</span>
-        </span>
-        {patrimoineValeur !== null && (
-          <span className="mt-3">
-            <span className="h5 ps-3 text-primary">{patrimoineValeur}</span>
-          </span>
-        )}
-      </div>
+      <Table className="table table-hover my-5 text-left">
+        <thead className="fs-5 border-bottom border-secondary">
+          <tr>
+            <th>Label</th>
+            <th className="text-center">Value</th>
+            <th className="text-center">Start date</th>
+            <th className="text-center">End date</th>
+            <th className="text-center">Depreciation rate</th>
+            <th className="text-center">Current value</th>
+            <th className="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="fw-normal ">
+          {possessions.map((possession) => (
+            <tr key={possession.libelle}>
+              <td className="pt-4">{possession.libelle || "-"}</td>
+              <td className="text-center pt-4">{possession.valeur || "-"}</td>
+              <td className="text-center pt-4">
+                {possession.dateDebut
+                  ? new Date(possession.dateDebut).toLocaleDateString()
+                  : "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.dateFin
+                  ? new Date(possession.dateFin).toLocaleDateString()
+                  : "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.tauxAmortissement || "-"}
+              </td>
+              <td className="text-center pt-4">
+                {possession.valeurActuelle || "-"}
+              </td>
+              <td className="text-center">
+                <Button
+                  className="bg-light border-1 border-secondary text-secondary px-4 py-2 me-1 my-2"
+                  onClick={() => handleEdit(possession.libelle)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  className="bg-light border-1 border-danger text-danger px-3 py-2 ms-1 my-2"
+                  onClick={() => handleClose(possession.libelle)}
+                >
+                  Close
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </Container>
   );
 };
