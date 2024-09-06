@@ -104,7 +104,7 @@ function GetValeurPatrimoine({ startDate, endDate }) {
     useEffect(() => {
         const fetchPossessionsAndCalculatePatrimoine = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/possessions');
+                const response = await axios.get('http://backend-patrimoine-economique-jrpz.onrender.com/possessions');
                 const possessions = response.data;
 
                 const labels = [];
@@ -126,9 +126,8 @@ function GetValeurPatrimoine({ startDate, endDate }) {
                         return total;
                     }, 0);
 
-                    data.push(totalPatrimoine.toFixed(2)); // Round to 2 decimal places
+                    data.push(totalPatrimoine.toFixed(2));
 
-                    // Move to the next month
                     currentDate.setMonth(currentDate.getMonth() + 1);
                 }
 
@@ -152,7 +151,7 @@ function PatrimoineOnTheActualDay({ onCalculatePatrimoine }) {
 
     const handleConfirm = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/possessions');
+            const response = await axios.get('http://backend-patrimoine-economique-jrpz.onrender.com/possessions');
             const possessions = response.data;
 
             const totalPatrimoine = possessions.reduce((total, possession) => {

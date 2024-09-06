@@ -33,7 +33,7 @@ function CreatePossession() {
         };
 
         try {
-            const response = await axios.post('http://localhost:3000/possession', data);
+            const response = await axios.post('http://backend-patrimoine-economique-jrpz.onrender.com/possession', data);
             console.log('Possession created successfully:', response.data);
             navigate('/possessions'); 
         } catch (error) {

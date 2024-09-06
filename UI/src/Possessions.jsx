@@ -12,7 +12,7 @@ function TablePossession() {
   useEffect(() => {
     const fetchPossessions = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/possessions');
+        const response = await axios.get('http://backend-patrimoine-economique-jrpz.onrender.com/possessions');
         if (Array.isArray(response.data)) {
           const updatedPossessions = response.data.map(possessionData => {
             const isFlux = possessionData.tauxAmortissement === 0;
@@ -56,7 +56,7 @@ function TablePossession() {
 
   const handleClose = async (libelle) => {
     try {
-      await axios.put(`http://localhost:3000/possession/${libelle}/close`);
+      await axios.put(`http://backend-patrimoine-economique-jrpz.onrender.com/possession/${libelle}/close`);
       setPossessions(prevPossessions =>
         prevPossessions.map(possession =>
           possession.libelle === libelle
@@ -71,7 +71,7 @@ function TablePossession() {
 
   const handleDelete = async (libelle) => {
     try {
-      await axios.delete(`http://localhost:3000/possession/${libelle}`);
+      await axios.delete(`http://backend-patrimoine-economique-jrpz.onrender.com/possession/${libelle}`);
       setPossessions(prevPossessions =>
         prevPossessions.filter(possession => possession.libelle !== libelle)
       );

@@ -38,7 +38,7 @@ function UpdatePossession() {
         setSubmitting(true);
 
         try {
-            await axios.put(`http://localhost:3000/possession/${libelle}`, {
+            await axios.put(`http://backend-patrimoine-economique-jrpz.onrender.com/possession/${libelle}`, {
                 dateFin: startDate.toISOString().split('T')[0],
                 newLibelle
             });
