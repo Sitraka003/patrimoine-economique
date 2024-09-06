@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Possession from "../../../models/possessions/Possession";
+import Flux from "../../../models/possessions/Flux";
 
 const PossessionPage = () => {
   const [possessions, setPossessions] = useState([]);
@@ -21,11 +22,7 @@ const PossessionPage = () => {
           const updatedPossessions = patrimoineData.data.possessions.map(
             (possessionData) => {
               let possession;
-
-              if (
-                "jour" in possessionData &&
-                "valeurConstante" in possessionData
-              ) {
+              if (possessionData.type === "Flux") {
                 possession = new Flux(
                   possessionData.possesseur,
                   possessionData.libelle,
@@ -34,9 +31,13 @@ const PossessionPage = () => {
                   possessionData.dateFin
                     ? new Date(possessionData.dateFin)
                     : null,
-                  possessionData.tauxAmortissement,
-                  possessionData.jour
+                  possessionData.tauxAmortissement
                 );
+
+                possessionData.valeurActuelle =
+                  possession.getValeur(currentDate) >= possessionData.valeur
+                    ? possessionData.valeur
+                    : possession.getValeur(currentDate);
               } else {
                 possession = new Possession(
                   possessionData.possesseur,
@@ -48,11 +49,14 @@ const PossessionPage = () => {
                     : null,
                   possessionData.tauxAmortissement
                 );
+
+                possessionData.valeurActuelle =
+                  possession.getValeur(currentDate) || "-";
               }
 
               return {
                 ...possessionData,
-                valeurActuelle: possession.getValeur(currentDate) || "-",
+                valeurActuelle: possessionData.valeurActuelle || "-",
               };
             }
           );
