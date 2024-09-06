@@ -26,6 +26,7 @@ export default class Patrimoine {
         );
       }
     });
+    console.log("Possessions après instanciation : ", this.possessions);
   }
 
   getValeur(date) {
