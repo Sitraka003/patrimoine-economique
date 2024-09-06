@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ChartJS.register(
     CategoryScale,
@@ -61,10 +62,10 @@ export default function LineGraph() {
     };
 
     const defaultData = {
-        labels: ['No data'],
+        labels: ["Evaluation graphique du patrimoine"],
         datasets: [{
-            label: 'Default Data',
-            borderColor: '#ddd',
+            label: 'Evaluation',
+            borderColor: '#ffd700',
             backgroundColor: 'rgba(221, 221, 221, 0.5)',
             data: [0],
             fill: true
@@ -72,36 +73,44 @@ export default function LineGraph() {
     };
 
     return (
-        <div>
-            <h2>Patrimoine Line Chart</h2>
-            <div>
-                <label>Date Debut:</label>
-                <DatePicker
-                    selected={dateDebut}
-                    onChange={(date) => setDateDebut(date)}
-                    dateFormat="dd/MM/yyyy"
-                />
+        <div className="container mt-5">
+            <h2 className="text-center mb-4">Patrimoine Line Chart</h2>
+            <div className="row mb-3">
+                <div className="col-md-4">
+                    <label className="form-label">Date Debut:</label>
+                    <DatePicker
+                        selected={dateDebut}
+                        onChange={(date) => setDateDebut(date)}
+                        dateFormat="dd/MM/yyyy"
+                        className="form-control"
+                        placeholderText='Selectionnez une date'
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label className="form-label">Date Fin:</label>
+                    <DatePicker
+                        selected={dateFin}
+                        onChange={(date) => setDateFin(date)}
+                        dateFormat="dd/MM/yyyy"
+                        className="form-control"
+                        placeholderText='Selectionnez une date'
+                    />
+                </div>
+                <div className="col-md-4">
+                    <label className="form-label">Jour:</label>
+                    <select value={jour} onChange={(e) => setJour(Number(e.target.value))} className="form-select">
+                        {[1, 7, 30].map(day => (
+                            <option key={day} value={day}>{day} days</option>
+                        ))}
+                    </select>
+                </div>
             </div>
-            <div>
-                <label>Date Fin:</label>
-                <DatePicker
-                    selected={dateFin}
-                    onChange={(date) => setDateFin(date)}
-                    dateFormat="dd/MM/yyyy"
-                />
+            <div className="d-flex justify-content-center mb-4">
+                <button onClick={handleFetchData} className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Loading...' : 'Validate'}
+                </button>
             </div>
-            <div>
-                <label>Jour:</label>
-                <select value={jour} onChange={(e) => setJour(Number(e.target.value))}>
-                    {[1, 7, 30].map(day => (
-                        <option key={day} value={day}>{day} days</option>
-                    ))}
-                </select>
-            </div>
-            <button onClick={handleFetchData} disabled={loading}>
-                {loading ? 'Loading...' : 'Validate'}
-            </button>
-            <div>
+            <div className="chart-container" style={{ position: 'relative', height: '60vh' }}>
                 <Line
                     options={{
                         responsive: true,

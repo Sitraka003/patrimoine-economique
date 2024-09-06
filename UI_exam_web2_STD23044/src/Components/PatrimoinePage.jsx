@@ -61,7 +61,7 @@ function PatrimoinePage() {
                 onChange={(date) => setSelectedDate(date)}
                 dateFormat="dd/MM/yyyy"
                 className="form-control"
-                placeholderText="La nouvelle date"
+                placeholderText="Enter la date"
               />
             </div>
           </div>
