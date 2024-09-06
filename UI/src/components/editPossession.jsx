@@ -5,24 +5,35 @@ import axios from "axios";
 
 export function ToggleEdit() {
     const edit = document.querySelector('.modification');
-    edit.classList.toggle('toggledEdit');
+    if (edit) {
+        edit.classList.toggle('toggledEdit');
+    }
 }
 
 function EditPossession({ possessionToEdit, onUpdate }) {
     const [libelle, setLibelle] = useState('');
     const [dateFin, setDateFin] = useState('');
 
-    // Utilisez useEffect pour initialiser les valeurs si possessionToEdit est défini
     useEffect(() => {
         if (possessionToEdit) {
             setLibelle(possessionToEdit.libelle || '');
-            setDateFin(possessionToEdit.dateFin ? possessionToEdit.dateFin.substring(0, 10) : '');
+            // Verification du type de dateFin avant d'appliquer substring
+            if (typeof possessionToEdit.dateFin === 'string') {
+                setDateFin(possessionToEdit.dateFin.substring(0, 10));
+            } else if (possessionToEdit.dateFin instanceof Date) {
+                setDateFin(possessionToEdit.dateFin.toISOString().substring(0, 10));
+            } else {
+                setDateFin('');
+            }
         }
     }, [possessionToEdit]);
 
     const Edit = async () => {
         try {
-            const response = await axios.put(`http://localhost:3500/possession/${libelle}`, { dateFin });
+            const response = await axios.put(`http://localhost:3500/possession/${possessionToEdit.libelle}`, { 
+                dateFin, 
+                newLibelle: libelle
+            });
 
             if (response.status === 200) {
                 onUpdate();

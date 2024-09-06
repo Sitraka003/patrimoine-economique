@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { useState, useEffect } from "react";
 import axios from "axios";
 import Possession from "../../../models/possessions/Possession";
 import Flux from "../../../models/possessions/Flux";
@@ -33,7 +32,7 @@ function MyChart() {
     const [values, setValues] = useState([]);
     const [dateDebut, setDateDebut] = useState("");
     const [dateFin, setDateFin] = useState("");
-    const [day, setDay] = useState(1); // Valeur par défaut pour le jour
+    const [day, setDay] = useState("1"); 
 
     useEffect(() => {
         axios.get('http://localhost:3500/possession')
@@ -82,8 +81,10 @@ function MyChart() {
         setDateFin(e.target.value);
     }
 
-    function dayPicker(e){
-        setDay(e.target.value);
+    function dayPicker(e) {
+        const selectedDay = e.target.value;
+        console.log("Selected day:", selectedDay);
+        setDay(selectedDay);
     }
 
     function getMonthsInRange(startDate, endDate) {
@@ -99,33 +100,48 @@ function MyChart() {
 
         return monthsArray;
     }
-
-    function calculateValueForMonth(possession, start, end, day) {
-        if (possession.dateFin < start || possession.dateDebut > end) {
-            return 0;
-        }
-        
-        const adjustedEnd = new Date(end);
-        adjustedEnd.setDate(day);
-        if (adjustedEnd > end) {
-            adjustedEnd.setMonth(adjustedEnd.getMonth() + 1);
-            adjustedEnd.setDate(0);
-        }
-
-        if (possession instanceof Flux) {
-            return possession.getValeur(adjustedEnd);
-        } else {
-            return possession.getValeurApresAmortissement(adjustedEnd);
-        }
-    }
-
     function getValuePerMonth() {
-        const valuePermonth = axios.get('http://localhost:3500/patrimoine/range')
-
-        return valuePermonth;
+        if (!dateDebut || !dateFin || !day) {
+            console.error("Tous les paramètres doivent être définis.");
+            return;
+        }
+    
+        console.log("Date début:", dateDebut);
+        console.log("Date fin:", dateFin);
+        console.log("Jour sélectionné:", day);
+    
+        axios.get('http://localhost:3500/patrimoine/range', {
+            params: {
+                dateDebut: dateDebut,
+                dateFin: dateFin,
+                day: day
+            }
+        })
+        .then(response => {
+            const calculatedValues = response.data;
+            const monthsInRange = getMonthsInRange(new Date(dateDebut), new Date(dateFin));
+    
+            
+            setMonths(monthsInRange);
+            setValues(calculatedValues.map(val => parseFloat(val))); 
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
     }
-
-    const options = {};
+    
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Valeurs du patrimoine par mois',
+            },
+        },
+    };
 
     const chartData = {
         labels: months,
@@ -133,26 +149,28 @@ function MyChart() {
             {
                 label: "Valeurs calculées",
                 data: values,
-                borderColor: "rgb(182, 135, 35)"
+                borderColor: "rgb(182, 135, 35)",
+                backgroundColor: "rgba(182, 135, 35, 0.5)",
             }
         ]
     };
 
-    function ShowOption(){
-        for(let i = 1; i<= 31; i++){
-            return (
-                <option value={i}>{i}</option>
-            )
+    function ShowOption() {
+        let options = [];
+        for (let i = 1; i <= 31; i++) {
+            options.push(
+                <option key={i} value={i}>{i}</option>
+            );
         }
+        return options;
     }
-    
 
     return (
         <>
             <div className="mainContainer">
                 <div className="leftContainer">
                     <h1>VOTRE PATRIMOINE</h1>
-                    <p className="explanation">Veuillez nous fournir la date de début et la date de fin afin de calculer la valeur de votre Patrimoine </p>
+                    <p className="explanation">Veuillez nous fournir la date de début et la date de fin afin de calculer la valeur de votre Patrimoine</p>
                     <div className="input-group mb-3 oneInput">
                         <span className="input-group-text">Date début</span>
                         <input type="date" className="form-control" onChange={datePickerDebut} />
@@ -162,11 +180,8 @@ function MyChart() {
                         <input type="date" className="form-control" onChange={datePickerFin} />
                     </div>
 
-                    <select className="form-select form-select-sm selectDay" onChange={(e) => setDay(Number(e.target.value))}>
-                        
-                            
-                            
-
+                    <select className="form-select form-select-sm selectDay" value={day} onChange={dayPicker}>
+                        <ShowOption />
                     </select>
 
                     <input className="btn btn-primary bouton" type="button" value="Valider" onClick={getValuePerMonth} />

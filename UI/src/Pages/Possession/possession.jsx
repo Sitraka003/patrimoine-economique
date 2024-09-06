@@ -98,13 +98,14 @@ function PossessionPage() {
             return;
         }
     
-        console.log('Converted date:', date.toISOString().split('T')[0]);
+        const formattedDate = date.toISOString().split('T')[0];
+        console.log('Converted date:', formattedDate);
     
-        axios.get(`http://localhost:3500/patrimoine/${date.toISOString().split('T')[0]}`)
+        axios.get(`http://localhost:3500/patrimoine/${formattedDate}`)
             .then(response => {
                 const newValue = response.data;
                 console.log('New value retrieved:', newValue);
-
+    
                 if (typeof newValue === 'number' || typeof newValue === 'string') {
                     setPatrimonyValue(newValue);
                 } else if (newValue && newValue.valeur) {
@@ -117,6 +118,8 @@ function PossessionPage() {
                 console.error('Error fetching new value:', error);
             });
     }
+    
+    
 
     function getActualValue() {
         const today = new Date();
