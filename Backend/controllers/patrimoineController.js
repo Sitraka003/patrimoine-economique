@@ -85,5 +85,6 @@ const getPatrimoineInRange = (req, res) => {
 
 module.exports = {
     getPatrimoineAtDate,
-    getPatrimoineInRange
+    getPatrimoineInRange,
+    
 };

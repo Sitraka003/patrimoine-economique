@@ -9,9 +9,11 @@ const {
     addPerson,
     addPossession,
     closePossession,
-    addNewPossession
+    addNewPossession,
+
 } = require("../controllers/personController");
 const { getPatrimoineInRange, getPatrimoineAtDate } = require("../controllers/patrimoineController");
+const dataJson = require("../controllers/dataContrloller");
 
 router.get("/personnes", getPersons);
 router.delete("/possessions/:nomPossesseur/:libelle", deletePossession);
@@ -24,5 +26,6 @@ router.put('/possessions/:nom/:libelle/close', closePossession);
 router.get('/patrimoine/:date', getPatrimoineAtDate);
 router.get("/patrimoine/range", getPatrimoineInRange);
 router.post('/possessions/:nom', addNewPossession);
+router.get("/data", dataJson);
 
 module.exports = router;
