@@ -18,7 +18,7 @@ function UpdatePossession() {
     useEffect(() => {
         const fetchPossession = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/possession/${libelle}`);
+                const response = await axios.get(`https://backend-patrimoine-economique-c484.onrender.com/possession/${libelle}`);
                 setNewLibelle(response.data.libelle || '');
                 if (response.data.Fin) {
                     setStartDate(new Date(response.data.Fin));
@@ -38,7 +38,7 @@ function UpdatePossession() {
         setSubmitting(true);
 
         try {
-            await axios.put(`http://backend-patrimoine-economique-jrpz.onrender.com/possession/${libelle}`, {
+            await axios.put(`https://backend-patrimoine-economique-c484.onrender.com/possession/${libelle}`, {
                 dateFin: startDate.toISOString().split('T')[0],
                 newLibelle
             });
