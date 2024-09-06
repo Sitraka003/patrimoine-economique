@@ -178,20 +178,22 @@ app.get("/patrimoine/:date", async (req, res) => {
     console.log("Date reçue:", dateObj);
 
     const data = await readData();
+    console.log("Données récupérées:", data);
+
     const patrimoineData = data.find((item) => item.model === "Patrimoine");
 
     if (!patrimoineData) {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // creation d'instnance avec les données récupérées
+    console.log("Données du Patrimoine:", patrimoineData);
+
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
     );
     console.log("Patrimoine chargé:", patrimoine);
 
-    // calcul de la valeur du patrimoine à la date donnée
     const valeur = patrimoine.getValeur(dateObj);
     console.log("Valeur calculée:", valeur);
 
