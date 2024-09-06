@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 import Flux from '../models/possessions/Flux.js';
+import Patrimoine from '../models/Patrimoine.js';
 import Possession from '../models/possessions/Possession.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -154,7 +155,40 @@ app.delete('/possession/:libelle', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 9000;
-app.listen(PORT, () => {
-  console.log(`Serveur en fonctionnement sur le port ${PORT}`);
+app.post('/patrimoine/range', (req, res) => {
+  const { dateDebut, dateFin, type, jour } = req.body;
+  const startDate = new Date(dateDebut);
+  const endDate = new Date(dateFin);
+  const patrimoineData = data.find(d => d.model === 'Patrimoine');
+
+  if (!patrimoineData) {
+    return res.status(404).send('Patrimoine not found');
+  }
+
+  const possessions = patrimoineData.data.possessions.map(p => {
+    return p.jour
+      ? new Flux(p.possesseur, p.libelle, p.valeurConstante, new Date(p.dateDebut), p.dateFin ? new Date(p.dateFin) : null, p.tauxAmortissement, p.jour)
+      : new Possession(p.possesseur, p.libelle, p.valeur, new Date(p.dateDebut), p.dateFin ? new Date(p.dateFin) : null, p.tauxAmortissement);
+  });
+
+  const patrimoine = new Patrimoine(patrimoineData.data.possesseur.nom, possessions);
+  let currentDate = startDate;
+  const results = [];
+
+  while (currentDate <= endDate) {
+    const valeur = patrimoine.getValeur(currentDate);
+    results.push({ date: currentDate.toISOString().split('T')[0], valeur });
+
+    if (type === 'month') {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    } else {
+      currentDate.setDate(currentDate.getDate() + jour);
+    }
+  }
+
+  res.json(results);
+});
+
+app.listen(9000, () => {
+  console.log('Serveur démarré sur le port 9000');
 });

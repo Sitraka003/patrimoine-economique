@@ -7,6 +7,7 @@ import data from '../../../data/data.json';
 import Patrimoine from '../../../models/Patrimoine.js';
 import Possession from '../../../models/possessions/Possession.js';
 import Flux from '../../../models/possessions/Flux.js';
+import LineGraph from "./Line.jsx";
 import '../App.css';
 
 function PatrimoinePage() {
@@ -44,7 +45,7 @@ function PatrimoinePage() {
   };
 
   return (
-    <div className='container mt-5 d-flex align-items-center justify-content-center min-vh-50'>
+    <div className='container mt-5 align-items-center justify-content-center min-vh-50'>
       <div className='w-100'>
         <div className='row justify-content-center mb-4'>
           <div className='col-md-6'>
@@ -77,6 +78,7 @@ function PatrimoinePage() {
           </div>
         </div>
       </div>
+      <div className='lineGraph'><LineGraph></LineGraph></div>
     </div>
   );
 }
