@@ -7,9 +7,8 @@ const app = express();
 const dataPath = path.join(__dirname, '../data/data.json');
 
 app.use(cors());
-app.use(express.json()); // Add this line to parse JSON request bodies
+app.use(express.json()); 
 
-// Helper function to read data
 const readData = (callback) => {
     readFile(dataPath, 'utf8', (err, data) => {
         if (err) return callback(err);
@@ -22,7 +21,6 @@ const readData = (callback) => {
     });
 };
 
-// Helper function to write data
 const writeData = (data, callback) => {
     writeFile(dataPath, JSON.stringify(data, null, 2), 'utf8', (err) => {
         callback(err);
@@ -170,5 +168,5 @@ app.get('/patrimoine/range', (req, res) => {
     });
 });
 
-const port = 3000; // Define the port
+const port = 3000; 
 app.listen(port, () => console.log(`Server running on port ${port}`));
