@@ -27,7 +27,8 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      setChartData(data.valeur); // Assurez-vous que 'data.valeur' contient les bonnes valeurs
+      console.log("Chart Data:", data);
+      setChartData(data.valeur);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
     }
@@ -41,7 +42,7 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
-      setPatrimoineValeur(data.valeur); // Assurez-vous que 'data.valeur' contient la bonne valeur
+      setPatrimoineValeur(data.valeur);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
