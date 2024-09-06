@@ -13,12 +13,25 @@ const ShowAll = () => {
   const [editType, setEditType] = useState("");
   const [currentItem, setCurrentItem] = useState(null);
   const [newValue, setNewValue] = useState("");
+  const [newDateDebut, setNewDateDebut] = useState("");
   const [newDateFin, setNewDateFin] = useState("");
   const [newValeur, setNewValeur] = useState("");
   const [newTauxAmortissement, setNewTauxAmortissement] = useState("");
   const [newValeurConstante, setNewValeurConstante] = useState("");
 
   const handleClose = () => setShowModal(false);
+
+  const handleShowAddPossession = (nom) => {
+    setEditType("add-possession");
+    setCurrentItem({ possesseur: { nom } });
+    setNewValue("");
+    setNewValeur("");
+    setNewValeurConstante("");
+    setNewTauxAmortissement("");
+    setNewDateFin("");
+    setNewDateDebut("");
+    setShowModal(true);
+  };
 
   const handleShow = (type, item) => {
     setEditType(type);
@@ -29,6 +42,11 @@ const ShowAll = () => {
     setNewTauxAmortissement(
       type === "possession" && item.tauxAmortissement
         ? item.tauxAmortissement
+        : ""
+    );
+    setNewDateDebut(
+      item && item.dateDebut
+        ? new Date(item.dateDebut).toISOString().split("T")[0]
         : ""
     );
     setNewDateFin(
@@ -53,6 +71,18 @@ const ShowAll = () => {
           libelle: newValue,
           valeur: newValeur,
           tauxAmortissement: newTauxAmortissement || null,
+          dateDebut: newDateDebut || null,
+          dateFin: newDateFin || null,
+          valeurConstante: newValeurConstante || null,
+        });
+      } else if (editType === "add-possession") {
+        url = `http://localhost:5000/api/possessions/${currentItem.possesseur.nom}`;
+        method = "POST";
+        body = JSON.stringify({
+          libelle: newValue,
+          valeur: newValeur,
+          tauxAmortissement: newTauxAmortissement || null,
+          dateDebut: newDateDebut || null,
           dateFin: newDateFin || null,
           valeurConstante: newValeurConstante || null,
         });
@@ -88,7 +118,12 @@ const ShowAll = () => {
                     libelle: newValue,
                     valeur: newValeur,
                     tauxAmortissement: newTauxAmortissement || null,
-                    dateFin: newDateFin || null,
+                    dateDebut: newDateDebut
+                      ? new Date(newDateDebut).toLocaleDateString()
+                      : null,
+                    dateFin: newDateFin
+                      ? new Date(newDateFin).toLocaleDateString()
+                      : null,
                     valeurConstante: newValeurConstante || null,
                   }
                 : possession
@@ -98,6 +133,36 @@ const ShowAll = () => {
               data: { ...item.data, possessions: updatedPossessions },
             };
           }
+          if (editType === "add-possession") {
+            const updatedData = data.map((item) => {
+              if (
+                item.model === "Patrimoine" &&
+                item.data.possesseur.nom === currentItem.possesseur.nom
+              ) {
+                return {
+                  ...item,
+                  data: {
+                    ...item.data,
+                    possessions: [
+                      ...item.data.possessions,
+                      {
+                        libelle: newValue,
+                        valeur: newValeur,
+                        tauxAmortissement: newTauxAmortissement || null,
+                        dateDebut: newDateDebut || null,
+                        dateFin: newDateFin || null,
+                        valeurConstante: newValeurConstante || null,
+                      },
+                    ],
+                  },
+                };
+              }
+              return item;
+            });
+            setData(updatedData);
+            handleClose();
+          }
+
           return item;
         });
         setData(updatedData);
@@ -115,12 +180,12 @@ const ShowAll = () => {
   };
 
   const handleDeletePerson = async (nom) => {
-      const isConfirmed = window.confirm(
-        `Êtes-vous sûr de vouloir supprimer cette personne" ?`
-      );
-      if (!isConfirmed) {
-        return;
-      }
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer cette personne" ?`
+    );
+    if (!isConfirmed) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:5000/api/personnes/${nom}`,
@@ -152,12 +217,12 @@ const ShowAll = () => {
   };
 
   const handleClosePossession = async (possession, possesseurNom) => {
-      const isConfirmed = window.confirm(
-        `Êtes-vous sûr de vouloir clôturer la possession "${possession.libelle}" ?`
-      );
-      if (!isConfirmed) {
-        return;
-      }
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir clôturer la possession "${possession.libelle}" ?`
+    );
+    if (!isConfirmed) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:5000/api/possessions/${possesseurNom}/${possession.libelle}/close`,
@@ -174,7 +239,7 @@ const ShowAll = () => {
           ) {
             const updatedPossessions = item.data.possessions.map((p) =>
               p.libelle === possession.libelle
-                ? { ...p, dateFin: new Date().toLocaleDateString() }
+                ? { ...p, dateFin: new Date().toLocaleDateString() } //!
                 : p
             );
             return {
@@ -198,12 +263,12 @@ const ShowAll = () => {
   };
 
   const handleDelete = async (possession, possesseurNom) => {
-      const isConfirmed = window.confirm(
-        `Êtes-vous sûr de vouloir supprimer la possession "${possession.libelle}" ?`
-      );
-      if (!isConfirmed) {
-        return;
-      }
+    const isConfirmed = window.confirm(
+      `Êtes-vous sûr de vouloir supprimer la possession "${possession.libelle}" ?`
+    );
+    if (!isConfirmed) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:5000/api/possessions/${possesseurNom}/${possession.libelle}`,
@@ -324,6 +389,20 @@ const ShowAll = () => {
                 ))}
               </tbody>
             </table>
+
+            {possessions.map((possession, index) => (
+              <tr key={index}></tr>
+            ))}
+            <tr>
+              <td colSpan="7" className="text-center">
+                <button
+                  className="btn btn-success"
+                  onClick={() => handleShowAddPossession(possesseur.nom)}
+                >
+                  + Ajouter une Possession
+                </button>
+              </td>
+            </tr>
           </div>
         </div>
       );
@@ -369,6 +448,14 @@ const ShowAll = () => {
                     onChange={(e) => setNewValeur(e.target.value)}
                   />
                 </Form.Group>
+                <Form.Group controlId="formBasicDateDebut">
+                  <Form.Label>Date Début</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newDateDebut}
+                    onChange={(e) => setNewDateDebut(e.target.value)}
+                  />
+                </Form.Group>
                 <Form.Group controlId="formBasicDateFin">
                   <Form.Label>Date Fin</Form.Label>
                   <Form.Control
@@ -401,6 +488,72 @@ const ShowAll = () => {
         <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={handleClose}>
             Annuler
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Enregistrer
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Ajouter une nouvelle possession</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Libellé</Form.Label>
+              <Form.Control
+                type="text"
+                value={newValue}
+                onChange={(e) => setNewValue(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Valeur</Form.Label>
+              <Form.Control
+                type="number"
+                value={newValeur}
+                onChange={(e) => setNewValeur(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Taux Amortissement</Form.Label>
+              <Form.Control
+                type="number"
+                value={newTauxAmortissement}
+                onChange={(e) => setNewTauxAmortissement(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Date de début</Form.Label>
+              <Form.Control
+                type="date"
+                value={newDateDebut}
+                onChange={(e) => setNewDateDebut(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Date Fin</Form.Label>
+              <Form.Control
+                type="date"
+                value={newDateFin}
+                onChange={(e) => setNewDateFin(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Valeur Constante</Form.Label>
+              <Form.Control
+                type="number"
+                value={newValeurConstante}
+                onChange={(e) => setNewValeurConstante(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Fermer
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Enregistrer
