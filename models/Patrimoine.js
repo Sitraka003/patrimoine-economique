@@ -1,32 +1,21 @@
 import Possession from "./possessions/Possession.js";
-import Flux from "./possessions/Flux.js";
 
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    this.possessions = possessions.map((p) => {
-      if (p.jour !== undefined) {
-        return new Flux(
-          p.possesseur,
-          p.libelle,
-          p.valeurConstante,
-          new Date(p.dateDebut),
-          p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement,
-          p.jour
-        );
-      } else {
-        return new Possession(
+    this.possessions = possessions.map(
+      (p) =>
+        new Possession(
           p.possesseur,
           p.libelle,
           p.valeur,
           new Date(p.dateDebut),
           p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement
-        );
-      }
-    });
-    console.log("Possessions après instanciation : ", this.possessions);
+          p.tauxAmortissement,
+          p.jour,
+          p.valeurConstante
+        )
+    );
   }
 
   getValeur(date) {
