@@ -184,14 +184,14 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Création d'instance avec les données récupérées
+    // creation d'instnance avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
     );
     console.log("Patrimoine chargé:", patrimoine);
 
-    // Calcul de la valeur du patrimoine à la date donnée
+    // calcul de la valeur du patrimoine à la date donnée
     const valeur = patrimoine.getValeur(dateObj);
     console.log("Valeur calculée:", valeur);
 

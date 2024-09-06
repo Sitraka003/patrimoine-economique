@@ -1,40 +1,38 @@
-// Patrimoine.js
-import Possession from "./Possession.js";
-import Flux from "./Flux.js";
+import Possession from "./possessions/Possession.js";
 
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    this.possessions = possessions.map((p) => {
-      if (p.jour !== undefined) {
+    this.possessions = possessions.map((possessionData) => {
+      if (possessionData.jour !== undefined) {
+        // Si c'est un flux
         return new Flux(
-          p.possesseur,
-          p.libelle,
-          p.valeur,
-          new Date(p.dateDebut),
-          p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement,
-          p.jour
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeurConstante,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement,
+          possessionData.jour
         );
       } else {
+        // Si c'est une possession normale
         return new Possession(
-          p.possesseur,
-          p.libelle,
-          p.valeur,
-          new Date(p.dateDebut),
-          p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeur,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement
         );
       }
     });
   }
 
   getValeur(date) {
-    let valeur = this.possessions.reduce(
-      (acc, possession) => acc + possession.getValeur(date),
-      0
-    );
-    valeur += this.flux.reduce((acc, flux) => acc + flux.getValeur(date), 0); // Ajoute la valeur des flux
-    return valeur;
+    // Calculer la valeur totale du patrimoine à une date donnée
+    return this.possessions.reduce((total, possession) => {
+      return total + possession.getValeur(date);
+    }, 0);
   }
 }
