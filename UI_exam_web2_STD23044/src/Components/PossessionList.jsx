@@ -33,7 +33,6 @@ export default function ListPossessionPage() {
                 throw new Error('Network response was not ok');
             }
             const result = await response.json();
-            setPossessions();
             setPossessions((prevPossessions) =>
                 prevPossessions.map((p) =>
                     p.libelle === libelle ? { ...p, dateFin: new Date(result.possession.dateFin).toLocaleDateString() } : p
