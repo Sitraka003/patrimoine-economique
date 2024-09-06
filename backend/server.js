@@ -12,9 +12,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://patrimoine-economique-std23044-ui.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type, Authorization'],
+}));
 
-const dataFilePath = path.join(__dirname,'data', 'data.json');
+const dataFilePath = path.join(__dirname, 'data', 'data.json');
 
 // Lecture des données de data.json
 let data;
@@ -187,6 +191,14 @@ app.post('/patrimoine/range', (req, res) => {
   }
 
   res.json(results);
+});
+
+// Servir les fichiers statiques de l'application React
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Rediriger toutes les routes vers index.html pour que React gère le routage
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(9000, () => {
