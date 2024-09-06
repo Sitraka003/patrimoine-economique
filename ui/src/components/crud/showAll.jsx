@@ -1,37 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { MdDelete } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Modal, Button, Form } from "react-bootstrap";
-import dataJs from "../../../../data/data.json";
 
 const ShowAll = () => {
-  const [data, setData] = useState(dataJs);
+  const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editType, setEditType] = useState("");
   const [currentItem, setCurrentItem] = useState(null);
   const [newValue, setNewValue] = useState("");
-  const [newDateDebut, setNewDateDebut] = useState("");
   const [newDateFin, setNewDateFin] = useState("");
   const [newValeur, setNewValeur] = useState("");
   const [newTauxAmortissement, setNewTauxAmortissement] = useState("");
   const [newValeurConstante, setNewValeurConstante] = useState("");
 
-  const handleClose = () => setShowModal(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/data");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Erreur lors de la récupération des données");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la requête GET:", error.message);
+      }
+    };
 
-  const handleShowAddPossession = (nom) => {
-    setEditType("add-possession");
-    setCurrentItem({ possesseur: { nom } });
-    setNewValue("");
-    setNewValeur("");
-    setNewValeurConstante("");
-    setNewTauxAmortissement("");
-    setNewDateFin("");
-    setNewDateDebut("");
-    setShowModal(true);
-  };
+    fetchData();
+  }, []);
+
+  const handleClose = () => setShowModal(false);
 
   const handleShow = (type, item) => {
     setEditType(type);
@@ -42,11 +46,6 @@ const ShowAll = () => {
     setNewTauxAmortissement(
       type === "possession" && item.tauxAmortissement
         ? item.tauxAmortissement
-        : ""
-    );
-    setNewDateDebut(
-      item && item.dateDebut
-        ? new Date(item.dateDebut).toISOString().split("T")[0]
         : ""
     );
     setNewDateFin(
@@ -71,18 +70,6 @@ const ShowAll = () => {
           libelle: newValue,
           valeur: newValeur,
           tauxAmortissement: newTauxAmortissement || null,
-          dateDebut: newDateDebut || null,
-          dateFin: newDateFin || null,
-          valeurConstante: newValeurConstante || null,
-        });
-      } else if (editType === "add-possession") {
-        url = `http://localhost:5000/api/possessions/${currentItem.possesseur.nom}`;
-        method = "POST";
-        body = JSON.stringify({
-          libelle: newValue,
-          valeur: newValeur,
-          tauxAmortissement: newTauxAmortissement || null,
-          dateDebut: newDateDebut || null,
           dateFin: newDateFin || null,
           valeurConstante: newValeurConstante || null,
         });
@@ -118,12 +105,7 @@ const ShowAll = () => {
                     libelle: newValue,
                     valeur: newValeur,
                     tauxAmortissement: newTauxAmortissement || null,
-                    dateDebut: newDateDebut
-                      ? new Date(newDateDebut).toLocaleDateString()
-                      : null,
-                    dateFin: newDateFin
-                      ? new Date(newDateFin).toLocaleDateString()
-                      : null,
+                    dateFin: newDateFin || null,
                     valeurConstante: newValeurConstante || null,
                   }
                 : possession
@@ -133,36 +115,6 @@ const ShowAll = () => {
               data: { ...item.data, possessions: updatedPossessions },
             };
           }
-          if (editType === "add-possession") {
-            const updatedData = data.map((item) => {
-              if (
-                item.model === "Patrimoine" &&
-                item.data.possesseur.nom === currentItem.possesseur.nom
-              ) {
-                return {
-                  ...item,
-                  data: {
-                    ...item.data,
-                    possessions: [
-                      ...item.data.possessions,
-                      {
-                        libelle: newValue,
-                        valeur: newValeur,
-                        tauxAmortissement: newTauxAmortissement || null,
-                        dateDebut: newDateDebut || null,
-                        dateFin: newDateFin || null,
-                        valeurConstante: newValeurConstante || null,
-                      },
-                    ],
-                  },
-                };
-              }
-              return item;
-            });
-            setData(updatedData);
-            handleClose();
-          }
-
           return item;
         });
         setData(updatedData);
@@ -239,7 +191,7 @@ const ShowAll = () => {
           ) {
             const updatedPossessions = item.data.possessions.map((p) =>
               p.libelle === possession.libelle
-                ? { ...p, dateFin: new Date().toLocaleDateString() } //!
+                ? { ...p, dateFin: new Date().toLocaleDateString() }
                 : p
             );
             return {
@@ -389,20 +341,6 @@ const ShowAll = () => {
                 ))}
               </tbody>
             </table>
-
-            {possessions.map((possession, index) => (
-              <tr key={index}></tr>
-            ))}
-            <tr>
-              <td colSpan="7" className="text-center">
-                <button
-                  className="btn btn-success"
-                  onClick={() => handleShowAddPossession(possesseur.nom)}
-                >
-                  + Ajouter une Possession
-                </button>
-              </td>
-            </tr>
           </div>
         </div>
       );
@@ -445,23 +383,21 @@ const ShowAll = () => {
                   <Form.Control
                     type="number"
                     value={newValeur}
-                    onChange={(e) => setNewValeur(e.target.value)}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicDateDebut">
-                  <Form.Label>Date Début</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={newDateDebut}
-                    onChange={(e) => setNewDateDebut(e.target.value)}
+                    onChange={(e) => setNewValeur(Number(e.target.value))}
                   />
                 </Form.Group>
                 <Form.Group controlId="formBasicDateFin">
                   <Form.Label>Date Fin</Form.Label>
                   <Form.Control
                     type="date"
-                    value={newDateFin}
-                    onChange={(e) => setNewDateFin(e.target.value)}
+                    value={
+                      newDateFin
+                        ? new Date(newDateFin).toISOString().substring(0, 10)
+                        : ""
+                    }
+                    onChange={(e) =>
+                      setNewDateFin(new Date(e.target.value).toISOString())
+                    }
                   />
                 </Form.Group>
                 <Form.Group controlId="formBasicTauxAmortissement">
@@ -470,7 +406,9 @@ const ShowAll = () => {
                     type="number"
                     step="0.01"
                     value={newTauxAmortissement}
-                    onChange={(e) => setNewTauxAmortissement(e.target.value)}
+                    onChange={(e) =>
+                      setNewTauxAmortissement(Number(e.target.value))
+                    }
                   />
                 </Form.Group>
                 <Form.Group controlId="formBasicValeurConstante">
@@ -488,72 +426,6 @@ const ShowAll = () => {
         <Modal.Footer className="bg-dark">
           <Button variant="secondary" onClick={handleClose}>
             Annuler
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Enregistrer
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Ajouter une nouvelle possession</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Libellé</Form.Label>
-              <Form.Control
-                type="text"
-                value={newValue}
-                onChange={(e) => setNewValue(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Valeur</Form.Label>
-              <Form.Control
-                type="number"
-                value={newValeur}
-                onChange={(e) => setNewValeur(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Taux Amortissement</Form.Label>
-              <Form.Control
-                type="number"
-                value={newTauxAmortissement}
-                onChange={(e) => setNewTauxAmortissement(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Date de début</Form.Label>
-              <Form.Control
-                type="date"
-                value={newDateDebut}
-                onChange={(e) => setNewDateDebut(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Date Fin</Form.Label>
-              <Form.Control
-                type="date"
-                value={newDateFin}
-                onChange={(e) => setNewDateFin(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Valeur Constante</Form.Label>
-              <Form.Control
-                type="number"
-                value={newValeurConstante}
-                onChange={(e) => setNewValeurConstante(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Fermer
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Enregistrer

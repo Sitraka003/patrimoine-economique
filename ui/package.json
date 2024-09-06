@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "proxy": "http://localhost:5000"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",

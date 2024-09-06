@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import data from "../../../../data/data.json";
-import Argent from "../../../../models/possessions/Argent.js";
-import BienMateriel from "../../../../models/possessions/BienMateriel.js";
-import Flux from "../../../../models/possessions/Flux.js";
-import Patrimoine from "../../../../models/Patrimoine.js";
+import Argent from "../../models/possessions/Argent.js";
+import BienMateriel from "../../models/possessions/BienMateriel.js";
+import Flux from "../../models/possessions/Flux.js";
+import Patrimoine from "../../models/Patrimoine.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link } from "react-router-dom";
@@ -14,6 +13,7 @@ import ChartComponent from "../chart/LineChart.jsx";
 const PatrimoineApp = () => {
   const [selectedPerson, setSelectedPerson] = useState("");
   const [patrimoine, setPatrimoine] = useState(null);
+  const [data, setData] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [error, setError] = useState("");
   const [patrimoineTotal, setPatrimoineTotal] = useState(null);
@@ -31,61 +31,86 @@ const PatrimoineApp = () => {
   const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/data");
+        if (response.ok) {
+          const result = await response.json();
+          setData(result);
+        } else {
+          console.error("Erreur lors de la récupération des données");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la requête GET:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (selectedPerson) {
       console.log("Recherche du patrimoine pour : ", selectedPerson);
 
-      const patrimoineData = data.find(
-        (item) =>
-          item.model === "Patrimoine" &&
-          item.data.possesseur.nom === selectedPerson
-      );
+      fetch("http://localhost:5000/api/data")
+        .then((response) => response.json())
+        .then((data) => {
+          const patrimoineData = data.find(
+            (item) =>
+              item.model === "Patrimoine" &&
+              item.data.possesseur.nom === selectedPerson
+          );
 
-      console.log("Données de patrimoine trouvées :", patrimoineData);
+          console.log("Données de patrimoine trouvées :", patrimoineData);
 
-      if (patrimoineData) {
-        const possessionsInstances = patrimoineData.data.possessions
-          .map((possession) => {
-            if (!possession || !possession.libelle) return null;
-            if (possession.valeurConstante !== undefined) {
-              return new Flux(
-                selectedPerson,
-                possession.libelle,
-                possession.valeurConstante,
-                new Date(possession.dateDebut),
-                possession.dateFin ? new Date(possession.dateFin) : null,
-                possession.tauxAmortissement,
-                possession.jour
-              );
-            } else if (possession.valeur !== undefined) {
-              if (possession.tauxAmortissement !== null) {
-                return new BienMateriel(
-                  selectedPerson,
-                  possession.libelle,
-                  possession.valeur,
-                  new Date(possession.dateDebut),
-                  possession.dateFin ? new Date(possession.dateFin) : null,
-                  possession.tauxAmortissement
-                );
-              } else {
-                return new Argent(
-                  selectedPerson,
-                  possession.libelle,
-                  possession.valeur,
-                  new Date(possession.dateDebut),
-                  possession.dateFin ? new Date(possession.dateFin) : null
-                );
-              }
-            }
-            return null;
-          })
-          .filter((item) => item !== null);
+          if (patrimoineData) {
+            const possessionsInstances = patrimoineData.data.possessions
+              .map((possession) => {
+                if (!possession || !possession.libelle) return null;
+                if (possession.valeurConstante !== undefined) {
+                  return new Flux(
+                    selectedPerson,
+                    possession.libelle,
+                    possession.valeurConstante,
+                    new Date(possession.dateDebut),
+                    possession.dateFin ? new Date(possession.dateFin) : null,
+                    possession.tauxAmortissement,
+                    possession.jour
+                  );
+                } else if (possession.valeur !== undefined) {
+                  if (possession.tauxAmortissement !== null) {
+                    return new BienMateriel(
+                      selectedPerson,
+                      possession.libelle,
+                      possession.valeur,
+                      new Date(possession.dateDebut),
+                      possession.dateFin ? new Date(possession.dateFin) : null,
+                      possession.tauxAmortissement
+                    );
+                  } else {
+                    return new Argent(
+                      selectedPerson,
+                      possession.libelle,
+                      possession.valeur,
+                      new Date(possession.dateDebut),
+                      possession.dateFin ? new Date(possession.dateFin) : null
+                    );
+                  }
+                }
+                return null;
+              })
+              .filter((item) => item !== null);
 
-        setPatrimoine(new Patrimoine(selectedPerson, possessionsInstances));
-        setPatrimoineTotal(null);
-      } else {
-        setPatrimoine(null);
-        console.log("Aucun patrimoine trouvé pour cette personne.");
-      }
+            setPatrimoine(new Patrimoine(selectedPerson, possessionsInstances));
+            setPatrimoineTotal(null);
+          } else {
+            setPatrimoine(null);
+            console.log("Aucun patrimoine trouvé pour cette personne.");
+          }
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des données:", error);
+        });
     }
   }, [selectedPerson, selectedDate]);
 
