@@ -22,22 +22,18 @@ const PossessionPage = () => {
           const updatedPossessions = patrimoineData.data.possessions.map(
             (possessionData) => {
               let possession;
-              if (possessionData.type === "Flux") {
+              if (possessionData.jour) {
                 possession = new Flux(
                   possessionData.possesseur,
                   possessionData.libelle,
-                  possessionData.valeur,
+                  possessionData.valeurConstante,
                   new Date(possessionData.dateDebut),
                   possessionData.dateFin
                     ? new Date(possessionData.dateFin)
                     : null,
-                  possessionData.tauxAmortissement
+                  possessionData.tauxAmortissement,
+                  possessionData.jour
                 );
-
-                possessionData.valeurActuelle =
-                  possession.getValeur(currentDate) >= possessionData.valeur
-                    ? possessionData.valeur
-                    : possession.getValeur(currentDate);
               } else {
                 possession = new Possession(
                   possessionData.possesseur,
@@ -49,14 +45,11 @@ const PossessionPage = () => {
                     : null,
                   possessionData.tauxAmortissement
                 );
-
-                possessionData.valeurActuelle =
-                  possession.getValeur(currentDate) || "-";
               }
 
               return {
                 ...possessionData,
-                valeurActuelle: possessionData.valeurActuelle || "-",
+                valeurActuelle: possession.getValeur(currentDate) || "-",
               };
             }
           );
