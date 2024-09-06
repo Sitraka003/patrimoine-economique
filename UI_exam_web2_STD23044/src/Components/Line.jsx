@@ -107,7 +107,7 @@ export default function LineGraph() {
             </div>
             <div className="d-flex justify-content-center mb-4">
                 <button onClick={handleFetchData} className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Loading...' : 'Validate'}
+                    {loading ? 'Chargement...' : 'Valider'}
                 </button>
             </div>
             <div className="chart-container" style={{ position: 'relative', height: '60vh' }}>
