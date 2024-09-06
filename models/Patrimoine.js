@@ -30,10 +30,11 @@ export default class Patrimoine {
   }
 
   getValeur(date) {
-    let result = 0;
-    for (const item of this.possessions) {
-      result += item.getValeur(date);
-    }
-    return result;
+    let valeur = this.possessions.reduce(
+      (acc, possession) => acc + possession.getValeur(date),
+      0
+    );
+    valeur += this.flux.reduce((acc, flux) => acc + flux.getValeur(date), 0); // Ajoute la valeur des flux
+    return valeur;
   }
 }
