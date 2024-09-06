@@ -88,7 +88,6 @@ const updatePossession = (req, res) => {
     const { possesseurNom, libelle } = req.params;
     const { libelle: nouveauLibelle, dateFin, valeur, valeurConstante, tauxAmortissement } = req.body;
 
-    // Validation de l'entrée
     if (!nouveauLibelle || typeof nouveauLibelle !== 'string') {
         return res.status(400).json({ message: "Libellé invalide fourni." });
     }
@@ -96,7 +95,6 @@ const updatePossession = (req, res) => {
     let data = readData();
     let possessionTrouvee = false;
 
-    // Mise à jour des données
     const updatedData = data.map((item) => {
         if (item.model === "Patrimoine" && item.data.possesseur.nom.trim() === possesseurNom.trim()) {
             const updatedPossessions = item.data.possessions.map((possession) => {
@@ -105,10 +103,10 @@ const updatePossession = (req, res) => {
                     return {
                         ...possession,
                         libelle: nouveauLibelle.trim(),
-                        dateFin: dateFin ? new Date(dateFin).toISOString() : possession.dateFin, // Garde l'ancienne date si non fournie
-                        valeur: typeof valeur === 'number' ? valeur : possession.valeur, // Mise à jour si valeur fournie
-                        valeurConstante: typeof valeurConstante === 'boolean' ? valeurConstante : possession.valeurConstante, // Mise à jour si booléen fourni
-                        tauxAmortissement: typeof tauxAmortissement === 'number' ? tauxAmortissement : possession.tauxAmortissement, // Mise à jour si fourni
+                        dateFin: dateFin ? new Date(dateFin).toISOString() : possession.dateFin, 
+                        valeur: typeof valeur === 'number' ? valeur : possession.valeur,
+                        valeurConstante: typeof valeurConstante === 'boolean' ? valeurConstante : possession.valeurConstante, 
+                        tauxAmortissement: typeof tauxAmortissement === 'number' ? tauxAmortissement : possession.tauxAmortissement,
                     };
                 }
                 return possession;
@@ -147,7 +145,6 @@ const addPerson = (req, res) => {
 
     data.push(personData);
 
-    // Ajoute également les possessions de cette personne
     const patrimoineData = {
         model: "Patrimoine",
         data: {
@@ -194,6 +191,39 @@ const addPossession = (req, res) => {
 };
 
 
+const addNewPossession = (req, res) => {
+    const { nom } = req.params;
+    const { libelle, valeur, tauxAmortissement, dateDebut, dateFin, valeurConstante } = req.body;
+
+    const data = readData();
+
+    const personne = data.find(entry => entry.model === "Personne" && entry.data.nom === nom);
+    if (!personne) {
+        return res.status(404).json({ message: "Personne non trouvée" });
+    }
+
+    const patrimoine = data.find(entry => entry.model === "Patrimoine" && entry.data.possesseur.nom === nom);
+    if (!patrimoine) {
+        return res.status(404).json({ message: "Patrimoine non trouvé pour cette personne" });
+    }
+
+    const nouvellePossession = {
+        possesseur: { nom },
+        libelle,
+        valeur,
+        tauxAmortissement: tauxAmortissement || null,
+        dateDebut: dateDebut || null,
+        dateFin: dateFin || null,
+        valeurConstante: valeurConstante || null
+    };
+
+    patrimoine.data.possessions.push(nouvellePossession);
+
+    writeData(data);
+
+    res.status(201).json({ message: "Possession ajoutée avec succès" });
+};
+
 
 const closePossession = (req, res) => {
     const { nom, libelle } = req.params;
@@ -206,7 +236,7 @@ const closePossession = (req, res) => {
         data = data.map(item => {
             if (item.model === 'Patrimoine' && item.data.possesseur.nom.trim() === nom.trim()) {
                 item.data.possessions = item.data.possessions.map(possession => {
-                    if (possession.libelle.trim() === libelle.trim() && !possession.dateFin) {
+                    if (possession.libelle.trim() === libelle.trim()) {
                         updated = true;
                         return {
                             ...possession,
@@ -223,13 +253,14 @@ const closePossession = (req, res) => {
             writeData(data);
             res.status(200).json({ message: 'Possession clôturée avec succès' });
         } else {
-            res.status(404).json({ message: 'Possession non trouvée ou déjà clôturée' });
+            res.status(404).json({ message: 'Possession non trouvée' });
         }
     } catch (error) {
         console.error('Erreur lors de la mise à jour:', error.message);
         res.status(500).json({ message: 'Erreur serveur' });
     }
 };
+
 
 module.exports = {
     getPersons,
@@ -239,5 +270,6 @@ module.exports = {
     updatePossession,
     addPerson,
     addPossession,
+    addNewPossession,
     closePossession
 };

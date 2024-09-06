@@ -8,7 +8,8 @@ const {
     updatePerson,
     addPerson,
     addPossession,
-    closePossession
+    closePossession,
+    addNewPossession
 } = require("../controllers/personController");
 const { getPatrimoineInRange, getPatrimoineAtDate } = require("../controllers/patrimoineController");
 
@@ -22,5 +23,6 @@ router.post("/possessions", addPossession);
 router.put('/possessions/:nom/:libelle/close', closePossession);
 router.get('/patrimoine/:date', getPatrimoineAtDate);
 router.get("/patrimoine/range", getPatrimoineInRange);
+router.post('/possessions/:nom', addNewPossession);
 
 module.exports = router;
