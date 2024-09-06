@@ -10,7 +10,7 @@ export default function CreatePossessionPage() {
     async function handleSubmit(e) {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:9000/possession', {
+            const response = await fetch('https://patrimoine-economique-std23044.onrender.com/possession', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ libelle, valeur, dateDebut, taux }),

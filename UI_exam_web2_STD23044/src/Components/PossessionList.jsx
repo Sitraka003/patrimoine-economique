@@ -9,7 +9,7 @@ export default function ListPossessionPage() {
     useEffect(() => {
         const fetchPossessions = async () => {
             try {
-                const response = await fetch('http://localhost:9000/possession');
+                const response = await fetch('https://patrimoine-economique-std23044.onrender.com/possession');
                 if (!response.ok) {
                     throw new Error('response was not ok');
                 }
@@ -25,7 +25,7 @@ export default function ListPossessionPage() {
 
     async function handleClose(libelle) {
         try {
-            const response = await fetch(`http://localhost:9000/possession/${libelle}/close`, {
+            const response = await fetch(`https://patrimoine-economique-std23044.onrender.com/possession/${libelle}/close`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -47,7 +47,7 @@ export default function ListPossessionPage() {
 
     async function handleDelete(libelle) {
         try {
-            const response = await fetch(`http://localhost:9000/possession/${libelle}`, {
+            const response = await fetch(`https://patrimoine-economique-std23044.onrender.com/possession/${libelle}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
             });

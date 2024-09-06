@@ -12,7 +12,7 @@ export default function UpdatePossessionPage() {
   useEffect(() => {
     const fetchPossessions = async () => {
       try {
-        const response = await fetch('http://localhost:9000/possession');
+        const response = await fetch('https://patrimoine-economique-std23044.onrender.com/possession');
         if (!response.ok) {
           throw new Error('Erreur réseau');
         }
@@ -35,7 +35,7 @@ export default function UpdatePossessionPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:9000/possession/${libelle}`, {
+      const response = await fetch(`https://patrimoine-economique-std23044.onrender.com/possession/${libelle}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ valeur, dateDebut, dateFin, taux }),
