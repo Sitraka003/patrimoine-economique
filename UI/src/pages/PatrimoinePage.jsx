@@ -29,8 +29,9 @@ const PatrimoinePage = () => {
       const data = await response.json();
       console.log("Données reçues pour le graphique:", data); // Debugging
 
-      if (Array.isArray(data)) {
-        const combinedData = data.map((item) => ({
+      // Vérification que `valeur` est bien un tableau
+      if (data && Array.isArray(data.valeur)) {
+        const combinedData = data.valeur.map((item) => ({
           date: item.date,
           valeur: Number(item.possessionsValeur) + Number(item.fluxValeur), // Convertir en nombre
         }));
@@ -53,13 +54,13 @@ const PatrimoinePage = () => {
       const data = await response.json();
       console.log("Données reçues pour la valeur du patrimoine:", data); // Debugging
 
-      if (data && typeof data === "object") {
-        setPatrimoineValeur(
-          Number(data.possessionsValeur) + Number(data.fluxValeur)
-        );
-      } else {
-        console.error("Les données reçues ne sont pas valides.");
-      }
+      // Vérification que les valeurs existent et sont bien des nombres
+      const possessionsValeur = data.possessionsValeur
+        ? Number(data.possessionsValeur)
+        : 0;
+      const fluxValeur = data.fluxValeur ? Number(data.fluxValeur) : 0;
+
+      setPatrimoineValeur(possessionsValeur + fluxValeur);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
