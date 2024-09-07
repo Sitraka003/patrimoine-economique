@@ -16,7 +16,6 @@ const PossessionPage = () => {
     fetch("https://patrimoine-economique-hnz4.onrender.com/possession")
       .then((response) => response.json())
       .then((data) => {
-        console.log("Fetched data:", data); // Ajoutez cette ligne pour vérifier les données récupérées
         const patrimoineData = data.find((item) => item.model === "Patrimoine");
         if (patrimoineData) {
           const currentDate = new Date();

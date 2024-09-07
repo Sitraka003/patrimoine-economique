@@ -72,7 +72,6 @@ app.post("/possession", async (req, res) => {
     );
 
     const data = await readData();
-
     const patrimoineData = data.find((item) => item.model === "Patrimoine");
 
     if (!patrimoineData) {
@@ -94,6 +93,9 @@ app.post("/possession", async (req, res) => {
     patrimoineData.data.valeurTotale = totalValeur;
 
     await writeData(data);
+
+    console.log("New possession added:", newPossession);
+    console.log("Updated patrimoine data:", patrimoineData);
 
     res.status(201).json(newPossession);
   } catch (error) {
