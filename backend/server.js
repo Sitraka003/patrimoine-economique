@@ -184,7 +184,7 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Création d'instance avec les données récupérées
+    // Création d'une instance de Patrimoine avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
