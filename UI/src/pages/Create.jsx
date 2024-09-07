@@ -38,7 +38,6 @@ const Create = () => {
     })
       .then((response) => {
         if (response.ok) {
-          // Si la création a réussi, redirige vers la page PossessionPage
           navigate("/possession");
         } else {
           console.error("Erreur lors de la création de la possession");
