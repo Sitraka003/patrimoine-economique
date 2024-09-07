@@ -3,45 +3,48 @@ import Possession from "./possessions/Possession.js"; // Assurez-vous que le che
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    this.possessions = possessions;
+    // Conversion des données en instances de Possession
+    this.possessions = possessions.map(
+      (p) =>
+        new Possession(
+          p.possesseur,
+          p.libelle,
+          p.valeur,
+          new Date(p.dateDebut),
+          p.dateFin ? new Date(p.dateFin) : null,
+          p.tauxAmortissement,
+          p.jour,
+          p.valeurConstante
+        )
+    );
   }
 
   getValeur(date) {
-    let valeurTotale = 0;
-
-    this.possessions.forEach((possession) => {
-      if (possession.jour && possession.valeurConstante !== undefined) {
-        // Traitement des flux
-        const dateDebut = new Date(possession.dateDebut);
-        const dateFin = possession.dateFin
-          ? new Date(possession.dateFin)
-          : new Date();
-        if (date >= dateDebut && date <= dateFin) {
-          // Calcul de la valeur du flux à la date donnée
-          if (date.getDate() === possession.jour) {
-            valeurTotale += possession.valeurConstante;
-          }
-        }
-      } else {
-        // Traitement des possessions normales
-        const dateDebut = new Date(possession.dateDebut);
-        const dateFin = possession.dateFin
-          ? new Date(possession.dateFin)
-          : new Date();
-        if (date >= dateDebut && date <= dateFin) {
-          const valeur =
-            possession.valeur /
-            (1 + possession.tauxAmortissement / 100) **
-              this.getYears(date, dateDebut);
-          valeurTotale += valeur;
-        }
-      }
-    });
-
-    return valeurTotale;
+    let result = 0;
+    for (const item of this.possessions) {
+      result += item.getValeur(date);
+    }
+    return result;
   }
 
-  getYears(date, dateDebut) {
-    return (date - dateDebut) / (1000 * 60 * 60 * 24 * 365);
+  addPossession(possession) {
+    if (possession.possesseur !== this.possesseur) {
+      console.log(
+        `${possession.libelle} n'appartient pas à ${this.possesseur}`
+      );
+    } else {
+      // Ajouter uniquement si ce n'est pas déjà dans la liste
+      if (!this.possessions.some((p) => p.libelle === possession.libelle)) {
+        this.possessions.push(possession);
+      } else {
+        console.log(`${possession.libelle} est déjà dans le patrimoine.`);
+      }
+    }
+  }
+
+  removePossession(possession) {
+    this.possessions = this.possessions.filter(
+      (p) => p.libelle !== possession.libelle
+    );
   }
 }
