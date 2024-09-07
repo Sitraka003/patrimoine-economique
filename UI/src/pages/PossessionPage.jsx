@@ -62,17 +62,26 @@ const PossessionPage = () => {
   };
 
   const handleCreate = () => {
+    const newPossessionData = {
+      possesseur: "John Doe",
+      libelle: "New Possession",
+      valeur: 99999999,
+      dateDebut: new Date().toISOString(),
+      dateFin: null,
+      tauxAmortissement: 5,
+    };
+
     fetch("https://patrimoine-economique-hnz4.onrender.com/possession", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newPossessionData), // Assurez-vous de fournir les bonnes données
+      body: JSON.stringify(newPossessionData),
     })
       .then((response) => {
         if (response.ok) {
           fetchPossessions(); // Recharger les possessions pour afficher les données mises à jour
-          navigate("/create");
+          navigate("/create"); // Naviguer vers la page de création ou une autre page appropriée
         } else {
           console.error("Erreur lors de la création de la possession.");
         }
@@ -155,7 +164,7 @@ const PossessionPage = () => {
                   Edit
                 </Button>
                 <Button
-                  className="bg-light border-1 border-danger text-danger px-3 py-2 ms-1 my-2"
+                  className="bg-light border-1 border-secondary text-secondary px-4 py-2 me-1 my-2"
                   onClick={() => handleClose(possession.libelle)}
                 >
                   Close
