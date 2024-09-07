@@ -1,10 +1,12 @@
-// addPossession.jsx
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './addPossession.css';
 import axios from "axios";
 import Possession from "../../../models/possessions/Possession";
 import Flux from "../../../models/possessions/Flux";
+
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export function ToggleAddPossession() {
     const formulaire = document.querySelector('.formulaire');
@@ -22,7 +24,7 @@ export function AddPossession() {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await axios.get('http://localhost:3500/possession');
+                const response = await axios.get(`${backendUrl}/possession`);
                 const newData = response.data.data;
 
                 if (JSON.stringify(newData) !== JSON.stringify(data)) {
@@ -69,23 +71,24 @@ export function AddPossession() {
         setPossessions(newPossessions);
     }
 
-    function confirmAddPossession() {
+    function confirmAddPossession(event) {
+        event.preventDefault();
+        
         const newPossession = {
-          libelle: libelle,
-          valeur: valeur,
-          dateDebut: dateDebut,
-          taux: tauxAmortissement
+            libelle: libelle,
+            valeur: valeur,
+            dateDebut: dateDebut,
+            taux: tauxAmortissement
         };
-      
-        axios.post("http://localhost:3500/possession", newPossession)
-          .then(response => {
-            console.log("Possession ajoutée avec succès", response.data);
-          })
-          .catch(error => {
-            console.error("Erreur lors de l'ajout de la possession :", error);
-          });
-      }
-      
+
+        axios.post(`${backendUrl}/possession`, newPossession)
+            .then(response => {
+                console.log("Possession ajoutée avec succès", response.data);
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'ajout de la possession :", error);
+            });
+    }
 
     return (
         <div className="formulaire">
