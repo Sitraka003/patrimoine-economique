@@ -3,48 +3,49 @@ import Possession from "./possessions/Possession.js"; // Assurez-vous que le che
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    // Conversion des données en instances de Possession
-    this.possessions = possessions.map(
-      (p) =>
-        new Possession(
-          p.possesseur,
-          p.libelle,
-          p.valeur,
-          new Date(p.dateDebut),
-          p.dateFin ? new Date(p.dateFin) : null,
-          p.tauxAmortissement,
-          p.jour,
-          p.valeurConstante
-        )
-    );
+    this.possessions = possessions;
   }
 
   getValeur(date) {
-    let result = 0;
-    for (const item of this.possessions) {
-      result += item.getValeur(date);
-    }
-    return result;
-  }
+    let valeurTotale = 0;
 
-  addPossession(possession) {
-    if (possession.possesseur !== this.possesseur) {
-      console.log(
-        `${possession.libelle} n'appartient pas à ${this.possesseur}`
-      );
-    } else {
-      // Ajouter uniquement si ce n'est pas déjà dans la liste
-      if (!this.possessions.some((p) => p.libelle === possession.libelle)) {
-        this.possessions.push(possession);
+    this.possessions.forEach((possession) => {
+      const dateDebut = new Date(possession.dateDebut);
+      const dateFin = possession.dateFin
+        ? new Date(possession.dateFin)
+        : new Date();
+
+      if (possession.jour && possession.valeurConstante !== undefined) {
+        // Traitement des flux
+        if (date >= dateDebut && date <= dateFin) {
+          // Vérifiez si la date actuelle est le jour du flux
+          if (date.getDate() === possession.jour) {
+            valeurTotale += possession.valeurConstante;
+          }
+        }
       } else {
-        console.log(`${possession.libelle} est déjà dans le patrimoine.`);
+        // Traitement des possessions normales
+        if (date >= dateDebut && date <= dateFin) {
+          const valeurAmortie = this.calculateValeur(possession, date);
+          valeurTotale += valeurAmortie;
+        }
       }
-    }
+    });
+
+    return valeurTotale;
   }
 
-  removePossession(possession) {
-    this.possessions = this.possessions.filter(
-      (p) => p.libelle !== possession.libelle
-    );
+  calculateValeur(possession, date) {
+    // Calcul de la valeur actualisée en fonction du taux d'amortissement
+    const dateDebut = new Date(possession.dateDebut);
+    const nombreAnnees = this.getYears(date, dateDebut);
+    const valeurAmortie =
+      possession.valeur /
+      (1 + possession.tauxAmortissement / 100) ** nombreAnnees;
+    return valeurAmortie;
+  }
+
+  getYears(date, dateDebut) {
+    return (date - dateDebut) / (1000 * 60 * 60 * 24 * 365);
   }
 }
