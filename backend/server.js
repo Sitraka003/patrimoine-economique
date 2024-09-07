@@ -206,7 +206,6 @@ app.get("/patrimoine/:date", async (req, res) => {
           possessionData
         );
 
-        // Vérifiez si c'est un Flux
         if (
           possessionData.valeurConstante !== undefined &&
           possessionData.jour !== undefined
