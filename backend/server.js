@@ -175,11 +175,18 @@ app.get("/patrimoine/:date", async (req, res) => {
   try {
     const { date } = req.params;
     const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) {
+      return res.status(400).json({ error: "Date invalide." });
+    }
+
     console.log("Date reçue:", dateObj);
 
     const data = await readData();
-    const patrimoineData = data.find((item) => item.model === "Patrimoine");
+    if (!data) {
+      return res.status(404).json({ error: "Données non trouvées." });
+    }
 
+    const patrimoineData = data.find((item) => item.model === "Patrimoine");
     if (!patrimoineData) {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
