@@ -8,6 +8,7 @@ export default class Patrimoine {
 
   getValeur(date) {
     let valeurTotale = 0;
+    const dateActuelle = new Date(date);
 
     this.possessions.forEach((possession) => {
       const dateDebut = new Date(possession.dateDebut);
@@ -17,16 +18,15 @@ export default class Patrimoine {
 
       if (possession.jour && possession.valeurConstante !== undefined) {
         // Traitement des flux
-        if (date >= dateDebut && date <= dateFin) {
-          // Vérifiez si la date actuelle est le jour du flux
-          if (date.getDate() === possession.jour) {
+        if (dateActuelle >= dateDebut && dateActuelle <= dateFin) {
+          if (dateActuelle.getDate() === possession.jour) {
             valeurTotale += possession.valeurConstante;
           }
         }
       } else {
         // Traitement des possessions normales
-        if (date >= dateDebut && date <= dateFin) {
-          const valeurAmortie = this.calculateValeur(possession, date);
+        if (dateActuelle >= dateDebut && dateActuelle <= dateFin) {
+          const valeurAmortie = this.calculateValeur(possession, dateActuelle);
           valeurTotale += valeurAmortie;
         }
       }
@@ -36,9 +36,10 @@ export default class Patrimoine {
   }
 
   calculateValeur(possession, date) {
-    // Calcul de la valeur actualisée en fonction du taux d'amortissement
     const dateDebut = new Date(possession.dateDebut);
     const nombreAnnees = this.getYears(date, dateDebut);
+
+    // Calcul de la valeur amortie
     const valeurAmortie =
       possession.valeur /
       (1 + possession.tauxAmortissement / 100) ** nombreAnnees;
@@ -46,6 +47,6 @@ export default class Patrimoine {
   }
 
   getYears(date, dateDebut) {
-    return (date - dateDebut) / (1000 * 60 * 60 * 24 * 365);
+    return (date - dateDebut) / (1000 * 60 * 60 * 24 * 365.25);
   }
 }
