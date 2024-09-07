@@ -72,7 +72,6 @@ app.post("/possession", async (req, res) => {
     );
 
     const data = await readData();
-
     const patrimoineData = data.find((item) => item.model === "Patrimoine");
 
     if (!patrimoineData) {
@@ -84,9 +83,21 @@ app.post("/possession", async (req, res) => {
     }
 
     patrimoineData.data.possessions.push(newPossession);
+
+    // Calculer la nouvelle valeur totale du patrimoine
+    const patrimoine = new Patrimoine(
+      patrimoineData.data.possesseur,
+      patrimoineData.data.possessions
+    );
+
+    const totalValeur = patrimoine.getValeur(new Date());
+
+    // Mettez à jour la valeur totale du patrimoine dans les données (si nécessaire)
+    patrimoineData.data.valeurTotale = totalValeur;
+
     await writeData(data);
 
-    res.status(201).json(newPossession);
+    res.status(201).json({ newPossession, valeurTotale: totalValeur });
   } catch (error) {
     console.error("Erreur lors de la création de la possession :", error);
     res
@@ -304,7 +315,7 @@ app.post("/patrimoine/range", async (req, res) => {
             possessionData.valeurConstante !== undefined &&
             possessionData.jour !== undefined
           ) {
-            // Traitement des flux
+            // flux
             const flux = new Flux(
               possessionData.possesseur,
               possessionData.libelle,
@@ -316,7 +327,7 @@ app.post("/patrimoine/range", async (req, res) => {
             );
             valeurActuelle = flux.getValeur(currentDate);
           } else {
-            // Traitement des possessions normales
+            // possessions normales
             const possession = new Possession(
               possessionData.possesseur,
               possessionData.libelle,
