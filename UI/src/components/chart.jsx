@@ -26,6 +26,9 @@ Chart.register(
     Legend
 );
 
+// Utilisation de l'URL du backend à partir du fichier .env
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function MyChart() {
     const [possessions, setPossessions] = useState([]);
     const [months, setMonths] = useState([]);
@@ -35,7 +38,7 @@ function MyChart() {
     const [day, setDay] = useState("1"); 
 
     useEffect(() => {
-        axios.get('http://localhost:3500/possession')
+        axios.get(`${backendUrl}/possession`)
             .then((response) => {
                 const data = response.data.data;
                 if (data && data[1] && Array.isArray(data[1].data.possessions)) {
@@ -100,6 +103,7 @@ function MyChart() {
 
         return monthsArray;
     }
+
     function getValuePerMonth() {
         if (!dateDebut || !dateFin || !day) {
             console.error("Tous les paramètres doivent être définis.");
@@ -110,7 +114,7 @@ function MyChart() {
         console.log("Date fin:", dateFin);
         console.log("Jour sélectionné:", day);
     
-        axios.get('http://localhost:3500/patrimoine/range', {
+        axios.get(`${backendUrl}/patrimoine/range`, {
             params: {
                 dateDebut: dateDebut,
                 dateFin: dateFin,
