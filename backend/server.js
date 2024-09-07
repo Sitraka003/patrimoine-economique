@@ -175,6 +175,11 @@ app.get("/patrimoine/:date", async (req, res) => {
   try {
     const { date } = req.params;
     const dateObj = new Date(date);
+
+    if (isNaN(dateObj.getTime())) {
+      return res.status(400).json({ error: "Date invalide." });
+    }
+
     console.log("Date reçue:", dateObj);
 
     const data = await readData();
@@ -184,7 +189,7 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Création d'instances avec les données récupérées
+    // Création des instances avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
@@ -197,41 +202,51 @@ app.get("/patrimoine/:date", async (req, res) => {
     for (const possessionData of patrimoineData.data.possessions) {
       let valeurActuelle = 0;
 
-      if (
-        possessionData.valeurConstante !== undefined &&
-        possessionData.jour !== undefined
-      ) {
-        // Traitement des flux
-        const flux = new Flux(
-          possessionData.possesseur,
-          possessionData.libelle,
-          possessionData.valeurConstante,
-          new Date(possessionData.dateDebut),
-          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
-          possessionData.tauxAmortissement,
-          possessionData.jour
-        );
-        valeurActuelle = flux.getValeur(dateObj);
-        console.log(
-          `Flux - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
-        );
-      } else {
-        // Traitement des possessions normales
-        const possession = new Possession(
-          possessionData.possesseur,
-          possessionData.libelle,
-          possessionData.valeur,
-          new Date(possessionData.dateDebut),
-          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
-          possessionData.tauxAmortissement
-        );
-        valeurActuelle = possession.getValeur(dateObj);
-        console.log(
-          `Possession - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
-        );
-      }
+      try {
+        if (
+          possessionData.valeurConstante !== undefined &&
+          possessionData.jour !== undefined
+        ) {
+          // Traitement des flux
+          const flux = new Flux(
+            possessionData.possesseur,
+            possessionData.libelle,
+            possessionData.valeurConstante,
+            new Date(possessionData.dateDebut),
+            possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+            possessionData.tauxAmortissement,
+            possessionData.jour
+          );
+          valeurActuelle = flux.getValeur(dateObj);
+          console.log(
+            `Flux - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+          );
+        } else {
+          // Traitement des possessions normales
+          const possession = new Possession(
+            possessionData.possesseur,
+            possessionData.libelle,
+            possessionData.valeur,
+            new Date(possessionData.dateDebut),
+            possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+            possessionData.tauxAmortissement
+          );
+          valeurActuelle = possession.getValeur(dateObj);
+          console.log(
+            `Possession - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+          );
+        }
 
-      totalValeur += valeurActuelle;
+        totalValeur += valeurActuelle;
+      } catch (error) {
+        console.error(
+          `Erreur lors du traitement de la possession ${possessionData.libelle}:`,
+          error
+        );
+        return res.status(500).json({
+          error: `Erreur lors du traitement de la possession ${possessionData.libelle}.`,
+        });
+      }
     }
 
     console.log("Valeur totale calculée:", totalValeur);
