@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import Possession from "../models/possessions/Possession.js";
 import Patrimoine from "../models/Patrimoine.js";
+import Flux from "../models/possessions/Flux.js";
 
 const app = express();
 const PORT = 3001;
