@@ -57,6 +57,10 @@ export default class Flux extends Possession {
     const totalMois = nombreDeMois(this.dateDebut, date, this.jour);
     const montantTotal = totalMois * this.valeurConstante;
 
+    console.log(
+      `Flux - Date: ${date}, Total Mois: ${totalMois}, Montant Total: ${montantTotal}`
+    );
+
     return montantTotal;
   }
 }

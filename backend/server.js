@@ -206,6 +206,7 @@ app.get("/patrimoine/:date", async (req, res) => {
           possessionData
         );
 
+        // Vérifiez si c'est un Flux
         if (
           possessionData.valeurConstante !== undefined &&
           possessionData.jour !== undefined
@@ -247,7 +248,7 @@ app.get("/patrimoine/:date", async (req, res) => {
           error
         );
         return res.status(500).json({
-          error: `Erreur lors du traitement de la possession ${possessionData.libelle}.`,
+          error: `Erreur lors du traitement de la possession ${possessionData.libelle}: ${error.message}`,
         });
       }
     }
@@ -260,7 +261,7 @@ app.get("/patrimoine/:date", async (req, res) => {
       error
     );
     res.status(500).json({
-      error: "Erreur lors de la récupération de la valeur du patrimoine.",
+      error: `Erreur lors de la récupération de la valeur du patrimoine: ${error.message}`,
     });
   }
 });
