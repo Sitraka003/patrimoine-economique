@@ -4,13 +4,16 @@ import { readFile, writeFile } from '../data/index.js';
 import Possession from '../models/possessions/Possession.js';
 import Flux from '../models/possessions/Flux.js';
 import Patrimoine from '../models/Patrimoine.js';
-import { promises as fs } from 'fs';
-import { log } from 'console';
+
 
 
 const app = express();
+const corsOptions = {
+  origin: 'https://patrimoine-economique-qadp.onrender.com', 
+  optionsSuccessStatus: 200
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/possession", async (request, response) => {
