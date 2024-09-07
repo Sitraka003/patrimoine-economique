@@ -29,9 +29,13 @@ const PatrimoinePage = () => {
       const data = await response.json();
       console.log("Données reçues pour le graphique avec flux inclus:", data);
 
-      // Assurez-vous que les données sont sous forme de tableau
       if (data && Array.isArray(data.valeur)) {
-        setChartData(data.valeur);
+        // Convertir le tableau de valeurs en données de chart
+        const chartDataFormatted = data.valeur.map((item) => ({
+          x: item.date,
+          y: item.valeur,
+        }));
+        setChartData(chartDataFormatted);
       } else {
         console.error("Les données reçues ne sont pas sous forme de tableau.");
       }
