@@ -190,12 +190,18 @@ app.get("/patrimoine/:date", async (req, res) => {
     for (const possessionData of possessions) {
       let valeurActuelle = 0;
 
-      if (possessionData.jour && possessionData.valeurConstante) {
+      if (possessionData.jour) {
         // Traitement des flux
-        const currentDay = dateObj.getDay();
-        if (currentDay === possessionData.jour) {
-          valeurActuelle = possessionData.valeurConstante;
-        }
+        const flux = new Flux(
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeur,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement,
+          possessionData.jour
+        );
+        valeurActuelle = flux.getValeur(dateObj);
         console.log(
           `Flux - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
         );
@@ -209,7 +215,6 @@ app.get("/patrimoine/:date", async (req, res) => {
           possessionData.dateFin ? new Date(possessionData.dateFin) : null,
           possessionData.tauxAmortissement
         );
-
         valeurActuelle = possession.getValeur(dateObj);
         console.log(
           `Possession - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
