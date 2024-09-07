@@ -300,6 +300,8 @@ app.get("/patrimoine/:date", async (request, response) => {
 
 
 
-app.listen(3500, () => {
-  console.log("Yayyy ça marche enfin");
+const PORT = process.env.PORT || 3500;
+
+app.listen(PORT, () => {
+  console.log(`Le serveur est en cours d'exécution sur le port ${PORT}`);
 });
