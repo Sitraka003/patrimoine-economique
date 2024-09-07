@@ -59,7 +59,7 @@ app.get("/possession", async (req, res) => {
   }
 });
 
-// 2. POST /possession: Create Possession
+// 2. POST /possession: Create Possession ok
 app.post("/possession", async (req, res) => {
   try {
     const newPossession = new Possession(
@@ -84,20 +84,26 @@ app.post("/possession", async (req, res) => {
 
     patrimoineData.data.possessions.push(newPossession);
 
-    // Calculer la nouvelle valeur totale du patrimoine
-    const patrimoine = new Patrimoine(
-      patrimoineData.data.possesseur,
-      patrimoineData.data.possessions
+    // Recalculez la valeur totale du patrimoine
+    const totalValue = patrimoineData.data.possessions.reduce(
+      (sum, possession) => {
+        const possessionInstance = new Possession(
+          possession.possesseur,
+          possession.libelle,
+          possession.valeur,
+          new Date(possession.dateDebut),
+          possession.dateFin ? new Date(possession.dateFin) : null,
+          possession.tauxAmortissement
+        );
+        return sum + possessionInstance.getValeur(new Date());
+      },
+      0
     );
 
-    const totalValeur = patrimoine.getValeur(new Date());
-
-    // Mettez à jour la valeur totale du patrimoine dans les données (si nécessaire)
-    patrimoineData.data.valeurTotale = totalValeur;
+    patrimoineData.data.valeurTotale = totalValue;
 
     await writeData(data);
-
-    res.status(201).json({ newPossession, valeurTotale: totalValeur });
+    res.status(201).json(newPossession);
   } catch (error) {
     console.error("Erreur lors de la création de la possession :", error);
     res

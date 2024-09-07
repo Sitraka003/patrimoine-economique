@@ -62,7 +62,24 @@ const PossessionPage = () => {
   };
 
   const handleCreate = () => {
-    navigate("/create");
+    fetch("https://patrimoine-economique-hnz4.onrender.com/possession", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPossessionData), // Assurez-vous de fournir les bonnes données
+    })
+      .then((response) => {
+        if (response.ok) {
+          fetchPossessions(); // Recharger les possessions pour afficher les données mises à jour
+          navigate("/create");
+        } else {
+          console.error("Erreur lors de la création de la possession.");
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la création de la possession:", error)
+      );
   };
 
   const handleEdit = (libelle) => {
