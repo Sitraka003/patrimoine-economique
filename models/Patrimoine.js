@@ -3,51 +3,48 @@ import Possession from "./possessions/Possession.js"; // Assurez-vous que le che
 export default class Patrimoine {
   constructor(possesseur, possessions) {
     this.possesseur = possesseur;
-    this.possessions = possessions;
+    // Conversion des données en instances de Possession
+    this.possessions = possessions.map(
+      (p) =>
+        new Possession(
+          p.possesseur,
+          p.libelle,
+          p.valeur,
+          new Date(p.dateDebut),
+          p.dateFin ? new Date(p.dateFin) : null,
+          p.tauxAmortissement,
+          p.jour,
+          p.valeurConstante
+        )
+    );
   }
 
   getValeur(date) {
-    let totalValeur = 0;
-
-    for (const possession of this.possessions) {
-      if (possession.dateFin && new Date(possession.dateFin) < date) {
-        continue; // La possession est fermée, ignorer
-      }
-
-      if (possession.jour && possession.valeurConstante) {
-        // C'est un flux, vérifier le jour
-        const currentDay = date.getDay();
-        if (currentDay === possession.jour) {
-          totalValeur += possession.valeurConstante;
-        }
-      } else {
-        // C'est une possession normale
-        const valeur = this.calculerValeurPossession(possession, date);
-        totalValeur += valeur;
-      }
+    let result = 0;
+    for (const item of this.possessions) {
+      result += item.getValeur(date);
     }
-
-    return totalValeur;
+    return result;
   }
 
-  calculerValeurPossession(possession, date) {
-    // Implémenter votre logique de calcul pour les possessions normales
-    // Par exemple, tenir compte de la dépréciation en fonction de la date
-    let valeurActuelle = possession.valeur;
-
-    if (possession.dateDebut && new Date(possession.dateDebut) > date) {
-      return 0; // La possession n'a pas encore commencé
+  addPossession(possession) {
+    if (possession.possesseur !== this.possesseur) {
+      console.log(
+        `${possession.libelle} n'appartient pas à ${this.possesseur}`
+      );
+    } else {
+      // Ajouter uniquement si ce n'est pas déjà dans la liste
+      if (!this.possessions.some((p) => p.libelle === possession.libelle)) {
+        this.possessions.push(possession);
+      } else {
+        console.log(`${possession.libelle} est déjà dans le patrimoine.`);
+      }
     }
+  }
 
-    if (possession.tauxAmortissement) {
-      // Calculer la dépréciation
-      const age =
-        (date - new Date(possession.dateDebut)) / (1000 * 60 * 60 * 24 * 365);
-      const amortissement =
-        (age / possession.tauxAmortissement) * possession.valeur;
-      valeurActuelle -= amortissement;
-    }
-
-    return Math.max(valeurActuelle, 0); // Valeur ne peut pas être négative
+  removePossession(possession) {
+    this.possessions = this.possessions.filter(
+      (p) => p.libelle !== possession.libelle
+    );
   }
 }

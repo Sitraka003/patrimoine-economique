@@ -184,21 +184,42 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Création d'une instance de Patrimoine avec les données récupérées
-    const patrimoine = new Patrimoine(
-      patrimoineData.data.possesseur,
-      patrimoineData.data.possessions
-    );
-    console.log("Patrimoine chargé:", patrimoine);
+    const possessions = patrimoineData.data.possessions;
 
-    // Calcul de la valeur du patrimoine à la date donnée
-    const valeur = patrimoine.getValeur(dateObj);
-    console.log("Valeur calculée:", valeur);
+    // Inclure flux et possessions
+    let totalValeur = 0;
 
-    res.json({ valeur });
+    for (const possessionData of possessions) {
+      let valeurActuelle = 0;
+
+      if (possessionData.jour && possessionData.valeurConstante) {
+        // Traitement des flux
+        const currentDay = dateObj.getDay();
+        if (currentDay === possessionData.jour) {
+          valeurActuelle = possessionData.valeurConstante;
+        }
+      } else {
+        // Traitement des possessions normales
+        const possession = new Possession(
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeur,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement
+        );
+
+        valeurActuelle = possession.getValeur(dateObj);
+      }
+
+      totalValeur += valeurActuelle;
+    }
+
+    console.log("Valeur calculée:", totalValeur);
+    res.json({ valeur: totalValeur });
   } catch (error) {
     console.error(
-      "Erreur lors de la récupération de la valeur du patrimoine :",
+      "Erreur lors de la récupération de la valeur du patrimoine:",
       error
     );
     res.status(500).json({
