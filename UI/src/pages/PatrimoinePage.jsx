@@ -27,18 +27,7 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      console.log("Données reçues pour le graphique avec flux inclus:", data);
-
-      if (data && Array.isArray(data.valeur)) {
-        // Convertir le tableau de valeurs en données de chart
-        const chartDataFormatted = data.valeur.map((item) => ({
-          x: item.date,
-          y: item.valeur,
-        }));
-        setChartData(chartDataFormatted);
-      } else {
-        console.error("Les données reçues ne sont pas sous forme de tableau.");
-      }
+      setChartData(data.valeur);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
     }
@@ -52,21 +41,12 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
-      console.log("Données reçues pour la valeur du patrimoine:", data);
-
-      // Directement utiliser la valeur reçue
-      if (data && typeof data.valeur === "number") {
-        setPatrimoineValeur(data.valeur);
-      } else {
-        console.error("Valeur du patrimoine non valide reçue.");
-        setPatrimoineValeur(0); // Valeur par défaut si problème
-      }
+      setPatrimoineValeur(data.valeur);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
         error
       );
-      setPatrimoineValeur(0); // Valeur par défaut en cas d'erreur
     }
   };
 

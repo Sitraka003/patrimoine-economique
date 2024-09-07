@@ -287,7 +287,8 @@ app.post("/patrimoine/range", async (req, res) => {
 
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
-      patrimoineData.data.possessions
+      patrimoineData.data.possessions,
+      patrimoineData.data.flux // Assurez-vous d'inclure les flux
     );
 
     let result = [];
