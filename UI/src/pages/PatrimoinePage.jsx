@@ -27,7 +27,14 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      setChartData(data.valeur);
+
+      // On assume que le backend retourne un tableau d'objets contenant les dates et les valeurs correspondantes
+      const combinedData = data.map((item) => ({
+        date: item.date,
+        valeur: item.possessionsValeur + item.fluxValeur, // Additionner la valeur des possessions et des flux
+      }));
+
+      setChartData(combinedData);
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
     }
@@ -41,7 +48,9 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
-      setPatrimoineValeur(data.valeur);
+
+      // On assume que le backend retourne maintenant aussi la valeur des flux
+      setPatrimoineValeur(data.possessionsValeur + data.fluxValeur);
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
