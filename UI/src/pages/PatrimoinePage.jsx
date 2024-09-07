@@ -27,14 +27,17 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
+      console.log("Données reçues pour le graphique:", data); // Debugging
 
-      // On assume que le backend retourne un tableau d'objets contenant les dates et les valeurs correspondantes
-      const combinedData = data.map((item) => ({
-        date: item.date,
-        valeur: item.possessionsValeur + item.fluxValeur, // Additionner la valeur des possessions et des flux
-      }));
-
-      setChartData(combinedData);
+      if (Array.isArray(data)) {
+        const combinedData = data.map((item) => ({
+          date: item.date,
+          valeur: Number(item.possessionsValeur) + Number(item.fluxValeur), // Convertir en nombre
+        }));
+        setChartData(combinedData);
+      } else {
+        console.error("Les données reçues ne sont pas sous forme de tableau.");
+      }
     } catch (error) {
       console.error("Erreur lors de la récupération des données:", error);
     }
@@ -48,9 +51,15 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
+      console.log("Données reçues pour la valeur du patrimoine:", data); // Debugging
 
-      // On assume que le backend retourne maintenant aussi la valeur des flux
-      setPatrimoineValeur(data.possessionsValeur + data.fluxValeur);
+      if (data && typeof data === "object") {
+        setPatrimoineValeur(
+          Number(data.possessionsValeur) + Number(data.fluxValeur)
+        );
+      } else {
+        console.error("Les données reçues ne sont pas valides.");
+      }
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
