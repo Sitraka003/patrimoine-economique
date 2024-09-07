@@ -1,4 +1,4 @@
-import Possession from "./possessions/Possession.js"; // Assurez-vous que le chemin est correct
+import Possession from "./possessions/Possession.js";
 
 export default class Patrimoine {
   constructor(possesseur, possessions) {
