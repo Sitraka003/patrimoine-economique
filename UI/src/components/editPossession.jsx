@@ -10,6 +10,9 @@ export function ToggleEdit() {
     }
 }
 
+// Utilisation de l'URL du backend à partir du fichier .env
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function EditPossession({ possessionToEdit, onUpdate }) {
     const [libelle, setLibelle] = useState('');
     const [dateFin, setDateFin] = useState('');
@@ -17,7 +20,7 @@ function EditPossession({ possessionToEdit, onUpdate }) {
     useEffect(() => {
         if (possessionToEdit) {
             setLibelle(possessionToEdit.libelle || '');
-            // Verification du type de dateFin avant d'appliquer substring
+            // Vérification du type de dateFin avant d'appliquer substring
             if (typeof possessionToEdit.dateFin === 'string') {
                 setDateFin(possessionToEdit.dateFin.substring(0, 10));
             } else if (possessionToEdit.dateFin instanceof Date) {
@@ -30,7 +33,7 @@ function EditPossession({ possessionToEdit, onUpdate }) {
 
     const Edit = async () => {
         try {
-            const response = await axios.put(`http://localhost:3500/possession/${possessionToEdit.libelle}`, { 
+            const response = await axios.put(`${backendUrl}/possession/${possessionToEdit.libelle}`, { 
                 dateFin, 
                 newLibelle: libelle
             });
