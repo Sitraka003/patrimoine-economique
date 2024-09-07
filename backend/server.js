@@ -177,47 +177,49 @@ app.get("/patrimoine/:date", async (req, res) => {
     const dateObj = new Date(date);
     console.log("Date reçue:", dateObj);
 
-    const data = await readData();
-    const patrimoineData = data.find((item) => item.model === "Patrimoine");
+    try {
+      const data = await readData();
+      console.log("Data:", data); // Add this log to check if data is being returned correctly
 
-    if (!patrimoineData) {
-      return res.status(404).json({ error: "Patrimoine non trouvé." });
+      const patrimoineData = data.find((item) => item.model === "Patrimoine");
+      console.log("PatrimoineData:", patrimoineData); // Add this log to check if patrimoineData is being found correctly
+
+      if (!patrimoineData) {
+        return res.status(404).json({ error: "Patrimoine non trouvé." });
+      }
+
+      try {
+        const patrimoine = new Patrimoine(
+          patrimoineData.data.possesseur,
+          patrimoineData.data.possessions.map((p) => {
+            return {
+              id: p.id,
+              nom: p.nom,
+              valeur: p.valeur,
+            };
+          })
+        );
+        console.log("Patrimoine chargé:", patrimoine);
+
+        const valeur = patrimoine.getValeur(dateObj);
+        console.log("Valeur calculée:", valeur);
+
+        res.json({ valeur });
+      } catch (error) {
+        console.error(
+          "Erreur lors de la création de l'instance Patrimoine :",
+          error
+        );
+        res.status(500).json({
+          error: "Erreur lors de la création de l'instance Patrimoine.",
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données :", error);
+      res.status(500).json({
+        error: "Erreur lors de la récupération des données.",
+      });
     }
-
-    // creation d'instnance avec les données récupérées
-    const patrimoine = new Patrimoine(
-      patrimoineData.data.possesseur,
-      patrimoineData.data.possessions.map((p) => {
-        if (p.jour && p.valeurConstante) {
-          return new Flux(
-            p.possesseur,
-            p.libelle,
-            p.valeur,
-            new Date(p.dateDebut),
-            p.dateFin ? new Date(p.dateFin) : null,
-            p.tauxAmortissement,
-            p.jour,
-            p.valeurConstante
-          );
-        } else {
-          return new Possession(
-            p.possesseur,
-            p.libelle,
-            p.valeur,
-            new Date(p.dateDebut),
-            p.dateFin ? new Date(p.dateFin) : null,
-            p.tauxAmortissement
-          );
-        }
-      })
-    );
-    console.log("Patrimoine chargé:", patrimoine);
-
-    // calcul de la valeur du patrimoine à la date donnée
-    const valeur = patrimoine.getValeur(dateObj);
-    console.log("Valeur calculée:", valeur);
-
-    res.json({ valeur });
   } catch (error) {
     console.error(
       "Erreur lors de la récupération de la valeur du patrimoine :",
