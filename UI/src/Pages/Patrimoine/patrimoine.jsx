@@ -5,7 +5,6 @@ import Possession from '../../../../models/possessions/Possession.js';
 import Flux from '../../../../models/possessions/Flux.js';
 import MyChart from '../../components/chart.jsx';
 
-// Utilisation de l'URL du backend à partir du fichier .env
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 function PatrimoinePage() {

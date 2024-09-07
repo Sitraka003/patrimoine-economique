@@ -10,7 +10,7 @@ export function ToggleEdit() {
     }
 }
 
-// Utilisation de l'URL du backend à partir du fichier .env
+
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 function EditPossession({ possessionToEdit, onUpdate }) {

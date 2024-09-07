@@ -9,6 +9,9 @@ import { AddPossession, ToggleAddPossession } from '../../components/addPossessi
 import { ToggleEdit } from '../../components/editPossession.jsx';
 import Patrimoine from '../../../../models/Patrimoine.js';
 
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function PossessionPage() {
     const [data, setData] = useState(null);
     const [possessions, setPossessions] = useState([]);
@@ -19,7 +22,7 @@ function PossessionPage() {
 
     const getData = async () => {
         try {
-            const response = await axios.get('http://localhost:3500/possession');
+            const response = await axios.get(`${backendUrl}/possession`);
             const newData = response.data.data;
 
             if (JSON.stringify(newData) !== JSON.stringify(data)) {
@@ -77,8 +80,6 @@ function PossessionPage() {
         setPossessions(newPossessions);
     }
     
-    
-
     function getDatePicker(e) {
         setDatePicker(e.target.value);
     }
@@ -101,7 +102,7 @@ function PossessionPage() {
         const formattedDate = date.toISOString().split('T')[0];
         console.log('Converted date:', formattedDate);
     
-        axios.get(`http://localhost:3500/patrimoine/${formattedDate}`)
+        axios.get(`${backendUrl}/patrimoine/${formattedDate}`)
             .then(response => {
                 const newValue = response.data;
                 console.log('New value retrieved:', newValue);
@@ -119,8 +120,6 @@ function PossessionPage() {
             });
     }
     
-    
-
     function getActualValue() {
         const today = new Date();
         const results = possessions.map(possession => {
@@ -152,10 +151,9 @@ function PossessionPage() {
         }
     }, [possessions]);
     
-
     function closePossession(libelle) {
         console.log(`Tentative de clôture de la possession : ${libelle}`);
-        axios.put(`http://localhost:3500/possession/${libelle}/close`, { dateFin: new Date().toISOString() })
+        axios.put(`${backendUrl}/possession/${libelle}/close`, { dateFin: new Date().toISOString() })
             .then(() => {
                 console.log('Possession clôturée avec succès');
                 getData(); // Recharger les données après la clôture
