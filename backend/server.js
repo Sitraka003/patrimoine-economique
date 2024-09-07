@@ -185,8 +185,6 @@ app.get("/patrimoine/:date", async (req, res) => {
     }
 
     const possessions = patrimoineData.data.possessions;
-
-    // Inclure flux et possessions
     let totalValeur = 0;
 
     for (const possessionData of possessions) {
@@ -198,6 +196,9 @@ app.get("/patrimoine/:date", async (req, res) => {
         if (currentDay === possessionData.jour) {
           valeurActuelle = possessionData.valeurConstante;
         }
+        console.log(
+          `Flux - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+        );
       } else {
         // Traitement des possessions normales
         const possession = new Possession(
@@ -210,12 +211,15 @@ app.get("/patrimoine/:date", async (req, res) => {
         );
 
         valeurActuelle = possession.getValeur(dateObj);
+        console.log(
+          `Possession - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+        );
       }
 
       totalValeur += valeurActuelle;
     }
 
-    console.log("Valeur calculée:", totalValeur);
+    console.log("Valeur totale calculée:", totalValeur);
     res.json({ valeur: totalValeur });
   } catch (error) {
     console.error(
