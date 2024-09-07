@@ -184,10 +184,19 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // creation d'instnance avec les données récupérées
+    // Separate possessions and fluxes
+    const possessions = patrimoineData.data.possessions.filter(
+      (p) => p.type !== "flux"
+    );
+    const fluxes = patrimoineData.data.possessions.filter(
+      (p) => p.type === "flux"
+    );
+
+    // creation d'instance avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
-      patrimoineData.data.possessions
+      possessions,
+      fluxes
     );
     console.log("Patrimoine chargé:", patrimoine);
 
