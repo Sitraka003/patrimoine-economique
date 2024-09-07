@@ -29,6 +29,8 @@ const Create = () => {
       tauxAmortissement: formattedTauxAmortissement,
     };
 
+    console.log("Submitting new possession:", newPossession);
+
     fetch("https://patrimoine-economique-hnz4.onrender.com/possession", {
       method: "POST",
       headers: {
@@ -38,10 +40,14 @@ const Create = () => {
     })
       .then((response) => {
         if (response.ok) {
-          navigate("/possession");
+          return response.json(); // Ajoutez cette ligne pour vérifier la réponse
         } else {
-          console.error("Erreur lors de la création de la possession");
+          return response.text(); // Ajoutez cette ligne pour récupérer le texte de l'erreur
         }
+      })
+      .then((data) => {
+        console.log("Response data:", data); // Affichez les données de la réponse
+        navigate("/possession");
       })
       .catch((error) =>
         console.error("Erreur lors de la création de la possession:", error)
