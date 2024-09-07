@@ -189,20 +189,24 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Création des instances avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
       patrimoineData.data.possessions
     );
     console.log("Patrimoine chargé:", patrimoine);
 
-    // Calcul de la valeur du patrimoine à la date donnée
     let totalValeur = 0;
 
     for (const possessionData of patrimoineData.data.possessions) {
       let valeurActuelle = 0;
 
       try {
+        console.log(
+          `Traitement de la possession: ${possessionData.libelle}`,
+          possessionData
+        );
+
+        // Vérifiez si c'est un Flux
         if (
           possessionData.valeurConstante !== undefined &&
           possessionData.jour !== undefined
