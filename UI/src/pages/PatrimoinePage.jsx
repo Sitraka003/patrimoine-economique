@@ -27,15 +27,11 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      console.log("Données reçues pour le graphique:", data); // Debugging
+      console.log("Données reçues pour le graphique:", data);
 
-      // Vérification que `valeur` est bien un tableau
+      // Si data.valeur est un tableau, on le passe directement au chart
       if (data && Array.isArray(data.valeur)) {
-        const combinedData = data.valeur.map((item) => ({
-          date: item.date,
-          valeur: Number(item.possessionsValeur) + Number(item.fluxValeur), // Convertir en nombre
-        }));
-        setChartData(combinedData);
+        setChartData(data.valeur);
       } else {
         console.error("Les données reçues ne sont pas sous forme de tableau.");
       }
@@ -52,20 +48,21 @@ const PatrimoinePage = () => {
         }`
       );
       const data = await response.json();
-      console.log("Données reçues pour la valeur du patrimoine:", data); // Debugging
+      console.log("Données reçues pour la valeur du patrimoine:", data);
 
-      // Vérification que les valeurs existent et sont bien des nombres
-      const possessionsValeur = data.possessionsValeur
-        ? Number(data.possessionsValeur)
-        : 0;
-      const fluxValeur = data.fluxValeur ? Number(data.fluxValeur) : 0;
-
-      setPatrimoineValeur(possessionsValeur + fluxValeur);
+      // Directement utiliser la valeur reçue
+      if (data && typeof data.valeur === "number") {
+        setPatrimoineValeur(data.valeur);
+      } else {
+        console.error("Valeur du patrimoine non valide reçue.");
+        setPatrimoineValeur(0); // Valeur par défaut si problème
+      }
     } catch (error) {
       console.error(
         "Erreur lors de la récupération de la valeur du patrimoine:",
         error
       );
+      setPatrimoineValeur(0); // Valeur par défaut en cas d'erreur
     }
   };
 
