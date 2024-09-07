@@ -287,18 +287,62 @@ app.post("/patrimoine/range", async (req, res) => {
 
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
-      patrimoineData.data.possessions,
-      patrimoineData.data.flux // Assurez-vous d'inclure les flux
+      patrimoineData.data.possessions
     );
 
     let result = [];
     let currentDate = new Date(debut);
 
     while (currentDate <= fin) {
-      const valeur = patrimoine.getValeur(new Date(currentDate));
+      let totalValeur = 0;
+
+      for (const possessionData of patrimoineData.data.possessions) {
+        let valeurActuelle = 0;
+
+        try {
+          if (
+            possessionData.valeurConstante !== undefined &&
+            possessionData.jour !== undefined
+          ) {
+            // Traitement des flux
+            const flux = new Flux(
+              possessionData.possesseur,
+              possessionData.libelle,
+              possessionData.valeurConstante,
+              new Date(possessionData.dateDebut),
+              possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+              possessionData.tauxAmortissement,
+              possessionData.jour
+            );
+            valeurActuelle = flux.getValeur(currentDate);
+          } else {
+            // Traitement des possessions normales
+            const possession = new Possession(
+              possessionData.possesseur,
+              possessionData.libelle,
+              possessionData.valeur,
+              new Date(possessionData.dateDebut),
+              possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+              possessionData.tauxAmortissement
+            );
+            valeurActuelle = possession.getValeur(currentDate);
+          }
+
+          totalValeur += valeurActuelle;
+        } catch (error) {
+          console.error(
+            `Erreur lors du traitement de la possession ${possessionData.libelle}:`,
+            error
+          );
+          return res.status(500).json({
+            error: `Erreur lors du traitement de la possession ${possessionData.libelle}: ${error.message}`,
+          });
+        }
+      }
+
       result.push({
         date: currentDate.toISOString().split("T")[0],
-        valeur: valeur,
+        valeur: totalValeur,
       });
 
       if (type === "mois") {
