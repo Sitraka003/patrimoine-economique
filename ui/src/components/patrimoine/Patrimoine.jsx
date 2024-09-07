@@ -29,14 +29,18 @@ const PatrimoineApp = () => {
     ],
   });
   const [showChart, setShowChart] = useState(false);
+  
+  const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/data");
-        if (response.ok) {
-          const result = await response.json();
-          setData(result);
+        const response = await fetch(
+          `${baseUrl}/api/data`
+          );
+          if (response.ok) {
+            const result = await response.json();
+            setData(result);
         } else {
           console.error("Erreur lors de la récupération des données");
         }
@@ -52,10 +56,10 @@ const PatrimoineApp = () => {
     if (selectedPerson) {
       console.log("Recherche du patrimoine pour : ", selectedPerson);
 
-      fetch("http://localhost:5000/api/data")
-        .then((response) => response.json())
-        .then((data) => {
-          const patrimoineData = data.find(
+      fetch(`${baseUrl}/api/personnes`)
+      .then((response) => response.json())
+      .then((data) => {
+        const patrimoineData = data.find(
             (item) =>
               item.model === "Patrimoine" &&
               item.data.possesseur.nom === selectedPerson

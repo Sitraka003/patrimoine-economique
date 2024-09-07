@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import HomeChart from "../chart/homeChart";
-import Features from "../feature/feature";
-import Testimonials from "../testimonial/Testimonial";
+import Chart from "../chart/chart.jsx";
+import Features from "../feature/Feature.jsx";
+import Testimonials from "../testimonial/Testimonial.jsx";
 
 const Home = () => {
   return (
@@ -37,7 +37,7 @@ const Home = () => {
       <Testimonials />
 
       <div className="p-5">
-      <HomeChart />
+      <Chart />
       </div>
       <motion.div
         className="text-center mt-5"
