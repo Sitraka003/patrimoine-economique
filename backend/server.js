@@ -184,30 +184,61 @@ app.get("/patrimoine/:date", async (req, res) => {
       return res.status(404).json({ error: "Patrimoine non trouvé." });
     }
 
-    // Separate possessions and fluxes
-    const possessions = patrimoineData.data.possessions.filter(
-      (p) => p.type !== "flux"
-    );
-    const fluxes = patrimoineData.data.possessions.filter(
-      (p) => p.type === "flux"
-    );
-
-    // creation d'instance avec les données récupérées
+    // Création d'instances avec les données récupérées
     const patrimoine = new Patrimoine(
       patrimoineData.data.possesseur,
-      possessions,
-      fluxes
+      patrimoineData.data.possessions
     );
     console.log("Patrimoine chargé:", patrimoine);
 
-    // calcul de la valeur du patrimoine à la date donnée
-    const valeur = patrimoine.getValeur(dateObj);
-    console.log("Valeur calculée:", valeur);
+    // Calcul de la valeur du patrimoine à la date donnée
+    let totalValeur = 0;
 
-    res.json({ valeur });
+    for (const possessionData of patrimoineData.data.possessions) {
+      let valeurActuelle = 0;
+
+      if (
+        possessionData.valeurConstante !== undefined &&
+        possessionData.jour !== undefined
+      ) {
+        // Traitement des flux
+        const flux = new Flux(
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeurConstante,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement,
+          possessionData.jour
+        );
+        valeurActuelle = flux.getValeur(dateObj);
+        console.log(
+          `Flux - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+        );
+      } else {
+        // Traitement des possessions normales
+        const possession = new Possession(
+          possessionData.possesseur,
+          possessionData.libelle,
+          possessionData.valeur,
+          new Date(possessionData.dateDebut),
+          possessionData.dateFin ? new Date(possessionData.dateFin) : null,
+          possessionData.tauxAmortissement
+        );
+        valeurActuelle = possession.getValeur(dateObj);
+        console.log(
+          `Possession - Libelle: ${possessionData.libelle}, Valeur: ${valeurActuelle}`
+        );
+      }
+
+      totalValeur += valeurActuelle;
+    }
+
+    console.log("Valeur totale calculée:", totalValeur);
+    res.json({ valeur: totalValeur });
   } catch (error) {
     console.error(
-      "Erreur lors de la récupération de la valeur du patrimoine :",
+      "Erreur lors de la récupération de la valeur du patrimoine:",
       error
     );
     res.status(500).json({
