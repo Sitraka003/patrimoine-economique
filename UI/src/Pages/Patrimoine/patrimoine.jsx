@@ -5,12 +5,15 @@ import Possession from '../../../../models/possessions/Possession.js';
 import Flux from '../../../../models/possessions/Flux.js';
 import MyChart from '../../components/chart.jsx';
 
+// Utilisation de l'URL du backend à partir du fichier .env
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 function PatrimoinePage() {
     const [possessions, setPossessions] = useState([]);
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:3500/possession')
+        axios.get(`${backendUrl}/possession`)
             .then((response) => {
                 const data = response.data;
                 if (data && data[1] && Array.isArray(data[1].data.possessions)) {
