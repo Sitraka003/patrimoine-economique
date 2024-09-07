@@ -27,9 +27,9 @@ const PatrimoinePage = () => {
         }
       );
       const data = await response.json();
-      console.log("Données reçues pour le graphique:", data);
+      console.log("Données reçues pour le graphique avec flux inclus:", data);
 
-      // Si data.valeur est un tableau, on le passe directement au chart
+      // Assurez-vous que les données sont sous forme de tableau
       if (data && Array.isArray(data.valeur)) {
         setChartData(data.valeur);
       } else {
