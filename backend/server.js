@@ -19,7 +19,7 @@ app.use(express.json());
 }));*/
 app.use(cors());
 
-const dataFilePath = path.join(__dirname, 'data', 'data.json');
+const dataFilePath = path.join(__dirname, '..', 'data', 'data.json');
 
 // Lecture des données de data.json
 let data;
