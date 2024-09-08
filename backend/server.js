@@ -12,11 +12,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
-app.use(cors({
+/*app.use(cors({
   origin: 'https://patrimoine-economique-std23044-ui.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type, Authorization'],
-}));
+}));*/
+app.use(cors());
 
 const dataFilePath = path.join(__dirname, 'data', 'data.json');
 

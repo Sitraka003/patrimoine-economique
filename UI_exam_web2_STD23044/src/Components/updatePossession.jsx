@@ -14,7 +14,7 @@ export default function UpdatePossessionPage() {
   useEffect(() => {
     const fetchPossessions = async () => {
       try {
-        const response = await fetch('https://patrimoine-economique-backend-std23044.onrender.com/possession');
+        const response = await fetch('http://localhost:9000/possession');
         if (!response.ok) {
           throw new Error('Erreur réseau');
         }
@@ -38,7 +38,7 @@ export default function UpdatePossessionPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const updateResponse = await fetch(`https://patrimoine-economique-backend-std23044.onrender.com/possession/${libelle}`, {
+      const updateResponse = await fetch(`http://localhost:9000/possession/${libelle}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ libelle: currentLibelle, valeur, dateDebut, dateFin, taux }),
@@ -50,7 +50,7 @@ export default function UpdatePossessionPage() {
       const updatedPossession = await updateResponse.json();
 
       if (libelle !== currentLibelle) {
-        const deleteResponse = await fetch(`https://patrimoine-economique-backend-std23044.onrender.com/possession/${libelle}`, {
+        const deleteResponse = await fetch(`http://localhost:9000/possession/${libelle}`, {
           method: 'DELETE',
         });
 
@@ -58,7 +58,7 @@ export default function UpdatePossessionPage() {
           throw new Error('Erreur lors de la suppression de l\'ancienne possession');
         }
 
-        const createResponse = await fetch(`https://patrimoine-economique-backend-std23044.onrender.com/possession`, {
+        const createResponse = await fetch(`http://localhost:9000/possession`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ libelle: currentLibelle, valeur, dateDebut, dateFin, taux }),
