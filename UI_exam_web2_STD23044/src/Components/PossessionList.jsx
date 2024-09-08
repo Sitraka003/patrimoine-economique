@@ -10,7 +10,7 @@ export default function ListPossessionPage() {
         const fetchPossessions = async () => {
             try {
                 const response = await fetch('https://patrimoine-economique-backend-std23044.onrender.com/possession', {
-                    mode: 'cors'
+
                 });
                 if (!response.ok) {
                     throw new Error('response was not ok');
@@ -30,7 +30,6 @@ export default function ListPossessionPage() {
             const response = await fetch(`https://patrimoine-economique-backend-std23044.onrender.com/possession/${libelle}/close`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                mode: 'cors'
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -52,7 +51,6 @@ export default function ListPossessionPage() {
             const response = await fetch(`https://patrimoine-economique-backend-std23044.onrender.com/possession/${libelle}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
-                mode: 'cors'
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
