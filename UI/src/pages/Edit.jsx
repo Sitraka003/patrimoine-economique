@@ -10,7 +10,7 @@ const Edit = () => {
 
   const [possession, setPossession] = useState({
     libelle: libelle,
-    dateFin: new Date(),
+    dateFin: null,
   });
 
   const handleChange = (e) => {
@@ -24,6 +24,11 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const updatedPossession = {
+      ...possession,
+      dateFin: possession.dateFin ? possession.dateFin.toISOString() : null,
+    };
+
     fetch(
       `https://patrimoine-economique-hnz4.onrender.com/possession/${libelle}`,
       {
@@ -31,10 +36,7 @@ const Edit = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...possession,
-          dateFin: possession.dateFin.toISOString(),
-        }),
+        body: JSON.stringify(updatedPossession),
       }
     )
       .then((response) => {
@@ -80,7 +82,8 @@ const Edit = () => {
             onChange={handleDateChange}
             dateFormat="yyyy-MM-dd"
             className="form-control"
-            placeholderText="Sélectionnez une date"
+            placeholderText="Select a date"
+            isClearable
           />
         </Form.Group>
 
