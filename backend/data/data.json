@@ -67,11 +67,18 @@
           "valeurConstante": -300000
         },
         {
-          "libelle": "Redmi Note 9",
+          "libelle": "Redmi Note 9 (Lost)",
           "valeur": 800000,
           "dateDebut": "2022-12-29",
-          "dateFin": null,
+          "dateFin": "2024-09-08",
           "tauxAmortissement": 15
+        },
+        {
+          "libelle": "Samsung Galaxy S23 (Gifted)",
+          "valeur": "1600000",
+          "dateDebut": "2024-09-08",
+          "dateFin": null,
+          "tauxAmortissement": "10"
         }
       ]
     }
