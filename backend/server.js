@@ -193,14 +193,6 @@ app.post('/patrimoine/range', (req, res) => {
   res.json(results);
 });
 
-// Servir les fichiers statiques de l'application React
-app.use(express.static(path.join(__dirname, 'build')));
-
-// Rediriger toutes les routes vers index.html pour que React gère le routage
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 app.listen(9000, () => {
   console.log('Serveur démarré sur le port 9000');
 });
