@@ -92,7 +92,7 @@ app.post('/possession', (req, res) => {
   }
 });
 
-//mettre à jour une possession
+// mettre à jour une possession
 app.put('/possession/:libelle', (req, res) => {
   const { libelle } = req.params;
   const { valeur, dateDebut, dateFin, taux } = req.body;
@@ -115,7 +115,7 @@ app.put('/possession/:libelle', (req, res) => {
   }
 });
 
-//clôture d'une possession
+// clôture d'une possession
 app.patch('/possession/:libelle/close', (req, res) => {
   console.log('Request to close possession:', req.params.libelle);
   const { libelle } = req.params;
@@ -127,14 +127,14 @@ app.patch('/possession/:libelle/close', (req, res) => {
 
     try {
       fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      res.json({ message: 'Possession cloture avec', possession });
+      res.json({ message: 'Possession clôturée avec succès', possession });
     } catch (error) {
-      console.error('Error saving data:', error);
-      res.status(500).send('Server error');
+      console.error('Erreur de sauvegarde des données:', error);
+      res.status(500).send('Erreur serveur');
     }
   } else {
-    console.log('Possession not found:', libelle);
-    res.status(404).send('Possession not found');
+    console.log('Possession non trouvée:', libelle);
+    res.status(404).send('Possession non trouvée');
   }
 });
 
@@ -149,13 +149,13 @@ app.delete('/possession/:libelle', (req, res) => {
 
     try {
       fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-      res.json({ message: 'Possession supprime avec succes' });
+      res.json({ message: 'Possession supprimée avec succès' });
     } catch (error) {
-      console.error('Error saving data:', error);
-      res.status(500).send('Server error');
+      console.error('Erreur de sauvegarde des données:', error);
+      res.status(500).send('Erreur serveur');
     }
   } else {
-    res.status(404).send('Possession not found');
+    res.status(404).send('Possession non trouvée');
   }
 });
 
@@ -166,7 +166,7 @@ app.post('/patrimoine/range', (req, res) => {
   const patrimoineData = data.find(d => d.model === 'Patrimoine');
 
   if (!patrimoineData) {
-    return res.status(404).send('Patrimoine not found');
+    return res.status(404).send('Patrimoine non trouvé');
   }
 
   const possessions = patrimoineData.data.possessions.map(p => {
