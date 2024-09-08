@@ -19,6 +19,12 @@ app.use(express.json());
 }));*/
 app.use(cors());
 
+app.use(express.static(path.join(__dirname, '..', 'UI_exam_web2_STD23044', 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'assets', 'index.html'));
+});
+
 const dataFilePath = path.join(__dirname, '..', 'data', 'data.json');
 
 // Lecture des données de data.json
