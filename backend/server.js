@@ -13,7 +13,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: 'http://localhost:5173/',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type, Authorization'],
 }));
 
 const dataFilePath = path.join(__dirname, '..', 'data', 'data.json');
