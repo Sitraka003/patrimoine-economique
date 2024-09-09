@@ -170,12 +170,13 @@ const addPossession = (req, res) => {
     const patrimoine = data.find(item => item.model === "Patrimoine" && item.data.possesseur.nom === nom);
 
     if (patrimoine) {
+
         const newPossession = {
             possesseur: { nom },
             libelle,
             valeur,
-            dateDebut,
-            dateFin: dateFin || null,
+            dateDebut: dateFin ? new Date(dateDebut).toISOString() : null,
+            dateFin: dateFin ? new Date(dateFin).toISOString() : null,
             tauxAmortissement: tauxAmortissement || null,
             valeurConstante: valeurConstante || null,
             jour: jour || null
@@ -189,6 +190,7 @@ const addPossession = (req, res) => {
         res.status(404).json({ message: "Personne non trouvée" });
     }
 };
+
 
 
 const addNewPossession = (req, res) => {
@@ -212,8 +214,8 @@ const addNewPossession = (req, res) => {
         libelle,
         valeur,
         tauxAmortissement: tauxAmortissement || null,
-        dateDebut: dateDebut || null,
-        dateFin: dateFin || null,
+        dateDebut: dateFin ? new Date(dateDebut).toISOString() : null,
+        dateFin: dateFin ? new Date(dateFin).toISOString() : null,
         valeurConstante: valeurConstante || null
     };
 
@@ -240,7 +242,7 @@ const closePossession = (req, res) => {
                         updated = true;
                         return {
                             ...possession,
-                            dateFin: dateFin
+                            dateFin: dateFin ? new Date(dateFin).toISOString() : null,
                         };
                     }
                     return possession;
