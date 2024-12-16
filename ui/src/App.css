@@ -1,0 +1,108 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-family: 'Arial', sans-serif;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.alert {
+  font-weight: bold;
+}
+
+.text-primary {
+  color: #00bcd4 !important;
+}
+
+.bg-dark {
+  /* background: conic-gradient(#2f5fab, #72b91c) !important; */
+  background: linear-gradient(135deg, #003366, #008d9f) !important;
+}
+
+.bg-dark-custom {
+  background: radial-gradient(circle, #1e3c72, #2a5298) !important;
+  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.bg-secondary {
+  background: #16334e !important;
+}
+
+.bg-custom {
+  background: #16334e !important;
+}
+
+.bg-conic {
+  background: conic-gradient(#008d9f, #003366) !important;
+}
+
+.table-gradient {
+  background: linear-gradient(135deg, #003366, #007989) !important;
+  color: white;
+}
+
+/* add possession */
+
+.container-custom {
+  background: linear-gradient(135deg, #003366, #007e8f) !important;
+  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.text-primary-custom {
+  color: white;
+  border-color: white;
+}
+
+.text-success-custom {
+  color: #d7d7d7;
+  border-color: #a2f5a2;
+}
+
+.input-group-prepend-custom {
+  background-color: #324a72;
+  border-color: white;
+}
+
+.form-control-custom {
+  background-color: #324a72;
+  color: #ffffff;
+  border-color: white;
+}
+
+.btn-outline-success-custom {
+  border-color: #a2f5a2;
+  color: #a2f5a2;
+}
+
+.btn-outline-info-custom {
+  border-color: white;
+  color: white;
+}
+
+.btn-outline-success-custom:hover,
+.btn-outline-info-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
