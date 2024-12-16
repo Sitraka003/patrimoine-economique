@@ -1,0 +1,34 @@
+[
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Ordinateur Dell",
+        "ValeurInitiale": 2000000,
+        "DateDeDebut": "2024-01-02",
+        "DateDeFin": "2026-01-02",
+        "Amortissement": 0.3
+    },
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Smartphone Samsung",
+        "ValeurInitiale": 1000000,
+        "DateDeDebut": "2024-01-02",
+        "DateDeFin": "2026-01-02",
+        "Amortissement": 0.2
+    },
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Montre",
+        "ValeurInitiale": 40000,
+        "DateDeDebut": "2024-05-05",
+        "DateDeFin": "2025-05-05",
+        "Amortissement": 0.6
+    },
+    {
+        "Posseseur": "Fanantenana Ny Aina",
+        "Libelle": "Moto",
+        "ValeurInitiale": 3000000,
+        "DateDeDebut": "2022-08-02",
+        "DateDeFin": "2026-08-02",
+        "Amortissement": 0.4
+    }
+]
